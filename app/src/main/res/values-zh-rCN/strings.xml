@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="header_one">问题：</string>
+    <string name="question">这部电影评分超过9分吗？</string>
+    <string name="no">不</string>
+    <string name="yes">是的</string>
+    <string name="search">搜索</string>
+    <string name="media">媒体库</string>
+    <string name="setting">设置</string>
+    <string name="light_theme">浅色主题</string>
+    <string name="dark_theme">深色主题</string>
+    <string name="header_share">分享应用程序</string>
+    <string name="header_support">写信支持</string>
+    <string name="header_agreement">使用条款</string>
+</resources>
