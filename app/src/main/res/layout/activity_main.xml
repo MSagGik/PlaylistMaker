@@ -49,7 +49,8 @@
             app:icon="@drawable/ic_search"
             app:iconGravity="textStart"
             app:iconPadding="@dimen/dimen_8"
-            app:iconTint="@color/grey_100"/>
+            app:iconTint="@color/grey_100"
+            android:foreground="?attr/selectableItemBackground" />
 
         <Button
             android:id="@+id/button_media"
@@ -66,7 +67,8 @@
             app:icon="@drawable/ic_music"
             app:iconGravity="textStart"
             app:iconPadding="@dimen/dimen_8"
-            app:iconTint="@color/grey_100" />
+            app:iconTint="@color/grey_100"
+            android:foreground="?attr/selectableItemBackground" />
 
         <Button
             android:id="@+id/button_setting"
@@ -82,7 +84,8 @@
             app:icon="@drawable/ic_setting"
             app:iconGravity="textStart"
             app:iconPadding="@dimen/dimen_8"
-            app:iconTint="@color/grey_100" />
+            app:iconTint="@color/grey_100"
+            android:foreground="?attr/selectableItemBackground" />
     </LinearLayout>
 
 
