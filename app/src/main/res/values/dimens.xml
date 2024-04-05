@@ -13,4 +13,5 @@
     <dimen name="dimen_61">61dp</dimen>
     <dimen name="dimen_16s">16sp</dimen>
     <dimen name="dimen_22s">22sp</dimen>
+    <dimen name="dimen_50s">50sp</dimen>
 </resources>
