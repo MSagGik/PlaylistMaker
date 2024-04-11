@@ -9,22 +9,25 @@
     android:background="@color/blue_100"
     tools:context=".MainActivity">
 
-    <!--    Используемые иллюстрации (иконки) в образовательных целях предоставлены Яндекс-Практикумом (practicum.yandex.ru)-->
+    <!--    Используемые иллюстрации (иконки) и шрифты в образовательных целях предоставлены Яндекс-Практикумом (practicum.yandex.ru)-->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
         android:layout_height="@dimen/dimen_56">
+
         <TextView
             android:id="@+id/panel_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_10"
-            android:layout_marginStart="@dimen/dimen_12"
+            android:layout_marginStart="@dimen/dimen_20"
+            android:layout_marginTop="@dimen/dimen_14"
+            android:fontFamily="@font/ys_display_medium"
+            android:text="@string/panel_header"
             android:textColor="@color/white"
+            android:textFontWeight="500"
             android:textSize="@dimen/dimen_22s"
-            android:textStyle="bold"
-            android:text="@string/panel_header" />
+            android:textStyle="bold" />
     </LinearLayout>
 
     <LinearLayout
@@ -36,56 +39,23 @@
 
         <Button
             android:id="@+id/button_search"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/white"
+            style="@style/ButtonMainActivity"
             android:text="@string/search"
-            android:textColor="@color/grey_100"
-            android:textSize="@dimen/dimen_22s"
-            android:textAllCaps="false"
-            android:layout_marginBottom="16dp"
-            app:cornerRadius="@dimen/dimen_16"
             app:icon="@drawable/ic_search"
-            app:iconGravity="textStart"
-            app:iconPadding="@dimen/dimen_8"
-            app:iconTint="@color/grey_100"
-            android:foreground="?attr/selectableItemBackground" />
+            android:layout_marginBottom="@dimen/dimen_16"/>
 
         <Button
             android:id="@+id/button_media"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/white"
+            style="@style/ButtonMainActivity"
             android:text="@string/media"
-            android:textColor="@color/grey_100"
-            android:textSize="@dimen/dimen_22s"
-            android:textAllCaps="false"
-            android:layout_marginBottom="@dimen/dimen_16"
-            app:cornerRadius="@dimen/dimen_16"
             app:icon="@drawable/ic_music"
-            app:iconGravity="textStart"
-            app:iconPadding="@dimen/dimen_8"
-            app:iconTint="@color/grey_100"
-            android:foreground="?attr/selectableItemBackground" />
+            android:layout_marginBottom="@dimen/dimen_16"/>
 
         <Button
             android:id="@+id/button_setting"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/white"
+            style="@style/ButtonMainActivity"
             android:text="@string/setting"
-            android:textColor="@color/grey_100"
-            android:textSize="@dimen/dimen_22s"
-            android:textAllCaps="false"
-            app:cornerRadius="@dimen/dimen_16"
-            app:icon="@drawable/ic_setting"
-            app:iconGravity="textStart"
-            app:iconPadding="@dimen/dimen_8"
-            app:iconTint="@color/grey_100"
-            android:foreground="?attr/selectableItemBackground" />
+            app:icon="@drawable/ic_setting"/>
     </LinearLayout>
 
 

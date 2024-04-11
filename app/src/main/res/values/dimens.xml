@@ -10,7 +10,9 @@
     <dimen name="dimen_10">10dp</dimen>
     <dimen name="dimen_11">11dp</dimen>
     <dimen name="dimen_12">12dp</dimen>
+    <dimen name="dimen_14">14dp</dimen>
     <dimen name="dimen_16">16dp</dimen>
+    <dimen name="dimen_20">20dp</dimen>
     <dimen name="dimen_24">24dp</dimen>
     <dimen name="dimen_40">40dp</dimen>
     <dimen name="dimen_48">48dp</dimen>

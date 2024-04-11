@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+<!--    <style name="ButtonMainActivity" parent="TextAppearance.MaterialComponents.Button">-->
+    <style name="ButtonMainActivity">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:textColor">@color/grey_100</item>
+        <item name="android:textSize">@dimen/dimen_22s</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="cornerRadius">@dimen/dimen_16</item>
+        <item name="iconGravity">textStart</item>
+        <item name="iconPadding">@dimen/dimen_8</item>
+        <item name="iconTint">@color/grey_100</item>
+    </style>
+
+    <style name="BaseTextViewSetting" parent="Widget.MaterialComponents.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/dimen_16s</item>
+        <item name="android:paddingStart">@dimen/dimen_16</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_gravity">start|center_vertical</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textFontWeight">400</item>
+    </style>
+
+    <style name="TextViewSetting" parent="BaseTextViewSetting">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="TextViewSettingHeader">
+        <item name="android:textColor">@color/grey_100</item>
+    </style>
+
+    <style name="ImageButtonSettingHeader">
+        <item name="tint">@color/grey_100</item>
+    </style>
+
+    <style name="BaseImageViewSetting">
+        <item name="android:layout_width">@dimen/dimen_24</item>
+        <item name="android:layout_height">@dimen/dimen_24</item>
+        <item name="android:layout_gravity">end|center_vertical</item>
+        <item name="android:layout_marginEnd">@dimen/dimen_16</item>
+    </style>
+
+    <style name="ImageViewSetting" parent="BaseImageViewSetting">
+        <item name="tint">@color/grey_500</item>
+    </style>
+
+    <style name="SwitchSetting">
+        <item name="android:thumbTint">@color/grey_500</item>
+        <item name="android:trackTint">@color/grey_700</item>
+    </style>
+
+</resources>
