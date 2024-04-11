@@ -1,19 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/blue_100"
     tools:context=".MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <!--    Используемые иллюстрации (иконки) в образовательных целях предоставлены Яндекс-Практикумом (practicum.yandex.ru)-->
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="@dimen/dimen_56">
+        <TextView
+            android:id="@+id/panel_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_10"
+            android:layout_marginStart="@dimen/dimen_12"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimen_22s"
+            android:textStyle="bold"
+            android:text="@string/panel_header" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginVertical="@dimen/dimen_24"
+        android:layout_marginHorizontal="@dimen/dimen_16">
+
+        <Button
+            android:id="@+id/button_search"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:text="@string/search"
+            android:textColor="@color/grey_100"
+            android:textSize="@dimen/dimen_22s"
+            android:textAllCaps="false"
+            android:layout_marginBottom="16dp"
+            app:cornerRadius="@dimen/dimen_16"
+            app:icon="@drawable/ic_search"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/dimen_8"
+            app:iconTint="@color/grey_100"
+            android:foreground="?attr/selectableItemBackground" />
+
+        <Button
+            android:id="@+id/button_media"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:text="@string/media"
+            android:textColor="@color/grey_100"
+            android:textSize="@dimen/dimen_22s"
+            android:textAllCaps="false"
+            android:layout_marginBottom="@dimen/dimen_16"
+            app:cornerRadius="@dimen/dimen_16"
+            app:icon="@drawable/ic_music"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/dimen_8"
+            app:iconTint="@color/grey_100"
+            android:foreground="?attr/selectableItemBackground" />
+
+        <Button
+            android:id="@+id/button_setting"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:backgroundTint="@color/white"
+            android:text="@string/setting"
+            android:textColor="@color/grey_100"
+            android:textSize="@dimen/dimen_22s"
+            android:textAllCaps="false"
+            app:cornerRadius="@dimen/dimen_16"
+            app:icon="@drawable/ic_setting"
+            app:iconGravity="textStart"
+            app:iconPadding="@dimen/dimen_8"
+            app:iconTint="@color/grey_100"
+            android:foreground="?attr/selectableItemBackground" />
+    </LinearLayout>
+
+
+</LinearLayout>
