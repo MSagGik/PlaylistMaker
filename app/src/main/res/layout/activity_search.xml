@@ -27,29 +27,36 @@
             style="@style/TextViewSettingHeader"/>
     </FrameLayout>
 
-    <EditText
-        android:id="@+id/input_search"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_36"
-        android:ems="10"
-        android:lines="1"
-        android:layout_marginTop="@dimen/dimen_8"
-        android:layout_marginHorizontal="@dimen/dimen_16"
-        android:background="@drawable/shape_edit_text"
-        android:inputType="text"
-        android:hint="@string/search"
-        android:fontFamily="@font/ys_display_regular"
-        android:textFontWeight="400"
-        android:drawableStart="@drawable/ic_search_small"
-        android:paddingStart="@dimen/dimen_12"
-        android:textSize="@dimen/dimen_16s"
-        style="@style/EditTextSearch"
-        android:drawablePadding="@dimen/dimen_8"
-        tools:ignore="RtlSymmetry" />
+        android:layout_height="100dp">
 
-    <Button
-        android:id="@+id/button_clear"
-        style="@style/ButtonInputClear"
-        android:visibility="gone" />
+        <EditText
+            android:id="@+id/input_search"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_36"
+            android:ems="10"
+            android:lines="1"
+            android:layout_marginTop="@dimen/dimen_8"
+            android:layout_marginHorizontal="@dimen/dimen_16"
+            android:background="@drawable/shape_edit_text"
+            android:inputType="text"
+            android:hint="@string/search"
+            android:fontFamily="@font/ys_display_regular"
+            android:textFontWeight="400"
+            android:drawableStart="@drawable/ic_search_small"
+            android:paddingStart="@dimen/dimen_12"
+            android:textSize="@dimen/dimen_16s"
+            style="@style/EditTextSearch"
+            android:drawablePadding="@dimen/dimen_8"
+            tools:ignore="RtlSymmetry" />
+
+        <Button
+            android:id="@+id/button_clear"
+            style="@style/ButtonInputClear"
+            android:layout_gravity="bottom|center"
+            android:visibility="gone" />
+
+    </FrameLayout>
 
 </LinearLayout>

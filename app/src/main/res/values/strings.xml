@@ -20,5 +20,5 @@
     <string name="email_title" translatable="false">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
     <string name="email_text" translatable="false">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="uri_agreement" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
-    <string name="input_clear" translatable="false">Очистить поисковой запрос</string>
+    <string name="input_clear" translatable="false">Очистить</string>
 </resources>
