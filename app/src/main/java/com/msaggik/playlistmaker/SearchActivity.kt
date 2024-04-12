@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -11,12 +12,14 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class SearchActivity : AppCompatActivity() {
+    private var textSearch = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
@@ -24,6 +27,8 @@ class SearchActivity : AppCompatActivity() {
         val inputSearch = findViewById<EditText>(R.id.input_search)
         val buttonBack = findViewById<ImageView>(R.id.button_back)
         val buttonClear = findViewById<Button>(R.id.button_clear)
+
+        inputSearch.setText(textSearch)
 
         val listener: View.OnClickListener = object: View.OnClickListener {
             override fun onClick(p0: View?) {
@@ -58,11 +63,27 @@ class SearchActivity : AppCompatActivity() {
 
             override fun afterTextChanged(p0: Editable?) {
                 // просмотр отредактированного текста
+                textSearch = p0.toString()
             }
         }
 
         inputSearch.addTextChangedListener(inputSearchWatcher)
         buttonBack.setOnClickListener(listener)
         buttonClear.setOnClickListener(listener)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(KEY_TEXT_SEARCH, textSearch)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        textSearch = savedInstanceState.getString(KEY_TEXT_SEARCH, TEXT_SEARCH_DEFAULT)
+    }
+
+    companion object {
+        const val KEY_TEXT_SEARCH = "KEY_SEARCH"
+        const val TEXT_SEARCH_DEFAULT = ""
     }
 }
