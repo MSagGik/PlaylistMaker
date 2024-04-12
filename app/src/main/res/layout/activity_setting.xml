@@ -23,15 +23,7 @@
 
         <TextView
             android:id="@+id/panel_header"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/dimen_48"
-            android:layout_marginStart="@dimen/dimen_60"
-            android:textSize="@dimen/dimen_22s"
-            android:textStyle="bold"
-            android:gravity="center_vertical"
             android:text="@string/setting"
-            android:fontFamily="@font/ys_display_medium"
-            android:textFontWeight="500"
             style="@style/TextViewSettingHeader"/>
     </FrameLayout>
 

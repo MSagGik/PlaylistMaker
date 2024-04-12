@@ -10,8 +10,13 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
-    <style name="TextViewSettingHeader">
+    <style name="TextViewSettingHeader" parent="BaseTextViewSettingHeader">
         <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="EditTextSearch">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textColorHint">@color/grey_100</item>
     </style>
 
     <style name="ImageButtonSettingHeader">
@@ -20,6 +25,11 @@
 
     <style name="ImageViewSetting" parent="BaseImageViewSetting">
         <item name="tint">@color/white</item>
+    </style>
+
+    <style name="ButtonInputClear" parent="BaseButtonInputClear">
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:textColor">@color/grey_100</item>
     </style>
 
 </resources>

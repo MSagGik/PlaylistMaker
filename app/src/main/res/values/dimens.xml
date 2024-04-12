@@ -14,11 +14,13 @@
     <dimen name="dimen_16">16dp</dimen>
     <dimen name="dimen_20">20dp</dimen>
     <dimen name="dimen_24">24dp</dimen>
+    <dimen name="dimen_36">36dp</dimen>
     <dimen name="dimen_40">40dp</dimen>
     <dimen name="dimen_48">48dp</dimen>
     <dimen name="dimen_56">56dp</dimen>
     <dimen name="dimen_60">60dp</dimen>
     <dimen name="dimen_61">61dp</dimen>
+    <dimen name="dimen_12s">12sp</dimen>
     <dimen name="dimen_16s">16sp</dimen>
     <dimen name="dimen_22s">22sp</dimen>
     <dimen name="dimen_50s">50sp</dimen>
