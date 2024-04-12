@@ -14,4 +14,10 @@
     <string name="header_share">Поделиться приложением</string>
     <string name="header_support">Написать в поддержку</string>
     <string name="header_agreement">Пользовательское соглашение</string>
+    <string name="uri_yandex_course" translatable="false">https://practicum.yandex.ru/catalog/programming/</string>
+    <string name="default_user" translatable="false">DefaultUser</string>
+    <string name="email" translatable="false">example@example.example</string>
+    <string name="email_title" translatable="false">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="email_text" translatable="false">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+    <string name="uri_agreement" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
 </resources>
