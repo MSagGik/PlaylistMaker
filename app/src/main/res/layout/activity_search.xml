@@ -57,6 +57,7 @@
             android:layout_height="@dimen/dimen_16"
             android:layout_gravity="center_vertical|end"
             android:layout_marginEnd="@dimen/dimen_24"
+            android:background="@drawable/shape_edit_text"
             app:srcCompat="@drawable/ic_clear"
             android:visibility="gone" />
 

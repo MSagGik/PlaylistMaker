@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:text="@string/media"
         android:textSize="@dimen/dimen_50s"
+        android:background="@null"
         android:textColor="@color/violet_500"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
