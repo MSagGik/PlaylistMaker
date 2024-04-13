@@ -2,15 +2,16 @@ package com.msaggik.playlistmaker
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.Intent.ACTION_SENDTO
+import android.content.Intent.EXTRA_EMAIL
+import android.content.Intent.EXTRA_SUBJECT
+import android.content.Intent.EXTRA_TEXT
+import android.content.Intent.createChooser
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import android.widget.ImageView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 
 class SettingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,13 +41,16 @@ class SettingActivity : AppCompatActivity() {
                         startActivity(shareIntent)
                     }
                     R.id.button_support -> {
-                        val supportIntent = Intent(Intent.ACTION_SENDTO)
-                        supportIntent.data = Uri.parse("mailto:")
-                        supportIntent.putExtra(Intent.EXTRA_EMAIL, getString(R.string.email))
-                        supportIntent.putExtra(Intent.EXTRA_TITLE, getString(R.string.email_title))
-                        supportIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.email_text))
+                        val supportIntent: Intent = Intent().apply {
+                            action = ACTION_SENDTO
+                            data = Uri.parse("mailto:")
+                            putExtra(EXTRA_EMAIL, arrayOf(getString(R.string.email)))
+                            putExtra(EXTRA_SUBJECT, getString(R.string.email_title))
+                            putExtra(EXTRA_TEXT, getString(R.string.email_text))
+                        }
+                        val supportEmail = createChooser(supportIntent, null)
                         //if(supportIntent.resolveActivity(packageManager) != null) startActivity(supportIntent)
-                        startActivity(supportIntent)
+                        startActivity(supportEmail)
                     }
                     R.id.button_agreement -> {
                         val agreementUri: Uri = Uri.parse(getString(R.string.uri_agreement))

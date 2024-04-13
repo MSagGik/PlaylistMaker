@@ -29,7 +29,8 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp">
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dimen_8">
 
         <EditText
             android:id="@+id/input_search"
@@ -37,8 +38,7 @@
             android:layout_height="@dimen/dimen_36"
             android:ems="10"
             android:lines="1"
-            android:layout_marginTop="@dimen/dimen_8"
-            android:layout_marginHorizontal="@dimen/dimen_16"
+            android:layout_marginHorizontal="@dimen/dimen_8"
             android:background="@drawable/shape_edit_text"
             android:inputType="text"
             android:hint="@string/search"
@@ -51,10 +51,13 @@
             android:drawablePadding="@dimen/dimen_8"
             tools:ignore="RtlSymmetry" />
 
-        <Button
+        <ImageView
             android:id="@+id/button_clear"
-            style="@style/ButtonInputClear"
-            android:layout_gravity="bottom|center"
+            android:layout_width="@dimen/dimen_16"
+            android:layout_height="@dimen/dimen_16"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginEnd="@dimen/dimen_24"
+            app:srcCompat="@drawable/ic_clear"
             android:visibility="gone" />
 
     </FrameLayout>

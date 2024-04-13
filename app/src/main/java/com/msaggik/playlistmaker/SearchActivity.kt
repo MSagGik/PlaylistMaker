@@ -26,7 +26,7 @@ class SearchActivity : AppCompatActivity() {
 
         val inputSearch = findViewById<EditText>(R.id.input_search)
         val buttonBack = findViewById<ImageView>(R.id.button_back)
-        val buttonClear = findViewById<Button>(R.id.button_clear)
+        val buttonClear = findViewById<ImageView>(R.id.button_clear)
 
         inputSearch.setText(textSearch)
 
