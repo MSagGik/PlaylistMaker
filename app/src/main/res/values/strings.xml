@@ -21,4 +21,8 @@
     <string name="email_text" translatable="false">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="uri_agreement" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
     <string name="input_clear" translatable="false">Очистить</string>
+    <string name="name_track" translatable="false">Название трека</string>
+    <string name="name_group" translatable="false">Группа</string>
+    <string name="inter_punctum" translatable="false">·</string>
+    <string name="length_track" translatable="false">длина трека</string>
 </resources>
