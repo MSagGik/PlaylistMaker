@@ -25,4 +25,5 @@
     <string name="name_group" translatable="false">Группа</string>
     <string name="inter_punctum" translatable="false">·</string>
     <string name="length_track" translatable="false">длина трека</string>
+    <string name="track_selection" translatable="false">Выбор трека</string>
 </resources>

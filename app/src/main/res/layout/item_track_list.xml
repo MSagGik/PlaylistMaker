@@ -5,13 +5,15 @@
     android:layout_height="@dimen/dimen_61"
     android:padding="@dimen/dimen_8">
 
+    <!--    Используемые иллюстрации (иконки) и шрифты в образовательных целях предоставлены Яндекс-Практикумом (practicum.yandex.ru)-->
+
     <ImageView
         android:id="@+id/image_album_track"
         android:layout_width="@dimen/dimen_45"
         android:layout_height="@dimen/dimen_45"
         android:background="@drawable/shape_image_album"
         android:layout_marginStart="@dimen/dimen_5"
-        app:srcCompat="@android:drawable/ic_menu_gallery" />
+        app:srcCompat="@drawable/ic_placeholder" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -58,17 +60,6 @@
 
         </LinearLayout>
 
-<!--        <TextView-->
-<!--            android:id="@+id/group_name_and_length_track"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:fontFamily="@font/ys_display_regular"-->
-<!--            android:textFontWeight="400"-->
-<!--            android:maxLines="1"-->
-<!--            android:ellipsize="end"-->
-<!--            android:textSize="@dimen/dimen_11s"-->
-<!--            style="@style/TextViewH2Color"-->
-<!--            android:text="@string/name_group_and_length_track" />-->
     </LinearLayout>
 
     <ImageView
