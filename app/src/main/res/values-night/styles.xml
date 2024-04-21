@@ -27,6 +27,18 @@
         <item name="tint">@color/white</item>
     </style>
 
+    <style name="ImageViewColor">
+        <item name="tint">@color/white</item>
+    </style>
+
+    <style name="TextViewH1Color" parent="BaseTextViewColor">
+        <item name="tint">@color/white</item>
+    </style>
+
+    <style name="TextViewH2Color" parent="BaseTextViewColor">
+        <item name="tint">@color/white</item>
+    </style>
+
     <style name="ImageViewSetting" parent="BaseImageViewSetting">
         <item name="tint">@color/white</item>
     </style>

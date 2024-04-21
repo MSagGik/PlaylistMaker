@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SettingActivity">
+    tools:context=".activity.SettingActivity">
 
     <!--    Используемые иллюстрации (иконки) и шрифты в образовательных целях предоставлены Яндекс-Практикумом (practicum.yandex.ru)-->
     <FrameLayout
@@ -101,8 +101,6 @@
         <ImageView
             android:id="@+id/button_agreement"
             style="@style/ImageViewSetting"
-            android:paddingHorizontal="@dimen/dimen_8"
-            android:paddingVertical="@dimen/dimen_5"
             app:srcCompat="@drawable/ic_arrow_forward"/>
     </FrameLayout>
 </LinearLayout>

@@ -1,6 +1,5 @@
-package com.msaggik.playlistmaker
+package com.msaggik.playlistmaker.activity
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.Intent.ACTION_SENDTO
 import android.content.Intent.EXTRA_EMAIL
@@ -12,6 +11,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import com.msaggik.playlistmaker.R
 
 class SettingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
