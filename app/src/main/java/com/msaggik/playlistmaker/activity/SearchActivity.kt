@@ -139,6 +139,9 @@ class SearchActivity : AppCompatActivity() {
                     keyboardOnOff?.hideSoftInputFromWindow(inputSearch.windowToken, 0)
                     trackList.clear()
                     trackListAdapter.notifyDataSetChanged()
+                    trackListView.visibility = View.VISIBLE
+                    layoutNothingFound.visibility = View.GONE
+                    layoutCommunicationProblems.visibility = View.GONE
                 }
                 R.id.button_update -> {
                     searchTracks(textSearch)
