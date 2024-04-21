@@ -1,6 +1,7 @@
-package com.msaggik.playlistmaker.util
+package com.msaggik.playlistmaker.util.adapters
 
 import android.content.Context
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -13,12 +14,14 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.msaggik.playlistmaker.R
 import com.msaggik.playlistmaker.entity.Track
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class TrackListAdapter (private val trackList: List<Track>) : RecyclerView.Adapter<TrackListAdapter.TrackViewHolder> () {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_track_list, parent, false)
-        return TrackListAdapter.TrackViewHolder(view)
+        return TrackViewHolder(view)
     }
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         holder.bind(trackList[position])
@@ -44,7 +47,7 @@ class TrackListAdapter (private val trackList: List<Track>) : RecyclerView.Adapt
                 .into(imageAlbumTrack)
             trackName.text = model.trackName
             groupName.text = model.artistName
-            trackLength.text = model.trackTime
+            trackLength.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTimeMillis)
             buttonTrack.setOnClickListener(View.OnClickListener {
                 Toast.makeText(
                     itemView.context.applicationContext,
