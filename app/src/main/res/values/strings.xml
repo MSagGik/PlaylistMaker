@@ -26,4 +26,7 @@
     <string name="inter_punctum" translatable="false">·</string>
     <string name="length_track" translatable="false">длина трека</string>
     <string name="track_selection" translatable="false">Выбор трека</string>
+    <string name="nothing_found" translatable="false">Ничего не нашлось</string>
+    <string name="communication_problems" translatable="false">Проблемы со связью\n\nЗагрузка не удалась. Проверьте\nподключение к интернету</string>
+    <string name="update" translatable="false">Обновить</string>
 </resources>

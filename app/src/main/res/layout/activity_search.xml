@@ -49,7 +49,9 @@
             android:textSize="@dimen/dimen_16s"
             style="@style/EditTextSearch"
             android:drawablePadding="@dimen/dimen_8"
-            tools:ignore="RtlSymmetry" />
+            tools:ignore="RtlSymmetry"
+            android:imeOptions="actionDone"
+            android:singleLine="true"/>
 
         <ImageView
             android:id="@+id/button_clear"
@@ -67,6 +69,47 @@
         android:id="@+id/track_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/dimen_16"/>
+        android:layout_marginTop="@dimen/dimen_16"
+        android:visibility="visible"/>
+
+    <LinearLayout
+        android:id="@+id/layout_nothing_found"
+        style="@style/LayoutStyle"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_nothing_found" />
+
+        <TextView
+            android:id="@+id/textView2"
+            style="@style/TextPlaceHolder"
+            android:text="@string/nothing_found" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_communication_problems"
+        style="@style/LayoutStyle"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_communication_problems" />
+
+        <TextView
+            android:id="@+id/textView3"
+            style="@style/TextPlaceHolder"
+            android:text="@string/communication_problems" />
+
+        <Button
+            android:id="@+id/button_update"
+            style="@style/ButtonPlaceHolder"
+            android:text="@string/update" />
+    </LinearLayout>
 
 </LinearLayout>
