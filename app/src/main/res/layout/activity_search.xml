@@ -70,7 +70,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/dimen_16"
-        android:visibility="visible"/>
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/layout_nothing_found"
@@ -93,7 +93,7 @@
     <LinearLayout
         android:id="@+id/layout_communication_problems"
         style="@style/LayoutStyle"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <ImageView
             android:id="@+id/imageView2"
