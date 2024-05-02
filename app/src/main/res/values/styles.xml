@@ -97,6 +97,12 @@
         <item name="android:trackTint">@color/grey_700</item>
     </style>
 
+    <style name="SwitchSettingMaterial">
+        <item name="thumbTint">@color/grey_500</item>
+        <item name="trackTint">@color/grey_700</item>
+        <item name="android:checked">false</item>
+    </style>
+
     <style name="LayoutStyle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

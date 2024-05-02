@@ -37,18 +37,18 @@
             android:text="@string/dark_theme"
             tools:ignore="RtlSymmetry" />
 
-        <Switch
+        <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/switch_theme"
             android:layout_width="@dimen/dimen_56"
             android:layout_height="@dimen/dimen_40"
+            android:text="@string/dark_theme"
             android:layout_gravity="end|center_vertical"
             android:padding="@dimen/dimen_9"
             android:gravity="center"
             android:paddingHorizontal="@dimen/dimen_10"
             android:paddingVertical="@dimen/dimen_11"
             android:layout_marginEnd="@dimen/dimen_6"
-            style="@style/SwitchSetting"
-            android:checked="false"
+            style="@style/SwitchSettingMaterial"
             tools:ignore="UseSwitchCompatOrMaterialXml" />
     </FrameLayout>
 

@@ -10,6 +10,12 @@
         <item name="android:trackTint">@color/blue_500</item>
     </style>
 
+    <style name="SwitchSettingMaterial">
+        <item name="thumbTint">@color/blue_100</item>
+        <item name="trackTint">@color/blue_500</item>
+        <item name="android:checked">true</item>
+    </style>
+
     <style name="TextViewSetting" parent="BaseTextViewSetting">
         <item name="android:textColor">@color/white</item>
     </style>
