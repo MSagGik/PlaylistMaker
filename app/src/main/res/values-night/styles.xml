@@ -45,6 +45,10 @@
         <item name="tint">@color/white</item>
     </style>
 
+    <style name="TextViewHeaderSearchColor" parent="BaseTextViewHeaderSearchColor">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
     <style name="ImageViewSetting" parent="BaseImageViewSetting">
         <item name="tint">@color/white</item>
     </style>
@@ -54,6 +58,11 @@
     </style>
 
     <style name="ButtonPlaceHolder" parent="BaseButtonPlaceHolder">
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:textColor">@color/grey_100</item>
+    </style>
+
+    <style name="ButtonClearSearchHistory" parent="BaseButtonClearSearchHistory">
         <item name="android:backgroundTint">@color/white</item>
         <item name="android:textColor">@color/grey_100</item>
     </style>

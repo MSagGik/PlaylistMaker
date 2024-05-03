@@ -73,6 +73,36 @@
         android:visibility="visible"/>
 
     <LinearLayout
+        android:id="@+id/layout_search_history"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/dimen_24"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/header_search"
+            style="@style/TextViewHeaderSearchColor"
+            android:layout_marginTop="@dimen/dimen_18"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:text="@string/header_search" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/search_history_track_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="@dimen/dimen_8" />
+
+        <Button
+            android:id="@+id/button_clear_search_history"
+            style="@style/ButtonClearSearchHistory"
+            android:text="@string/clear_search_history"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/layout_nothing_found"
         style="@style/LayoutStyle"
         android:visibility="gone">
