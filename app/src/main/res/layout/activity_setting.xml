@@ -48,8 +48,7 @@
             android:paddingHorizontal="@dimen/dimen_10"
             android:paddingVertical="@dimen/dimen_11"
             android:layout_marginEnd="@dimen/dimen_6"
-            style="@style/SwitchSettingMaterial"
-            tools:ignore="UseSwitchCompatOrMaterialXml" />
+            style="@style/SwitchSettingMaterial" />
     </FrameLayout>
 
     <FrameLayout

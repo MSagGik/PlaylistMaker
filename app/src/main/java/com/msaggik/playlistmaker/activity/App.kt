@@ -4,13 +4,13 @@ import android.app.Application
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 
-const val SHARE_PREF_NAME = "share_pref_name"
-const val APP_THEME_KEY = "app_theme_123"
+private const val SHARE_PREF_NAME = "share_pref_name"
+private const val APP_THEME_KEY = "app_theme_key"
 
 class App : Application() {
 
-    var darkTheme = false
-    lateinit var sharedPreferences: SharedPreferences
+    private var darkTheme = false
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate() {
         super.onCreate()
@@ -29,7 +29,7 @@ class App : Application() {
         return darkTheme
     }
 
-    fun setApplicationTheme(darkThemeEnabled: Boolean) {
+    private fun setApplicationTheme(darkThemeEnabled: Boolean) {
         AppCompatDelegate.setDefaultNightMode(
             if(darkThemeEnabled) {
                 AppCompatDelegate.MODE_NIGHT_YES

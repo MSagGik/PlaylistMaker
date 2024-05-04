@@ -185,7 +185,7 @@ class SearchActivity : AppCompatActivity() {
                     trackList.clear()
                     trackListAdapter.notifyDataSetChanged()
                     trackListView.visibility = View.VISIBLE
-                    //visibleLayoutSearchHistory(true)
+                    visibleLayoutSearchHistory(true)
                     layoutNothingFound.visibility = View.GONE
                     layoutCommunicationProblems.visibility = View.GONE
                 }

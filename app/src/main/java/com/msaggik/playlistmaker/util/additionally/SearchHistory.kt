@@ -5,6 +5,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.msaggik.playlistmaker.entity.Track
 
+private const val TRACK_LIST_LIMIT = 10
 private const val TRACK_LIST_HISTORY_KEY = "track_list_history_key"
 
 class SearchHistory {
@@ -51,7 +52,7 @@ class SearchHistory {
 
         if(unique) {
             trackListHistory.add(0, track)
-            if(trackListHistory.size > 10) {
+            if(trackListHistory.size > TRACK_LIST_LIMIT) {
                 trackListHistory.removeLast()
             }
         } else if(isNotFirst){
