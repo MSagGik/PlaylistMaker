@@ -3,16 +3,20 @@ package com.msaggik.playlistmaker.activity
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.View
+import android.view.View.OnFocusChangeListener
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.TextView.OnEditorActionListener
 import android.widget.Toast
@@ -23,6 +27,7 @@ import com.msaggik.playlistmaker.R
 import com.msaggik.playlistmaker.entity.Track
 import com.msaggik.playlistmaker.entity.TrackResponse
 import com.msaggik.playlistmaker.util.adapters.TrackListAdapter
+import com.msaggik.playlistmaker.util.additionally.SearchHistory
 import com.msaggik.playlistmaker.util.network.RestItunes
 import retrofit2.Call
 import retrofit2.Callback
@@ -30,19 +35,27 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+private const val TRACK_LIST_PREFERENCES = "track_list_preferences"
+private const val TRACK_LIST_HISTORY_KEY = "track_list_history_key"
+
 class SearchActivity : AppCompatActivity() {
 
     private lateinit var inputSearch: EditText
     private lateinit var buttonBack: ImageView
     private lateinit var buttonClear: ImageView
     private lateinit var trackListView: RecyclerView
+    private lateinit var trackListHistoryView: RecyclerView
     private lateinit var layoutNothingFound: LinearLayout
     private lateinit var layoutCommunicationProblems: LinearLayout
+    private lateinit var layoutSearchHistory: LinearLayout
     private lateinit var buttonUpdate: Button
+    private lateinit var buttonClearSearchHistory: Button
 
     private var textSearch = ""
     private var trackList: MutableList<Track> = mutableListOf()
+    private lateinit var searchHistory: SearchHistory
     private lateinit var trackListAdapter: TrackListAdapter
+    private lateinit var trackListHistoryAdapter: TrackListAdapter
 
     private val itunesBaseURL = "https://itunes.apple.com"
     private val retrofit = Retrofit.Builder()
@@ -50,6 +63,8 @@ class SearchActivity : AppCompatActivity() {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
     private val itunesRestService = retrofit.create(RestItunes::class.java)
+
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,21 +74,50 @@ class SearchActivity : AppCompatActivity() {
         buttonBack = findViewById(R.id.button_back)
         buttonClear = findViewById(R.id.button_clear)
         trackListView = findViewById(R.id.track_list)
+        trackListHistoryView = findViewById(R.id.search_history_track_list)
         layoutNothingFound = findViewById(R.id.layout_nothing_found)
         layoutCommunicationProblems = findViewById(R.id.layout_communication_problems)
+        layoutSearchHistory = findViewById(R.id.layout_search_history)
         buttonUpdate = findViewById(R.id.button_update)
+        buttonClearSearchHistory = findViewById(R.id.button_clear_search_history)
 
         trackListView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        trackListHistoryView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
-        // вывод списка треков на экран в RecyclerView
+        // вывод списка треков в RecyclerView trackListView
         trackListAdapter = TrackListAdapter(trackList)
         trackListView.adapter = trackListAdapter
 
+        sharedPreferences = getSharedPreferences(TRACK_LIST_PREFERENCES, MODE_PRIVATE)
+        sharedPreferences.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener)
+        // вывод списка истории треков в RecyclerView trackListHistoryView
+        searchHistory = SearchHistory()
+        trackListHistoryAdapter = TrackListAdapter(searchHistory.readTrackListHistorySharedPreferences(sharedPreferences))
+        trackListHistoryView.adapter = trackListHistoryAdapter
+
         inputSearch.setOnEditorActionListener(editorActionListener)
+        inputSearch.setOnFocusChangeListener(focusChangeListener)
         inputSearch.addTextChangedListener(inputSearchWatcher)
         buttonBack.setOnClickListener(listener)
         buttonClear.setOnClickListener(listener)
         buttonUpdate.setOnClickListener(listener)
+        buttonClearSearchHistory.setOnClickListener(listener)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private var sharedPreferenceChangeListener: OnSharedPreferenceChangeListener =
+        OnSharedPreferenceChangeListener { sharedPreferences, key ->
+            if(key == TRACK_LIST_HISTORY_KEY) {
+                val trackListHistory = searchHistory.readTrackListHistorySharedPreferences(sharedPreferences)
+                trackListHistoryAdapter.setTrackList(trackListHistory)
+                trackListHistoryAdapter.notifyDataSetChanged()
+            }
+        }
+
+    private val focusChangeListener = object: OnFocusChangeListener {
+        override fun onFocusChange(p0: View?, p1: Boolean) {
+            visibleLayoutSearchHistory(p1)
+        }
     }
 
     private val editorActionListener = object: OnEditorActionListener {
@@ -126,6 +170,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private val listener: View.OnClickListener = object: View.OnClickListener {
+        @SuppressLint("NotifyDataSetChanged")
         override fun onClick(p0: View?) {
             when(p0?.id) {
                 R.id.button_back -> {
@@ -140,11 +185,16 @@ class SearchActivity : AppCompatActivity() {
                     trackList.clear()
                     trackListAdapter.notifyDataSetChanged()
                     trackListView.visibility = View.VISIBLE
+                    visibleLayoutSearchHistory(true)
                     layoutNothingFound.visibility = View.GONE
                     layoutCommunicationProblems.visibility = View.GONE
                 }
                 R.id.button_update -> {
                     searchTracks(textSearch)
+                }
+                R.id.button_clear_search_history -> {
+                    searchHistory.clearTrackListHistorySharedPreferences(sharedPreferences)
+                    visibleLayoutSearchHistory(true)
                 }
             }
         }
@@ -162,6 +212,8 @@ class SearchActivity : AppCompatActivity() {
             } else {
                 buttonClear.visibility = View.VISIBLE
             }
+
+            visibleLayoutSearchHistory(p0?.isEmpty() == true)
         }
 
         override fun afterTextChanged(p0: Editable?) {
@@ -178,6 +230,19 @@ class SearchActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         textSearch = savedInstanceState.getString(KEY_TEXT_SEARCH, TEXT_SEARCH_DEFAULT)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun visibleLayoutSearchHistory(flag: Boolean) {
+        val trackListHistory = searchHistory.readTrackListHistorySharedPreferences(sharedPreferences)
+        if (flag && inputSearch.text.isEmpty() && inputSearch.hasFocus() && trackListHistory.isNotEmpty()) {
+            layoutSearchHistory.visibility = View.VISIBLE
+            trackListView.visibility = View.GONE
+            trackListHistoryAdapter.setTrackList(trackListHistory)
+            trackListHistoryAdapter.notifyDataSetChanged()
+        } else {
+            layoutSearchHistory.visibility = View.GONE
+        }
     }
 
     companion object {

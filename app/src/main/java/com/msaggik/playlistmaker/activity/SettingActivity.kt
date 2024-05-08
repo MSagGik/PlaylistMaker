@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.switchmaterial.SwitchMaterial
 import com.msaggik.playlistmaker.R
 
 class SettingActivity : AppCompatActivity() {
@@ -22,6 +23,13 @@ class SettingActivity : AppCompatActivity() {
         val buttonShare = findViewById<ImageView>(R.id.button_share)
         val buttonSupport = findViewById<ImageView>(R.id.button_support)
         val buttonAgreement = findViewById<ImageView>(R.id.button_agreement)
+        val themeSwitch = findViewById<SwitchMaterial>(R.id.switch_theme)
+
+        themeSwitch.setChecked((applicationContext as App).getApplicationTheme())
+
+        themeSwitch.setOnCheckedChangeListener { switcher, checked ->
+            (applicationContext as App).switchTheme(checked)
+        }
 
         val listener: View.OnClickListener = object: View.OnClickListener {
             override fun onClick(p0: View?) {

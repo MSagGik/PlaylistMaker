@@ -10,6 +10,12 @@
         <item name="android:trackTint">@color/blue_500</item>
     </style>
 
+    <style name="SwitchSettingMaterial">
+        <item name="thumbTint">@color/blue_100</item>
+        <item name="trackTint">@color/blue_500</item>
+        <item name="android:checked">true</item>
+    </style>
+
     <style name="TextViewSetting" parent="BaseTextViewSetting">
         <item name="android:textColor">@color/white</item>
     </style>
@@ -39,6 +45,10 @@
         <item name="tint">@color/white</item>
     </style>
 
+    <style name="TextViewHeaderSearchColor" parent="BaseTextViewHeaderSearchColor">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
     <style name="ImageViewSetting" parent="BaseImageViewSetting">
         <item name="tint">@color/white</item>
     </style>
@@ -48,6 +58,11 @@
     </style>
 
     <style name="ButtonPlaceHolder" parent="BaseButtonPlaceHolder">
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:textColor">@color/grey_100</item>
+    </style>
+
+    <style name="ButtonClearSearchHistory" parent="BaseButtonClearSearchHistory">
         <item name="android:backgroundTint">@color/white</item>
         <item name="android:textColor">@color/grey_100</item>
     </style>
