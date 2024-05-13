@@ -29,6 +29,14 @@
     <string name="nothing_found" translatable="false">Ничего не нашлось</string>
     <string name="communication_problems" translatable="false">Проблемы со связью\n\nЗагрузка не удалась. Проверьте\nподключение к интернету</string>
     <string name="update" translatable="false">Обновить</string>
-    <string name="header_search">Вы искали</string>
-    <string name="clear_search_history">Очистить историю</string>
+    <string name="header_search" translatable="false">Вы искали</string>
+    <string name="clear_search_history" translatable="false">Очистить историю</string>
+    <string name="time_track" translatable="false">0:00</string>
+    <string name="header_length_track" translatable="false">Длительность</string>
+    <string name="header_album" translatable="false">Альбом</string>
+    <string name="name_album" translatable="false">Название альбома</string>
+    <string name="header_year_album" translatable="false">Год</string>
+    <string name="default_string" translatable="false">—</string>
+    <string name="header_genre" translatable="false">Жанр</string>
+    <string name="header_country" translatable="false">Страна</string>
 </resources>
