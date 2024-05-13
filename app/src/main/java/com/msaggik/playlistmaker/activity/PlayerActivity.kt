@@ -3,6 +3,7 @@ package com.msaggik.playlistmaker.activity
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
@@ -62,7 +63,7 @@ class PlayerActivity : AppCompatActivity() {
                 .into(cover)
             trackName.text = track.trackName
             artistName.text = track.artistName
-            trackLength.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
+            trackLength.text = SimpleDateFormat("m:ss", Locale.getDefault()).format(track.trackTimeMillis)
             if (track.collectionName.isNullOrEmpty()) {
                 groupAlbumName.visibility = View.GONE
             } else {
