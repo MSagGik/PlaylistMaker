@@ -1,16 +1,19 @@
 package com.msaggik.playlistmaker.util.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.msaggik.playlistmaker.R
+import com.msaggik.playlistmaker.activity.PlayerActivity
 import com.msaggik.playlistmaker.entity.Track
 import com.msaggik.playlistmaker.util.additionally.SearchHistory
 import java.text.SimpleDateFormat
@@ -40,10 +43,11 @@ class TrackListAdapter (private val trackListAdd: List<Track>) : RecyclerView.Ad
     class TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
 
         private val imageAlbumTrack: ImageView = itemView.findViewById(R.id.image_album_track)
-        private val trackName: TextView = itemView.findViewById(R.id.name_track)
-        private val groupName: TextView = itemView.findViewById(R.id.group_name)
+        private val trackName: TextView = itemView.findViewById(R.id.track_name)
+        private val groupName: TextView = itemView.findViewById(R.id.artist_name)
         private val trackLength: TextView = itemView.findViewById(R.id.length_track)
         private val buttonTrack: ImageView = itemView.findViewById(R.id.button_track)
+        private val layoutTrack: FrameLayout = itemView.findViewById(R.id.layout_track)
 
         fun bind(model: Track) {
             Glide.with(itemView)
@@ -55,11 +59,16 @@ class TrackListAdapter (private val trackListAdd: List<Track>) : RecyclerView.Ad
             trackName.text = model.trackName
             groupName.text = model.artistName
             trackLength.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTimeMillis)
-            buttonTrack.setOnClickListener(View.OnClickListener {
+            layoutTrack.setOnClickListener(View.OnClickListener {
                 // получение объекта настроек и их обновление новым треком
                 val sharedPreferences = itemView.context.applicationContext.getSharedPreferences(TRACK_LIST_PREFERENCES, Context.MODE_PRIVATE)
                 val searchHistory = SearchHistory()
                 searchHistory.addTrackListHistorySharedPreferences(sharedPreferences, model)
+                // переход в активность аудиоплеера
+                val context = itemView.context
+                val intent = Intent(context, PlayerActivity::class.java)
+                intent.putExtra(Track::class.java.simpleName, model)
+                context.startActivity(intent)
             })
         }
 
