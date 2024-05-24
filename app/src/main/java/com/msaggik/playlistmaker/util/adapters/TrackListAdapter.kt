@@ -6,6 +6,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -46,6 +47,7 @@ class TrackListAdapter (private val trackListAdd: List<Track>) : RecyclerView.Ad
         private val groupName: TextView = itemView.findViewById(R.id.artist_name)
         private val trackLength: TextView = itemView.findViewById(R.id.length_track)
         private val buttonTrack: ImageView = itemView.findViewById(R.id.button_track)
+        private val layoutTrack: FrameLayout = itemView.findViewById(R.id.layout_track)
 
         fun bind(model: Track) {
             Glide.with(itemView)
@@ -57,7 +59,7 @@ class TrackListAdapter (private val trackListAdd: List<Track>) : RecyclerView.Ad
             trackName.text = model.trackName
             groupName.text = model.artistName
             trackLength.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTimeMillis)
-            buttonTrack.setOnClickListener(View.OnClickListener {
+            layoutTrack.setOnClickListener(View.OnClickListener {
                 // получение объекта настроек и их обновление новым треком
                 val sharedPreferences = itemView.context.applicationContext.getSharedPreferences(TRACK_LIST_PREFERENCES, Context.MODE_PRIVATE)
                 val searchHistory = SearchHistory()
