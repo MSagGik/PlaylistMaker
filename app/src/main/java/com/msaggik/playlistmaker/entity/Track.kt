@@ -21,5 +21,7 @@ data class Track (
     @SerializedName("primaryGenreName")
     val primaryGenreName: String, // Жанр трека
     @SerializedName("country")
-    val country: String // Страна исполнителя
+    val country: String, // Страна исполнителя
+    @SerializedName("previewUrl")
+    val previewUrl: String // url отрывка трека
 ) : Serializable

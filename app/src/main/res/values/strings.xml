@@ -39,4 +39,5 @@
     <string name="default_string" translatable="false">—</string>
     <string name="header_genre" translatable="false">Жанр</string>
     <string name="header_country" translatable="false">Страна</string>
+    <string name="time_track_reverse">0:30</string>
 </resources>
