@@ -20,6 +20,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.msaggik.playlistmaker.R
@@ -219,15 +220,13 @@ class SearchActivity : AppCompatActivity() {
 
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             // просмотр введённого текста
-            if(p0.isNullOrEmpty()) {
-                buttonClear.visibility = View.GONE
-            } else {
-                buttonClear.visibility = View.VISIBLE
+            val isInputText = !p0.isNullOrEmpty()
+            buttonClear.isVisible = isInputText
+            if(isInputText) {
                 searchTrack = p0.toString()
                 searchTracksDebounce()
             }
-
-            visibleLayoutSearchHistory(p0?.isEmpty() == true)
+            visibleLayoutSearchHistory(!isInputText)
         }
 
         override fun afterTextChanged(p0: Editable?) {
