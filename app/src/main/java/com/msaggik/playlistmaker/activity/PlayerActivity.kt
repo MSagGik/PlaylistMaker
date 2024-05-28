@@ -22,6 +22,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.msaggik.playlistmaker.R
 import com.msaggik.playlistmaker.entity.Track
+import com.msaggik.playlistmaker.util.Util
+import com.msaggik.playlistmaker.util.Util.doToPx
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -75,7 +77,7 @@ class PlayerActivity : AppCompatActivity() {
                 .load(track.artworkUrl100.replaceAfterLast('/',"512x512bb.jpg"))
                 .placeholder(R.drawable.ic_placeholder)
                 .centerCrop()
-                .transform(RoundedCorners(doToPx(8f, this)))
+                .transform(RoundedCorners(Util.doToPx(8f, this)))
                 .into(cover)
             trackName.text = track.trackName
             artistName.text = track.artistName
@@ -192,15 +194,7 @@ class PlayerActivity : AppCompatActivity() {
         )
     }
 
-    private fun doToPx(dp: Float, context: Context): Int {
-        return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            dp,
-            context.resources.displayMetrics
-        ).toInt()
-    }
-
-    companion object {
+    private companion object {
         private const val PLAYER_STATE_CLEAR = 0
         private const val PLAYER_STATE_PREPARED = 1
         private const val PLAYER_STATE_PLAYING = 2

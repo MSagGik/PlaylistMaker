@@ -15,6 +15,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.msaggik.playlistmaker.R
 import com.msaggik.playlistmaker.activity.PlayerActivity
 import com.msaggik.playlistmaker.entity.Track
+import com.msaggik.playlistmaker.util.Util
 import com.msaggik.playlistmaker.util.additionally.SearchHistory
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -57,19 +58,11 @@ class TrackListAdapter (private val trackListAdd: List<Track>, private val track
                 .load(model.artworkUrl100)
                 .placeholder(R.drawable.ic_placeholder)
                 .centerCrop()
-                .transform(RoundedCorners(doToPx(2f, itemView.context.applicationContext)))
+                .transform(RoundedCorners(Util.doToPx(2f, itemView.context.applicationContext)))
                 .into(imageAlbumTrack)
             trackName.text = model.trackName
             groupName.text = model.artistName
             trackLength.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTimeMillis)
-        }
-
-        private fun doToPx(dp: Float, context: Context): Int {
-            return TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                dp,
-                context.resources.displayMetrics
-            ).toInt()
         }
     }
 }
