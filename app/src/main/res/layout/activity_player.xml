@@ -162,6 +162,7 @@
 
     <ImageButton
         android:id="@+id/button_play_pause"
+        android:enabled="false"
         android:layout_width="@dimen/dimen_100"
         android:layout_height="@dimen/dimen_100"
         android:background="@null"

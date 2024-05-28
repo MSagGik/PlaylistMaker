@@ -71,6 +71,15 @@
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/dimen_16"
         android:visibility="visible"/>
+    
+    <ProgressBar
+        android:id="@+id/loading_time"
+        android:layout_width="@dimen/dimen_44"
+        android:layout_height="@dimen/dimen_44"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dimen_140"
+        android:indeterminateTint="@color/violet_170"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/layout_search_history"
