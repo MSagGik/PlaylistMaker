@@ -1,16 +1,11 @@
 package com.msaggik.playlistmaker.activity
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
-import android.util.TypedValue
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -22,8 +17,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.msaggik.playlistmaker.R
 import com.msaggik.playlistmaker.entity.Track
-import com.msaggik.playlistmaker.util.Util
-import com.msaggik.playlistmaker.util.Util.doToPx
+import com.msaggik.playlistmaker.util.Utils
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -77,7 +71,7 @@ class PlayerActivity : AppCompatActivity() {
                 .load(track.artworkUrl100.replaceAfterLast('/',"512x512bb.jpg"))
                 .placeholder(R.drawable.ic_placeholder)
                 .centerCrop()
-                .transform(RoundedCorners(Util.doToPx(8f, this)))
+                .transform(RoundedCorners(Utils.doToPx(8f, this)))
                 .into(cover)
             trackName.text = track.trackName
             artistName.text = track.artistName

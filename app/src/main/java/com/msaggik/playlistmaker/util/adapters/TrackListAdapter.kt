@@ -1,22 +1,16 @@
 package com.msaggik.playlistmaker.util.adapters
 
-import android.content.Context
-import android.content.Intent
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.msaggik.playlistmaker.R
-import com.msaggik.playlistmaker.activity.PlayerActivity
 import com.msaggik.playlistmaker.entity.Track
-import com.msaggik.playlistmaker.util.Util
-import com.msaggik.playlistmaker.util.additionally.SearchHistory
+import com.msaggik.playlistmaker.util.Utils
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -58,7 +52,7 @@ class TrackListAdapter (private val trackListAdd: List<Track>, private val track
                 .load(model.artworkUrl100)
                 .placeholder(R.drawable.ic_placeholder)
                 .centerCrop()
-                .transform(RoundedCorners(Util.doToPx(2f, itemView.context.applicationContext)))
+                .transform(RoundedCorners(Utils.doToPx(2f, itemView.context.applicationContext)))
                 .into(imageAlbumTrack)
             trackName.text = model.trackName
             groupName.text = model.artistName
