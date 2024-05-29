@@ -1,4 +1,4 @@
-package com.msaggik.playlistmaker.activity
+package com.msaggik.playlistmaker.presentation.ui.activity
 
 import android.annotation.SuppressLint
 import android.media.MediaPlayer
@@ -16,7 +16,7 @@ import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.msaggik.playlistmaker.R
-import com.msaggik.playlistmaker.entity.Track
+import com.msaggik.playlistmaker.domain.models.Track
 import com.msaggik.playlistmaker.util.Utils
 import java.text.SimpleDateFormat
 import java.util.Locale

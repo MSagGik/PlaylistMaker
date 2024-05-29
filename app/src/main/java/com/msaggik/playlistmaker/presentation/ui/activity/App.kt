@@ -1,11 +1,9 @@
-package com.msaggik.playlistmaker.activity
+package com.msaggik.playlistmaker.presentation.ui.activity
 
 import android.app.Application
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
-
-private const val SHARE_PREF_NAME = "share_pref_name"
-private const val APP_THEME_KEY = "app_theme_key"
+import com.msaggik.playlistmaker.util.AppConstants
 
 class App : Application() {
 
@@ -14,15 +12,15 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        sharedPreferences = getSharedPreferences(SHARE_PREF_NAME, MODE_PRIVATE)
-        darkTheme = getSharedPreferences(SHARE_PREF_NAME, MODE_PRIVATE).getBoolean(APP_THEME_KEY, false)
+        sharedPreferences = getSharedPreferences(AppConstants.SHARE_PREF_NAME, MODE_PRIVATE)
+        darkTheme = getSharedPreferences(AppConstants.SHARE_PREF_NAME, MODE_PRIVATE).getBoolean(AppConstants.APP_THEME_KEY, false)
         setApplicationTheme(darkTheme)
     }
 
     fun switchTheme(darkThemeEnabled: Boolean) {
         darkTheme = darkThemeEnabled
         setApplicationTheme(darkTheme)
-        sharedPreferences.edit().putBoolean(APP_THEME_KEY, darkTheme).apply()
+        sharedPreferences.edit().putBoolean(AppConstants.APP_THEME_KEY, darkTheme).apply()
     }
 
     fun getApplicationTheme(): Boolean {

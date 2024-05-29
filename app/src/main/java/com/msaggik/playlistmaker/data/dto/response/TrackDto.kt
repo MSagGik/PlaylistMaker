@@ -1,9 +1,9 @@
-package com.msaggik.playlistmaker.entity
+package com.msaggik.playlistmaker.data.dto.response
 
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-data class Track (
+data class TrackDto (
     @SerializedName("trackId")
     val trackId: Int, // Id композиции
     @SerializedName("trackName")

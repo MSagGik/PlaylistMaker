@@ -1,4 +1,4 @@
-package com.msaggik.playlistmaker.activity
+package com.msaggik.playlistmaker.presentation.ui.activity.placeholderactivity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
