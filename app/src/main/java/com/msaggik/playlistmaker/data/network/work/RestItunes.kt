@@ -1,4 +1,4 @@
-package com.msaggik.playlistmaker.data.network
+package com.msaggik.playlistmaker.data.network.work
 
 import com.msaggik.playlistmaker.data.dto.response.TrackResponse
 import okhttp3.OkHttpClient

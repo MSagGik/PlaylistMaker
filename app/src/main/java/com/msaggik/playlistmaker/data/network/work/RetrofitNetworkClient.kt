@@ -1,8 +1,8 @@
-package com.msaggik.playlistmaker.data.network
+package com.msaggik.playlistmaker.data.network.work
 
-import com.msaggik.playlistmaker.data.NetworkClient
 import com.msaggik.playlistmaker.data.dto.request.TracksSearchRequest
 import com.msaggik.playlistmaker.data.dto.response.Response
+import com.msaggik.playlistmaker.data.network.NetworkClient
 import com.msaggik.playlistmaker.util.AppConstants
 
 class RetrofitNetworkClient : NetworkClient {

@@ -18,27 +18,19 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.msaggik.playlistmaker.R
-import com.msaggik.playlistmaker.data.dto.response.TrackDto
-import com.msaggik.playlistmaker.data.dto.response.TrackResponse
 import com.msaggik.playlistmaker.presentation.ui.adapters.TrackListAdapter
-import com.msaggik.playlistmaker.data.sp.SearchHistory
-import com.msaggik.playlistmaker.data.network.RestItunes
+import com.msaggik.playlistmaker.data.sp.SearchHistoryOld
 import com.msaggik.playlistmaker.domain.Creator
-import com.msaggik.playlistmaker.domain.api.TracksInteractor
+import com.msaggik.playlistmaker.domain.api.network.TracksInteractor
+import com.msaggik.playlistmaker.domain.api.sp.SpInteractor
 import com.msaggik.playlistmaker.domain.models.Track
 import com.msaggik.playlistmaker.util.AppConstants
 import com.msaggik.playlistmaker.util.Utils
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 
 class SearchActivity : AppCompatActivity(R.layout.activity_search) {
@@ -108,9 +100,6 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
     private val sharedPreferences: SharedPreferences by lazy {
         getSharedPreferences(AppConstants.TRACK_LIST_PREFERENCES, MODE_PRIVATE)
     }
-    private val searchHistory: SearchHistory by lazy {
-        SearchHistory()
-    }
 
     // search tracks
     private val handlerSearchTrack = Handler(Looper.getMainLooper())
@@ -123,7 +112,11 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
 
     // communication with domain
     private val tracksInteractor = Creator.provideTracksInteractor()
+    private val spInteractor by lazy {
+        Creator.provideSpInteractor(applicationContext)
+    }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -135,7 +128,8 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
         trackListView.adapter = trackListAdapter
 
         // output list tracks in RecyclerView trackListHistoryView
-        trackListHistory = searchHistory.readTrackListHistorySharedPreferences(sharedPreferences)
+        readTrackListHistory()
+        trackListHistoryAdapter.notifyDataSetChanged()
         trackListHistoryView.adapter = trackListHistoryAdapter
 
         // listeners
@@ -148,8 +142,32 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
         buttonClearSearchHistory.setOnClickListener(listener)
     }
 
+    private fun readTrackListHistory() {
+        spInteractor.readTrackListHistory(object : SpInteractor.SpConsumer {
+            @SuppressLint("NotifyDataSetChanged")
+            override fun consume(listHistoryTracks: List<Track>) {
+                trackListHistory.clear()
+                trackListHistory.addAll(listHistoryTracks)
+            }
+        })
+    }
+
+    private fun addTrackListHistory(track: Track) {
+        spInteractor.addTrackListHistory(track, object : SpInteractor.SpConsumer {
+            @SuppressLint("NotifyDataSetChanged")
+            override fun consume(listHistoryTracks: List<Track>) {
+                trackListHistory.clear()
+                trackListHistory.addAll(listHistoryTracks)
+            }
+        })
+    }
+
+    private fun clearTrackListHistory() {
+        spInteractor.clearTrackListHistory()
+    }
+
     private fun trackSelection(track: Track) {
-        searchHistory.addTrackListHistorySharedPreferences(sharedPreferences, track)
+        addTrackListHistory(track)
         val intent = Intent(applicationContext, PlayerActivity::class.java)
         intent.putExtra(Track::class.java.simpleName, track)
         startActivity(intent)
@@ -159,7 +177,7 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
     private var sharedPreferenceChangeListener: OnSharedPreferenceChangeListener =
         OnSharedPreferenceChangeListener { sharedPreferences, key ->
             if (key == AppConstants.TRACK_LIST_HISTORY_KEY) {
-                trackListHistory = searchHistory.readTrackListHistorySharedPreferences(sharedPreferences)
+                readTrackListHistory()
                 trackListHistoryAdapter.setTrackList(trackListHistory)
                 trackListHistoryAdapter.notifyDataSetChanged()
             }
@@ -174,7 +192,7 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
     // show search history
     @SuppressLint("NotifyDataSetChanged")
     private fun visibleLayoutSearchHistory(flag: Boolean) {
-        trackListHistory = searchHistory.readTrackListHistorySharedPreferences(sharedPreferences)
+        readTrackListHistory()
         if (flag && inputSearch.text.isEmpty() && inputSearch.hasFocus() && trackListHistory.isNotEmpty()) {
             Utils.visibilityView(viewArray, layoutSearchHistory)
             trackListHistoryAdapter.setTrackList(trackListHistory)
@@ -235,7 +253,8 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
                 }
 
                 R.id.button_clear_search_history -> {
-                    searchHistory.clearTrackListHistorySharedPreferences(sharedPreferences)
+                    clearTrackListHistory()
+                    trackListHistory.clear()
                     visibleLayoutSearchHistory(true)
                 }
             }

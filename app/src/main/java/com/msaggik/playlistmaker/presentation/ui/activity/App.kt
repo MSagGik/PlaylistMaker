@@ -1,9 +1,11 @@
 package com.msaggik.playlistmaker.presentation.ui.activity
 
 import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 import com.msaggik.playlistmaker.util.AppConstants
+
 
 class App : Application() {
 
@@ -16,6 +18,8 @@ class App : Application() {
         darkTheme = getSharedPreferences(AppConstants.SHARE_PREF_NAME, MODE_PRIVATE).getBoolean(AppConstants.APP_THEME_KEY, false)
         setApplicationTheme(darkTheme)
     }
+
+
 
     fun switchTheme(darkThemeEnabled: Boolean) {
         darkTheme = darkThemeEnabled

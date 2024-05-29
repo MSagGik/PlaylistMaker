@@ -1,16 +1,18 @@
-package com.msaggik.playlistmaker.data.sp
+package com.msaggik.playlistmaker.data.sp.work
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import com.google.gson.Gson
-import com.msaggik.playlistmaker.domain.models.Track
+import com.msaggik.playlistmaker.data.dto.response.TrackDto
+import com.msaggik.playlistmaker.presentation.ui.activity.App
 import com.msaggik.playlistmaker.util.AppConstants
 
-class SearchHistory {
+class SearchHistoryImpl (context: Context) : SearchHistory {
 
-    private var trackListHistory: MutableList<Track> = ArrayList()
-
-    fun clearTrackListHistorySharedPreferences(sharedPreferences: SharedPreferences) {
+    private var trackListHistory: MutableList<TrackDto> = ArrayList()
+    private val sharedPreferences = SearchHistory.createObjectSharedPreferences(context)
+    override fun clearTrackListHistorySharedPreferences() {
         sharedPreferences.edit()
             .clear()
             .apply()
@@ -18,30 +20,31 @@ class SearchHistory {
         Log.e("clearTrackListHistory", "clearTrackListHistory")
     }
 
-    fun readTrackListHistorySharedPreferences(sharedPreferences: SharedPreferences): MutableList<Track> {
+    override fun readTrackListHistorySharedPreferences(): MutableList<TrackDto> {
         readSharePreferences(sharedPreferences)
         Log.e("readTrackListHistory", "size " + trackListHistory.size)
         return trackListHistory
     }
 
-    fun addTrackListHistorySharedPreferences(sharedPreferences: SharedPreferences, track: Track) {
+    override fun addTrackListHistorySharedPreferences(track: TrackDto) : MutableList<TrackDto> {
         Log.e("addTrackListHistory", "add start size " + trackListHistory.size + ", " + track.trackName)
         readSharePreferences(sharedPreferences)
         addTrackListHistory(track)
         writeSharePreferences(sharedPreferences)
         Log.e("addTrackListHistory", "add end size " + trackListHistory.size + ", " + track.trackName)
+        return trackListHistory
     }
 
     private fun readSharePreferences(sharedPreferences: SharedPreferences) {
         val json = sharedPreferences.getString(AppConstants.TRACK_LIST_HISTORY_KEY, null)
         if(json != null) {
             trackListHistory.clear()
-            trackListHistory = Gson().fromJson(json, Array<Track>::class.java).toMutableList()
+            trackListHistory = Gson().fromJson(json, Array<TrackDto>::class.java).toMutableList()
         }
         Log.e("readSharePreferences", "read " + trackListHistory.size)
     }
 
-    private fun addTrackListHistory(track: Track) {
+    private fun addTrackListHistory(track: TrackDto) {
         var unique = true
         var isNotFirst = true
         for(i in 0..<trackListHistory.size) {
@@ -72,4 +75,5 @@ class SearchHistory {
             .apply()
         Log.e("writeSharePreferences", "write " + trackListHistory.size)
     }
+
 }
