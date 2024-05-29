@@ -56,7 +56,7 @@ class TrackListAdapter (private val trackListAdd: List<Track>, private val track
                 .into(imageAlbumTrack)
             trackName.text = model.trackName
             groupName.text = model.artistName
-            trackLength.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTimeMillis)
+            trackLength.text = Utils.dateFormatMillisToMinSecFull(model.trackTimeMillis)
         }
     }
 }

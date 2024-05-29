@@ -18,8 +18,6 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.msaggik.playlistmaker.R
 import com.msaggik.playlistmaker.domain.models.Track
 import com.msaggik.playlistmaker.util.Utils
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
 
@@ -75,7 +73,7 @@ class PlayerActivity : AppCompatActivity() {
                 .into(cover)
             trackName.text = track.trackName
             artistName.text = track.artistName
-            trackLength.text = Utils.dateFormatMillisToMinSec(track.trackTimeMillis)
+            trackLength.text = Utils.dateFormatMillisToMinSecShort(track.trackTimeMillis)
             if (track.collectionName.isNullOrEmpty()) {
                 groupAlbumName.visibility = View.GONE
             } else {
@@ -174,7 +172,7 @@ class PlayerActivity : AppCompatActivity() {
             object : Runnable{
                 @SuppressLint("SetTextI18n")
                 override fun run() {
-                    timeTrack.text = Utils.dateFormatMillisToMinSec(
+                    timeTrack.text = Utils.dateFormatMillisToMinSecShort(
                         if(trackListReverse) {
                             player.currentPosition.toLong()
                         } else {

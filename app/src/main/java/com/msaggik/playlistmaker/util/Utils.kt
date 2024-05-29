@@ -25,7 +25,11 @@ object Utils {
             ?.let { SimpleDateFormat("yyyy", Locale.getDefault()).format(it) }
     }
 
-    fun dateFormatMillisToMinSec(dateFormatMillis: Long) : String? {
+    fun dateFormatMillisToMinSecShort(dateFormatMillis: Long) : String? {
         return SimpleDateFormat("m:ss", Locale.getDefault()).format(dateFormatMillis)
+    }
+
+    fun dateFormatMillisToMinSecFull(dateFormatMillis: Long) : String? {
+        return SimpleDateFormat("mm:ss", Locale.getDefault()).format(dateFormatMillis)
     }
 }
