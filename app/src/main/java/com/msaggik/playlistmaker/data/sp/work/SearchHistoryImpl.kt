@@ -17,21 +17,17 @@ class SearchHistoryImpl (context: Context) : SearchHistory {
             .clear()
             .apply()
         trackListHistory.clear()
-        Log.e("clearTrackListHistory", "clearTrackListHistory")
     }
 
     override fun readTrackListHistorySharedPreferences(): MutableList<TrackDto> {
         readSharePreferences(sharedPreferences)
-        Log.e("readTrackListHistory", "size " + trackListHistory.size)
         return trackListHistory
     }
 
     override fun addTrackListHistorySharedPreferences(track: TrackDto) : MutableList<TrackDto> {
-        Log.e("addTrackListHistory", "add start size " + trackListHistory.size + ", " + track.trackName)
         readSharePreferences(sharedPreferences)
         addTrackListHistory(track)
         writeSharePreferences(sharedPreferences)
-        Log.e("addTrackListHistory", "add end size " + trackListHistory.size + ", " + track.trackName)
         return trackListHistory
     }
 
@@ -41,7 +37,6 @@ class SearchHistoryImpl (context: Context) : SearchHistory {
             trackListHistory.clear()
             trackListHistory = Gson().fromJson(json, Array<TrackDto>::class.java).toMutableList()
         }
-        Log.e("readSharePreferences", "read " + trackListHistory.size)
     }
 
     private fun addTrackListHistory(track: TrackDto) {
@@ -65,7 +60,6 @@ class SearchHistoryImpl (context: Context) : SearchHistory {
             trackListHistory.remove(track)
             trackListHistory.add(0, track)
         }
-        Log.e("addTrackListHistory1", "add " + track.trackName)
     }
 
     private fun writeSharePreferences(sharedPreferences: SharedPreferences) {
@@ -73,7 +67,5 @@ class SearchHistoryImpl (context: Context) : SearchHistory {
         sharedPreferences.edit()
             .putString(AppConstants.TRACK_LIST_HISTORY_KEY, json)
             .apply()
-        Log.e("writeSharePreferences", "write " + trackListHistory.size)
     }
-
 }

@@ -3,8 +3,6 @@ package com.msaggik.playlistmaker.presentation.ui.activity
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -24,12 +22,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.msaggik.playlistmaker.R
 import com.msaggik.playlistmaker.presentation.ui.adapters.TrackListAdapter
-import com.msaggik.playlistmaker.data.sp.SearchHistoryOld
 import com.msaggik.playlistmaker.domain.Creator
 import com.msaggik.playlistmaker.domain.api.network.TracksInteractor
 import com.msaggik.playlistmaker.domain.api.sp.SpInteractor
 import com.msaggik.playlistmaker.domain.models.Track
-import com.msaggik.playlistmaker.util.AppConstants
 import com.msaggik.playlistmaker.util.Utils
 
 
@@ -97,9 +93,6 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
 
     // shared preferences data MutableList<Track>
     private var trackListHistory: MutableList<Track> = mutableListOf()
-    private val sharedPreferences: SharedPreferences by lazy {
-        getSharedPreferences(AppConstants.TRACK_LIST_PREFERENCES, MODE_PRIVATE)
-    }
 
     // search tracks
     private val handlerSearchTrack = Handler(Looper.getMainLooper())
@@ -133,7 +126,6 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
         trackListHistoryView.adapter = trackListHistoryAdapter
 
         // listeners
-        sharedPreferences.registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener) // listener update shared preferences
         inputSearch.setOnFocusChangeListener(focusChangeListener)
         inputSearch.addTextChangedListener(inputSearchWatcher)
         buttonBack.setOnClickListener(listener)
@@ -166,22 +158,14 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
         spInteractor.clearTrackListHistory()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun trackSelection(track: Track) {
         addTrackListHistory(track)
+        trackListHistoryAdapter.notifyDataSetChanged()
         val intent = Intent(applicationContext, PlayerActivity::class.java)
         intent.putExtra(Track::class.java.simpleName, track)
         startActivity(intent)
     }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private var sharedPreferenceChangeListener: OnSharedPreferenceChangeListener =
-        OnSharedPreferenceChangeListener { sharedPreferences, key ->
-            if (key == AppConstants.TRACK_LIST_HISTORY_KEY) {
-                readTrackListHistory()
-                trackListHistoryAdapter.setTrackList(trackListHistory)
-                trackListHistoryAdapter.notifyDataSetChanged()
-            }
-        }
 
     private val focusChangeListener = object : OnFocusChangeListener {
         override fun onFocusChange(p0: View?, p1: Boolean) {

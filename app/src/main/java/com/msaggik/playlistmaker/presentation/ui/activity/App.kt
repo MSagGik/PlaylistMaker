@@ -1,7 +1,6 @@
 package com.msaggik.playlistmaker.presentation.ui.activity
 
 import android.app.Application
-import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 import com.msaggik.playlistmaker.util.AppConstants

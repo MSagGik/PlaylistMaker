@@ -75,16 +75,14 @@ class PlayerActivity : AppCompatActivity() {
                 .into(cover)
             trackName.text = track.trackName
             artistName.text = track.artistName
-            trackLength.text = SimpleDateFormat("m:ss", Locale.getDefault()).format(track.trackTimeMillis)
+            trackLength.text = Utils.dateFormatMillisToMinSec(track.trackTimeMillis)
             if (track.collectionName.isNullOrEmpty()) {
                 groupAlbumName.visibility = View.GONE
             } else {
                 groupAlbumName.visibility = View.VISIBLE
                 trackAlbumName.text = track.collectionName
             }
-            trackYear.text =
-                SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(track.releaseDate)
-                    ?.let { SimpleDateFormat("yyyy", Locale.getDefault()).format(it) }
+            trackYear.text = Utils.dateFormatStandardToYear(track.releaseDate)
             trackGenre.text = track.primaryGenreName
             trackCountry.text = track.country
 
@@ -176,11 +174,11 @@ class PlayerActivity : AppCompatActivity() {
             object : Runnable{
                 @SuppressLint("SetTextI18n")
                 override fun run() {
-                    timeTrack.text = SimpleDateFormat("m:ss", Locale.getDefault()).format(
+                    timeTrack.text = Utils.dateFormatMillisToMinSec(
                         if(trackListReverse) {
-                            player.currentPosition
+                            player.currentPosition.toLong()
                         } else {
-                            player.duration - player.currentPosition
+                            (player.duration - player.currentPosition).toLong()
                         })
                     handlerTrackList?.postDelayed(this, PLAYER_DELAY_UPDATE_TRACK_LIST)
                 }
