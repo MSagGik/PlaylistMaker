@@ -1,29 +1,44 @@
 package com.msaggik.playlistmaker.presentation.ui.activity
 
+import android.annotation.SuppressLint
 import android.app.Application
-import android.content.SharedPreferences
+import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
+import com.msaggik.playlistmaker.domain.Creator
+import com.msaggik.playlistmaker.domain.api.sp.SpInteractor
+import com.msaggik.playlistmaker.domain.models.Track
 import com.msaggik.playlistmaker.util.AppConstants
 
 
 class App : Application() {
 
     private var darkTheme = false
-    private lateinit var sharedPreferences: SharedPreferences
+    private val spInteractor by lazy {
+        Creator.provideSpInteractor(applicationContext)
+    }
 
     override fun onCreate() {
         super.onCreate()
-        sharedPreferences = getSharedPreferences(AppConstants.SHARE_PREF_NAME, MODE_PRIVATE)
-        darkTheme = getSharedPreferences(AppConstants.SHARE_PREF_NAME, MODE_PRIVATE).getBoolean(AppConstants.APP_THEME_KEY, false)
-        setApplicationTheme(darkTheme)
+        readDarkThemeSp()
     }
 
+    private fun readDarkThemeSp(){
+        spInteractor.isDarkTheme(object : SpInteractor.SpThemeConsumer {
+            override fun consume(isDarkTheme: Boolean) {
+                darkTheme = isDarkTheme
+                setApplicationTheme(darkTheme)
+            }
+        })
+    }
 
+    private fun setDarkThemeSp(isDarkTheme: Boolean) {
+        spInteractor.setDarkTheme(isDarkTheme)
+    }
 
     fun switchTheme(darkThemeEnabled: Boolean) {
         darkTheme = darkThemeEnabled
         setApplicationTheme(darkTheme)
-        sharedPreferences.edit().putBoolean(AppConstants.APP_THEME_KEY, darkTheme).apply()
+        setDarkThemeSp(darkTheme)
     }
 
     fun getApplicationTheme(): Boolean {

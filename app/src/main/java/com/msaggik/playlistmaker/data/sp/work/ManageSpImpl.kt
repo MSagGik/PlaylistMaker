@@ -2,32 +2,39 @@ package com.msaggik.playlistmaker.data.sp.work
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Log
 import com.google.gson.Gson
 import com.msaggik.playlistmaker.data.dto.response.TrackDto
-import com.msaggik.playlistmaker.presentation.ui.activity.App
 import com.msaggik.playlistmaker.util.AppConstants
 
-class SearchHistoryImpl (context: Context) : SearchHistory {
+class ManageSpImpl (context: Context) : ManageSp {
 
     private var trackListHistory: MutableList<TrackDto> = ArrayList()
-    private val sharedPreferences = SearchHistory.createObjectSharedPreferences(context)
+    private val spSearchHistory = ManageSp.createObjectSpSearchHistory(context)
+    private val spTheme = ManageSp.createObjectSpTheme(context)
+    override fun isDarkThemeSharedPreferences(): Boolean {
+        return spTheme.getBoolean(AppConstants.APP_THEME_KEY, false)
+    }
+
+    override fun setDarkThemeSharedPreferences(isDarkTheme: Boolean) {
+        spTheme.edit().putBoolean(AppConstants.APP_THEME_KEY, isDarkTheme).apply()
+    }
+
     override fun clearTrackListHistorySharedPreferences() {
-        sharedPreferences.edit()
+        spSearchHistory.edit()
             .clear()
             .apply()
         trackListHistory.clear()
     }
 
     override fun readTrackListHistorySharedPreferences(): MutableList<TrackDto> {
-        readSharePreferences(sharedPreferences)
+        readSharePreferences(spSearchHistory)
         return trackListHistory
     }
 
     override fun addTrackListHistorySharedPreferences(track: TrackDto) : MutableList<TrackDto> {
-        readSharePreferences(sharedPreferences)
+        readSharePreferences(spSearchHistory)
         addTrackListHistory(track)
-        writeSharePreferences(sharedPreferences)
+        writeSharePreferences(spSearchHistory)
         return trackListHistory
     }
 

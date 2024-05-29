@@ -4,11 +4,18 @@ import com.msaggik.playlistmaker.domain.models.Track
 
 interface SpInteractor { // интерфейс для связи domain - presentation
 
-    fun clearTrackListHistory()
-    fun readTrackListHistory(consumer: SpConsumer)
-    fun addTrackListHistory(track: Track, consumer: SpConsumer)
+    fun isDarkTheme(consumer: SpThemeConsumer)
+    fun setDarkTheme(isDarkTheme : Boolean)
 
-    interface SpConsumer { // Callback между IO и UI потоками
+    fun clearTrackListHistory()
+    fun readTrackListHistory(consumer: SpTracksHistoryConsumer)
+    fun addTrackListHistory(track: Track, consumer: SpTracksHistoryConsumer)
+
+    // Callback между IO и UI потоками
+    interface SpThemeConsumer {
+        fun consume(isDarkTheme : Boolean)
+    }
+    interface SpTracksHistoryConsumer {
         fun consume(listHistoryTracks: List<Track>)
     }
 }

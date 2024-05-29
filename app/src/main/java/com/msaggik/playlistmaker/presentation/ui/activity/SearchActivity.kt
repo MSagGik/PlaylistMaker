@@ -135,7 +135,7 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
     }
 
     private fun readTrackListHistory() {
-        spInteractor.readTrackListHistory(object : SpInteractor.SpConsumer {
+        spInteractor.readTrackListHistory(object : SpInteractor.SpTracksHistoryConsumer {
             @SuppressLint("NotifyDataSetChanged")
             override fun consume(listHistoryTracks: List<Track>) {
                 trackListHistory.clear()
@@ -145,7 +145,7 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
     }
 
     private fun addTrackListHistory(track: Track) {
-        spInteractor.addTrackListHistory(track, object : SpInteractor.SpConsumer {
+        spInteractor.addTrackListHistory(track, object : SpInteractor.SpTracksHistoryConsumer {
             @SuppressLint("NotifyDataSetChanged")
             override fun consume(listHistoryTracks: List<Track>) {
                 trackListHistory.clear()
