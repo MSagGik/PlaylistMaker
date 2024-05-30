@@ -1,4 +1,4 @@
-package com.msaggik.playlistmaker.domain
+package com.msaggik.playlistmaker.util
 
 import android.content.Context
 import com.msaggik.playlistmaker.data.network.TracksRepositoryImpl
@@ -20,7 +20,6 @@ object Creator { // инициализация репозитория и ите�
     fun provideSpInteractor(context: Context): SpInteractor {
         return SpInteractorImpl(getSpRepository(context))
     }
-
 
     private fun getTracksRepository(): TracksRepository {
         return TracksRepositoryImpl(RetrofitNetworkClient())

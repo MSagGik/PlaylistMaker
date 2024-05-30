@@ -1,6 +1,5 @@
 package com.msaggik.playlistmaker.domain.api.sp
 
-import com.msaggik.playlistmaker.data.dto.response.TrackDto
 import com.msaggik.playlistmaker.domain.models.Track
 
 interface SpRepository { // интерфейс для связи data - domain

@@ -1,13 +1,9 @@
 package com.msaggik.playlistmaker.presentation.ui.activity
 
-import android.annotation.SuppressLint
 import android.app.Application
-import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
-import com.msaggik.playlistmaker.domain.Creator
+import com.msaggik.playlistmaker.util.Creator
 import com.msaggik.playlistmaker.domain.api.sp.SpInteractor
-import com.msaggik.playlistmaker.domain.models.Track
-import com.msaggik.playlistmaker.util.AppConstants
 
 
 class App : Application() {

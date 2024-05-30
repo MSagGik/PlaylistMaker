@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.msaggik.playlistmaker.R
 import com.msaggik.playlistmaker.presentation.ui.adapters.TrackListAdapter
-import com.msaggik.playlistmaker.domain.Creator
+import com.msaggik.playlistmaker.util.Creator
 import com.msaggik.playlistmaker.domain.api.network.TracksInteractor
 import com.msaggik.playlistmaker.domain.api.sp.SpInteractor
 import com.msaggik.playlistmaker.domain.models.Track

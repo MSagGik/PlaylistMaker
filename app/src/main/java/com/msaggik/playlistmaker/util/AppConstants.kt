@@ -1,6 +1,6 @@
 package com.msaggik.playlistmaker.util
 
-object AppConstants {
+internal object AppConstants {
     // network
     const val ITUNES_BASE_URL = "https://itunes.apple.com"
     // shared preferences
