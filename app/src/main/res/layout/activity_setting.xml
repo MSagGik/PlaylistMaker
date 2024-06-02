@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.SettingActivity">
+    tools:context=".presentation.ui.activity.SettingActivity">
 
     <!--    Используемые иллюстрации (иконки) и шрифты в образовательных целях предоставлены Яндекс-Практикумом (practicum.yandex.ru)-->
     <FrameLayout

@@ -1,4 +1,4 @@
-package com.msaggik.playlistmaker.activity
+package com.msaggik.playlistmaker.presentation.ui.activity
 
 import android.content.Intent
 import android.content.Intent.ACTION_SENDTO

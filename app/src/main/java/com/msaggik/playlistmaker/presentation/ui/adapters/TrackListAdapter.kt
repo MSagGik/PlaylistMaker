@@ -1,4 +1,4 @@
-package com.msaggik.playlistmaker.util.adapters
+package com.msaggik.playlistmaker.presentation.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.msaggik.playlistmaker.R
-import com.msaggik.playlistmaker.entity.Track
+import com.msaggik.playlistmaker.domain.models.Track
 import com.msaggik.playlistmaker.util.Utils
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -56,7 +56,7 @@ class TrackListAdapter (private val trackListAdd: List<Track>, private val track
                 .into(imageAlbumTrack)
             trackName.text = model.trackName
             groupName.text = model.artistName
-            trackLength.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTimeMillis)
+            trackLength.text = Utils.dateFormatMillisToMinSecFull(model.trackTimeMillis)
         }
     }
 }

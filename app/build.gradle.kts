@@ -50,4 +50,6 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.glide)
     annotationProcessor(libs.compiler)
+    implementation(libs.logging.interceptor)
+    implementation(libs.gson)
 }

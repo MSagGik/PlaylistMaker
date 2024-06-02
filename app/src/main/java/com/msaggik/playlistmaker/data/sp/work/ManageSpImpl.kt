@@ -1,44 +1,54 @@
-package com.msaggik.playlistmaker.util.additionally
+package com.msaggik.playlistmaker.data.sp.work
 
+import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import com.msaggik.playlistmaker.entity.Track
+import com.msaggik.playlistmaker.data.dto.response.TrackDto
 
+private const val APP_THEME_KEY = "app_theme_key"
 private const val TRACK_LIST_LIMIT = 10
 private const val TRACK_LIST_HISTORY_KEY = "track_list_history_key"
+class ManageSpImpl (context: Context) : ManageSp {
 
-class SearchHistory {
+    private var trackListHistory: MutableList<TrackDto> = ArrayList()
+    private val spSearchHistory = ManageSp.createObjectSpSearchHistory(context)
+    private val spTheme = ManageSp.createObjectSpTheme(context)
+    override fun isDarkThemeSharedPreferences(): Boolean {
+        return spTheme.getBoolean(APP_THEME_KEY, false)
+    }
 
-    private var trackListHistory: MutableList<Track> = ArrayList()
+    override fun setDarkThemeSharedPreferences(isDarkTheme: Boolean) {
+        spTheme.edit().putBoolean(APP_THEME_KEY, isDarkTheme).apply()
+    }
 
-    fun clearTrackListHistorySharedPreferences(sharedPreferences: SharedPreferences) {
-        sharedPreferences.edit()
+    override fun clearTrackListHistorySharedPreferences() {
+        spSearchHistory.edit()
             .clear()
             .apply()
         trackListHistory.clear()
     }
 
-    fun readTrackListHistorySharedPreferences(sharedPreferences: SharedPreferences): MutableList<Track> {
-        readSharePreferences(sharedPreferences)
+    override fun readTrackListHistorySharedPreferences(): MutableList<TrackDto> {
+        readSharePreferences(spSearchHistory)
         return trackListHistory
     }
 
-    fun addTrackListHistorySharedPreferences(sharedPreferences: SharedPreferences, track: Track) {
-        readSharePreferences(sharedPreferences)
+    override fun addTrackListHistorySharedPreferences(track: TrackDto) : MutableList<TrackDto> {
+        readSharePreferences(spSearchHistory)
         addTrackListHistory(track)
-        writeSharePreferences(sharedPreferences)
+        writeSharePreferences(spSearchHistory)
+        return trackListHistory
     }
 
     private fun readSharePreferences(sharedPreferences: SharedPreferences) {
         val json = sharedPreferences.getString(TRACK_LIST_HISTORY_KEY, null)
         if(json != null) {
             trackListHistory.clear()
-            trackListHistory = Gson().fromJson(json, Array<Track>::class.java).toMutableList()
+            trackListHistory = Gson().fromJson(json, Array<TrackDto>::class.java).toMutableList()
         }
     }
 
-    private fun addTrackListHistory(track: Track) {
+    private fun addTrackListHistory(track: TrackDto) {
         var unique = true
         var isNotFirst = true
         for(i in 0..<trackListHistory.size) {

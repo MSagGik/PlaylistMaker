@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/violet_100"
-    tools:context=".activity.MediaActivity">
+    tools:context=".presentation.ui.activity.placeholderactivity.MediaActivity">
 
     <TextView
         android:id="@+id/textView"

@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     style="@style/BackgroundMainActivity"
-    tools:context=".activity.MainActivity">
+    tools:context=".presentation.ui.activity.MainActivity">
 
     <!--    Используемые иллюстрации (иконки) и шрифты в образовательных целях предоставлены Яндекс-Практикумом (practicum.yandex.ru)-->
 
