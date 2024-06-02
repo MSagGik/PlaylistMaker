@@ -7,7 +7,7 @@ import android.view.View
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-object Utils {
+internal object Utils {
     fun doToPx(dp: Float, context: Context): Int {
         return TypedValue
             .applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.resources.displayMetrics)

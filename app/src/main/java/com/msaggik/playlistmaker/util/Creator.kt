@@ -12,7 +12,7 @@ import com.msaggik.playlistmaker.domain.api.sp.SpRepository
 import com.msaggik.playlistmaker.domain.impl.network.TracksInteractorImpl
 import com.msaggik.playlistmaker.domain.impl.sp.SpInteractorImpl
 
-object Creator { // инициализация репозитория и итерактора
+internal object Creator { // инициализация репозитория и итерактора
     fun provideTracksInteractor(): TracksInteractor {
         return TracksInteractorImpl(getTracksRepository())
     }

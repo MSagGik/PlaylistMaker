@@ -4,19 +4,21 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.msaggik.playlistmaker.data.dto.response.TrackDto
-import com.msaggik.playlistmaker.util.AppConstants
 
+private const val APP_THEME_KEY = "app_theme_key"
+private const val TRACK_LIST_LIMIT = 10
+private const val TRACK_LIST_HISTORY_KEY = "track_list_history_key"
 class ManageSpImpl (context: Context) : ManageSp {
 
     private var trackListHistory: MutableList<TrackDto> = ArrayList()
     private val spSearchHistory = ManageSp.createObjectSpSearchHistory(context)
     private val spTheme = ManageSp.createObjectSpTheme(context)
     override fun isDarkThemeSharedPreferences(): Boolean {
-        return spTheme.getBoolean(AppConstants.APP_THEME_KEY, false)
+        return spTheme.getBoolean(APP_THEME_KEY, false)
     }
 
     override fun setDarkThemeSharedPreferences(isDarkTheme: Boolean) {
-        spTheme.edit().putBoolean(AppConstants.APP_THEME_KEY, isDarkTheme).apply()
+        spTheme.edit().putBoolean(APP_THEME_KEY, isDarkTheme).apply()
     }
 
     override fun clearTrackListHistorySharedPreferences() {
@@ -39,7 +41,7 @@ class ManageSpImpl (context: Context) : ManageSp {
     }
 
     private fun readSharePreferences(sharedPreferences: SharedPreferences) {
-        val json = sharedPreferences.getString(AppConstants.TRACK_LIST_HISTORY_KEY, null)
+        val json = sharedPreferences.getString(TRACK_LIST_HISTORY_KEY, null)
         if(json != null) {
             trackListHistory.clear()
             trackListHistory = Gson().fromJson(json, Array<TrackDto>::class.java).toMutableList()
@@ -60,7 +62,7 @@ class ManageSpImpl (context: Context) : ManageSp {
 
         if(unique) {
             trackListHistory.add(0, track)
-            if(trackListHistory.size > AppConstants.TRACK_LIST_LIMIT) {
+            if(trackListHistory.size > TRACK_LIST_LIMIT) {
                 trackListHistory.removeLast()
             }
         } else if(isNotFirst){
@@ -72,7 +74,7 @@ class ManageSpImpl (context: Context) : ManageSp {
     private fun writeSharePreferences(sharedPreferences: SharedPreferences) {
         val json = Gson().toJson(trackListHistory)
         sharedPreferences.edit()
-            .putString(AppConstants.TRACK_LIST_HISTORY_KEY, json)
+            .putString(TRACK_LIST_HISTORY_KEY, json)
             .apply()
     }
 }

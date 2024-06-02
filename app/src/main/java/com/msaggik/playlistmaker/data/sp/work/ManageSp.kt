@@ -5,21 +5,16 @@ import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import com.msaggik.playlistmaker.data.dto.response.TrackDto
-import com.msaggik.playlistmaker.util.AppConstants
 
+private const val SHARE_PREF_NAME = "share_pref_name"
+private const val TRACK_LIST_PREFERENCES = "track_list_preferences"
 interface ManageSp {
     companion object{
         fun createObjectSpTheme(context: Context): SharedPreferences {
-            return context.getSharedPreferences(
-                AppConstants.SHARE_PREF_NAME,
-                Application.MODE_PRIVATE
-            )
+            return context.getSharedPreferences(SHARE_PREF_NAME, Application.MODE_PRIVATE)
         }
         fun createObjectSpSearchHistory(context: Context): SharedPreferences {
-            return context.getSharedPreferences(
-                AppConstants.TRACK_LIST_PREFERENCES,
-                AppCompatActivity.MODE_PRIVATE
-            )
+            return context.getSharedPreferences(TRACK_LIST_PREFERENCES, AppCompatActivity.MODE_PRIVATE)
         }
     }
 
