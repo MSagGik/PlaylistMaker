@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.TypedValue
 import android.view.View
+import androidx.appcompat.app.AppCompatDelegate
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -31,5 +32,15 @@ internal object Utils {
 
     fun dateFormatMillisToMinSecFull(dateFormatMillis: Long) : String? {
         return SimpleDateFormat("mm:ss", Locale.getDefault()).format(dateFormatMillis)
+    }
+
+    fun setApplicationTheme(darkThemeEnabled: Boolean) {
+        AppCompatDelegate.setDefaultNightMode(
+            if(darkThemeEnabled) {
+                AppCompatDelegate.MODE_NIGHT_YES
+            } else {
+                AppCompatDelegate.MODE_NIGHT_NO
+            }
+        )
     }
 }
