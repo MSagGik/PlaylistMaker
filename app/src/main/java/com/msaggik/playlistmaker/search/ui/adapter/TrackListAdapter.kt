@@ -1,18 +1,16 @@
 package com.msaggik.playlistmaker.search.ui.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.msaggik.playlistmaker.R
+import com.msaggik.playlistmaker.databinding.ItemTrackListBinding
 import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.util.Utils
 
-class TrackListAdapter (private val trackListAdd: List<Track>, private val trackClickListener: TrackClickListener) : RecyclerView.Adapter<TrackListAdapter.TrackViewHolder> () {
+class TrackListAdapter (trackListAdd: List<Track>, private val trackClickListener: TrackClickListener) : RecyclerView.Adapter<TrackListAdapter.TrackViewHolder> () {
 
     private var trackList = trackListAdd
 
@@ -21,8 +19,8 @@ class TrackListAdapter (private val trackListAdd: List<Track>, private val track
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_track_list, parent, false)
-        return TrackViewHolder(view)
+        val layoutInspector = LayoutInflater.from(parent.context)
+        return TrackViewHolder(ItemTrackListBinding.inflate(layoutInspector, parent, false))
     }
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         holder.bind(trackList[position])
@@ -38,23 +36,17 @@ class TrackListAdapter (private val trackListAdd: List<Track>, private val track
         fun onTrackClick(track: Track)
     }
 
-    class TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-
-        private val imageAlbumTrack: ImageView = itemView.findViewById(R.id.image_album_track)
-        private val trackName: TextView = itemView.findViewById(R.id.track_name)
-        private val groupName: TextView = itemView.findViewById(R.id.artist_name)
-        private val trackLength: TextView = itemView.findViewById(R.id.length_track)
-
+    class TrackViewHolder(private val binding: ItemTrackListBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(model: Track) {
             Glide.with(itemView)
                 .load(model.artworkUrl100)
                 .placeholder(R.drawable.ic_placeholder)
                 .centerCrop()
                 .transform(RoundedCorners(Utils.doToPx(2f, itemView.context.applicationContext)))
-                .into(imageAlbumTrack)
-            trackName.text = model.trackName
-            groupName.text = model.artistName
-            trackLength.text = Utils.dateFormatMillisToMinSecFull(model.trackTimeMillis)
+                .into(binding.imageAlbumTrack)
+            binding.trackName.text = model.trackName
+            binding.artistName.text = model.artistName
+            binding.lengthTrack.text = Utils.dateFormatMillisToMinSecFull(model.trackTimeMillis)
         }
     }
 }

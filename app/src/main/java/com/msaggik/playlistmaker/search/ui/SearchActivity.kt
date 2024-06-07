@@ -50,12 +50,11 @@ class SearchActivity : AppCompatActivity() {
     }
 
     // data
-    private var textSearch = ""
+    private var searchTrack = ""
     private var searchTrackResult = ""
     private var trackList: MutableList<Track> = mutableListOf()
     private val trackListAdapter: TrackListAdapter by lazy {
         TrackListAdapter(trackList) {
-            // implementing an adapter interface method with Debounce
             if (clickTracksDebounce()) {
                 trackSelection(it)
             }
@@ -63,7 +62,6 @@ class SearchActivity : AppCompatActivity() {
     }
     private val trackListHistoryAdapter: TrackListAdapter by lazy {
         TrackListAdapter(trackListHistory) {
-            // implementing an adapter interface method with Debounce
             if (clickTracksDebounce()) {
                 trackSelection(it)
             }
@@ -181,7 +179,7 @@ class SearchActivity : AppCompatActivity() {
                 }
 
                 R.id.button_update -> {
-                    searchViewModel.searchTracks(textSearch)
+                    searchViewModel.searchTracks(searchTrack)
                 }
 
                 R.id.button_clear_search_history -> {
@@ -208,7 +206,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         override fun afterTextChanged(resultText: Editable?) {
-            textSearch = resultText.toString()
+            searchTrack = resultText.toString()
         }
     }
 
@@ -228,12 +226,12 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(KEY_TEXT_SEARCH, textSearch)
+        outState.putString(KEY_TEXT_SEARCH, searchTrack)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        textSearch = savedInstanceState.getString(KEY_TEXT_SEARCH, TEXT_SEARCH_DEFAULT)
+        searchTrack = savedInstanceState.getString(KEY_TEXT_SEARCH, TEXT_SEARCH_DEFAULT)
     }
 
     private companion object {
