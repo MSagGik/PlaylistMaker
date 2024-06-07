@@ -5,6 +5,7 @@ import android.media.MediaPlayer
 import com.msaggik.playlistmaker.player.data.TrackPlayer
 import com.msaggik.playlistmaker.player.domain.state.PlayerState
 import com.msaggik.playlistmaker.search.data.base.sp.impl.SearchHistorySpImpl
+import com.msaggik.playlistmaker.search.domain.models.Track
 
 class TrackPlayerImpl(private val trackId: Int, private val context: Context) : TrackPlayer {
 
@@ -25,6 +26,12 @@ class TrackPlayerImpl(private val trackId: Int, private val context: Context) : 
     init {
         player.apply {
             setDataSource(track?.previewUrl)
+            if (playerState == PlayerState.PLAYER_STATE_DEFAULT) {
+                player.prepareAsync()
+                player.setOnPreparedListener {
+                    playerState = PlayerState.PLAYER_STATE_PREPARED
+                }
+            }
             setOnCompletionListener {
                 playerState = PlayerState.PLAYER_STATE_PREPARED
             }
@@ -32,10 +39,6 @@ class TrackPlayerImpl(private val trackId: Int, private val context: Context) : 
     }
 
     override fun onPlay() {
-        if (playerState == PlayerState.PLAYER_STATE_DEFAULT) {
-            player.prepareAsync()
-            playerState = PlayerState.PLAYER_STATE_PREPARED
-        }
         player.start()
         playerState = PlayerState.PLAYER_STATE_PLAYING
     }
@@ -48,6 +51,14 @@ class TrackPlayerImpl(private val trackId: Int, private val context: Context) : 
     override fun onStop() {
         player.stop()
         playerState = PlayerState.PLAYER_STATE_STOP
+    }
+
+    override fun loading(trackId: Int): Track {
+        return Track(
+            track!!.trackId, track!!.trackName, track!!.artistName,
+            track!!.trackTimeMillis, track!!.artworkUrl100, track!!.collectionName,
+            track!!.releaseDate, track!!.primaryGenreName, track!!.country, track!!.previewUrl
+        )
     }
 
     override fun getCurrentPosition(isReverse: Boolean): Int {

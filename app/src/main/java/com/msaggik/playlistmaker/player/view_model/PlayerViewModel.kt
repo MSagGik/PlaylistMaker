@@ -38,16 +38,30 @@ class PlayerViewModel(
     private val handler = Handler(Looper.getMainLooper())
 
     private var playerTrackLiveData = MutableLiveData<Track>()
-    fun getTrackListHistoryLiveData(): LiveData<Track> = playerTrackLiveData
+    fun getTrackLiveData(): LiveData<Track> = playerTrackLiveData
 
     private var buttonStateLiveData = MutableLiveData<PlayState>()
     fun getButtonStateLiveData(): LiveData<PlayState> = buttonStateLiveData
 
     private var isReverse: Boolean = false
     private var currentTimePlayingLiveData = MutableLiveData<String>()
-    fun getCurrentTimePlayingLiveData(isReverse: Boolean): LiveData<String> {
-        this.isReverse = isReverse
+    fun getCurrentTimePlayingLiveData(): LiveData<String> {
         return currentTimePlayingLiveData
+    }
+
+    fun isReverse() {
+        isReverse = !isReverse
+        currentTimePlayingLiveData.postValue(
+            when (currentTimePlayingLiveData.value) {
+                START -> END
+                END -> START
+                else -> Utils.dateFormatMillisToMinSecShort(
+                    playerInteractor.getPlayerCurrentPosition(
+                        isReverse
+                    ).toLong()
+                )
+            }
+        )
     }
 
     override fun onCleared() {
@@ -56,28 +70,39 @@ class PlayerViewModel(
         handler.removeCallbacksAndMessages(null)
     }
 
+    fun loadingTrack(trackId: Int) {
+        val track = playerInteractor.loading(trackId)
+        playerTrackLiveData.postValue(track)
+    }
+
     private fun startPlayer() {
-        buttonStateLiveData.postValue(PlayState.Pause)
         playerInteractor.play()
+        buttonStateLiveData.postValue(PlayState.Pause)
 
         handler.postDelayed(object : Runnable {
             override fun run() {
                 if (playerInteractor.getPlayerState() == PlayerState.PLAYER_STATE_PREPARED) {
-                    currentTimePlayingLiveData.postValue(if(isReverse) END else START)
+                    currentTimePlayingLiveData.postValue(if (isReverse) END else START)
                     buttonStateLiveData.postValue(PlayState.Play)
                     handler.removeCallbacksAndMessages(null)
                 } else {
-                    currentTimePlayingLiveData.postValue(Utils.dateFormatMillisToMinSecShort(playerInteractor.getPlayerCurrentPosition(isReverse).toLong()))
+                    currentTimePlayingLiveData.postValue(
+                        Utils.dateFormatMillisToMinSecShort(
+                            playerInteractor.getPlayerCurrentPosition(isReverse).toLong()
+                        )
+                    )
                     handler.postDelayed(this, PLAYER_DELAY_UPDATE_TRACK_LIST)
                 }
             }
         }, PLAYER_DELAY_UPDATE_TRACK_LIST)
     }
 
-    private fun pausePlayer() {
-        playerInteractor.pause()
-        buttonStateLiveData.postValue(PlayState.Play)
-        handler.removeCallbacksAndMessages(null)
+    fun pausePlayer() {
+        if (playerInteractor.getPlayerState() == PlayerState.PLAYER_STATE_PLAYING) {
+            playerInteractor.pause()
+            buttonStateLiveData.postValue(PlayState.Play)
+            handler.removeCallbacksAndMessages(null)
+        }
     }
 
     fun checkPlayPause() {
@@ -86,5 +111,11 @@ class PlayerViewModel(
             PlayerState.PLAYER_STATE_PREPARED, PlayerState.PLAYER_STATE_PAUSED -> startPlayer()
             else -> {}
         }
+    }
+
+    fun releasePlayer() {
+        playerInteractor.release()
+        buttonStateLiveData.postValue(PlayState.Play)
+        handler.removeCallbacksAndMessages(null)
     }
 }
