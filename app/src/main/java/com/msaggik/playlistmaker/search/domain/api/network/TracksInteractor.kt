@@ -6,6 +6,6 @@ interface TracksInteractor { // интерфейс для связи domain - vi
     fun searchTracks(searchTracks: String, consumer: TracksConsumer)
 
     interface TracksConsumer { // Callback между IO и UI потоками
-        fun consume(listTracks: List<Track>)
+        fun consume(listTracks: List<Track>?, errorMessage: String?)
     }
 }

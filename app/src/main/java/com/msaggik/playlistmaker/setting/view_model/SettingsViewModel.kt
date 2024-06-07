@@ -9,7 +9,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.msaggik.playlistmaker.setting.domain.api.SettingsInteractor
 import com.msaggik.playlistmaker.setting.domain.model.ThemeSettings
-import com.msaggik.playlistmaker.setting.ui.App
+import com.msaggik.playlistmaker.root.App
 import com.msaggik.playlistmaker.sharing.domain.api.SharingInteractor
 import com.msaggik.playlistmaker.util.Utils
 

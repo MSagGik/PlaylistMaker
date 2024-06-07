@@ -1,4 +1,4 @@
-package com.msaggik.playlistmaker.setting.ui
+package com.msaggik.playlistmaker.root
 
 import android.app.Application
 import com.msaggik.playlistmaker.search.data.base.network.retrofit.RetrofitNetworkClient
@@ -34,7 +34,6 @@ class App : Application() {
         })
     }
 
-    // инициализация репозитория и итерактора
     fun provideTracksInteractor(): TracksInteractor {
         return TracksInteractorImpl(getTracksRepository())
     }
@@ -52,7 +51,7 @@ class App : Application() {
     }
 
     private fun getTracksRepository(): TracksRepository {
-        return TracksRepositoryImpl(RetrofitNetworkClient())
+        return TracksRepositoryImpl(RetrofitNetworkClient(applicationContext), applicationContext)
     }
 
     private fun getSearchHistoryRepository(): SearchHistorySpRepository {

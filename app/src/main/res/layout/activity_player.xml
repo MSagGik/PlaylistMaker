@@ -263,13 +263,19 @@
     <TextView
         android:id="@+id/track_album_name"
         style="@style/TextViewYSMediumThreeTheme"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:gravity="end"
+        android:paddingStart="@dimen/dimen_16"
         android:text="@string/default_string"
         app:layout_constraintBottom_toBottomOf="@+id/header_album_name"
         app:layout_constraintEnd_toStartOf="@+id/guideline_end_two"
+        app:layout_constraintStart_toEndOf="@+id/header_album_name"
         app:layout_constraintTag="album_name"
-        app:layout_constraintTop_toTopOf="@+id/header_album_name" />
+        app:layout_constraintTop_toTopOf="@+id/header_album_name"
+        tools:ignore="RtlSymmetry" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/group_album_name"

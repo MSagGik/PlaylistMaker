@@ -39,5 +39,8 @@
     <string name="default_string" translatable="false">—</string>
     <string name="header_genre" translatable="false">Жанр</string>
     <string name="header_country" translatable="false">Страна</string>
-    <string name="time_track_reverse">0:30</string>
+    <string name="time_track_reverse" translatable="false">0:30</string>
+    <string name="no_connection" translatable="false">Проверьте подключение к интернету</string>
+    <string name="server_error" translatable="false">Ошибка сервера</string>
+    <string name="something_went_wrong" translatable="false">Что-то пошло не так</string>
 </resources>
