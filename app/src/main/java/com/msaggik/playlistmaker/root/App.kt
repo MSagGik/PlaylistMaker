@@ -1,6 +1,9 @@
 package com.msaggik.playlistmaker.root
 
 import android.app.Application
+import com.msaggik.playlistmaker.player.data.impl.TrackPlayerImpl
+import com.msaggik.playlistmaker.player.domain.api.PlayerInteractor
+import com.msaggik.playlistmaker.player.domain.api.impl.PlayerInteractorImpl
 import com.msaggik.playlistmaker.search.data.base.network.retrofit.RetrofitNetworkClient
 import com.msaggik.playlistmaker.search.data.base.sp.impl.SearchHistorySpImpl
 import com.msaggik.playlistmaker.search.data.repository.network.TracksRepository
@@ -50,6 +53,11 @@ class App : Application() {
         return SharingInteractorImpl(getSharingRepository())
     }
 
+    //////////
+    fun providePlayerInteractor(trackId: Int): PlayerInteractor {
+        return PlayerInteractorImpl(TrackPlayerImpl(trackId = trackId, applicationContext))
+    }
+    //////////
     private fun getTracksRepository(): TracksRepository {
         return TracksRepositoryImpl(RetrofitNetworkClient(applicationContext), applicationContext)
     }

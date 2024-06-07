@@ -7,6 +7,18 @@
     android:layout_height="match_parent"
     tools:context=".player.ui.PlayerActivity">
 
+    <ProgressBar
+        android:id="@+id/loading_time_player"
+        android:layout_width="@dimen/dimen_44"
+        android:layout_height="@dimen/dimen_44"
+        android:layout_gravity="center_horizontal"
+        android:indeterminateTint="@color/violet_170"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_start_one"
         android:layout_width="wrap_content"

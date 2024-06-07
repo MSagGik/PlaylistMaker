@@ -3,7 +3,7 @@ package com.msaggik.playlistmaker.search.domain.models
 import java.io.Serializable
 
 data class Track (
-    val trackId: Int, // Id композиции
+    val trackId: Int = -1, // Id композиции
     val trackName: String, // Название композиции
     val artistName: String, // Имя исполнителя
     val trackTimeMillis: Long, // Продолжительность трека

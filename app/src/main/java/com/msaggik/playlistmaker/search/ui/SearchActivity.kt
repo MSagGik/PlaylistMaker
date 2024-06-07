@@ -28,7 +28,7 @@ import com.msaggik.playlistmaker.util.Utils
 
 class SearchActivity : AppCompatActivity() {
 
-    // param view
+    // view
     private val binding by lazy {
         ActivitySearchBinding.inflate(layoutInflater)
     }
