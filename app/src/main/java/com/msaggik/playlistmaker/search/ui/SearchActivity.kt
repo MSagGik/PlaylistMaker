@@ -11,66 +11,31 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.View.OnFocusChangeListener
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.msaggik.playlistmaker.R
 import com.msaggik.playlistmaker.main.ui.MainActivity
 import com.msaggik.playlistmaker.player.ui.PlayerActivity
 import com.msaggik.playlistmaker.search.ui.adapter.TrackListAdapter
 import com.msaggik.playlistmaker.creator.Creator
+import com.msaggik.playlistmaker.databinding.ActivitySearchBinding
 import com.msaggik.playlistmaker.search.domain.api.network.TracksInteractor
 import com.msaggik.playlistmaker.search.domain.api.sp.SearchHistoryInteractor
 import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.util.Utils
 
 
-class SearchActivity : AppCompatActivity(R.layout.activity_search) {
+class SearchActivity : AppCompatActivity() {
 
     // param view
-    private val inputSearch: EditText by lazy {
-        findViewById(R.id.input_search)
-    }
-    private val buttonBack: ImageView by lazy {
-        findViewById(R.id.button_back)
-    }
-    private val buttonClear: ImageView by lazy {
-        findViewById(R.id.button_clear)
-    }
-    private val trackListView: RecyclerView by lazy {
-        findViewById(R.id.track_list)
-    }
-    private val trackListHistoryView: RecyclerView by lazy {
-        findViewById(R.id.search_history_track_list)
-    }
-    private val layoutNothingFound: LinearLayout by lazy {
-        findViewById(R.id.layout_nothing_found)
-    }
-    private val layoutCommunicationProblems: LinearLayout by lazy {
-        findViewById(R.id.layout_communication_problems)
-    }
-    private val layoutSearchHistory: LinearLayout by lazy {
-        findViewById(R.id.layout_search_history)
-    }
-    private val buttonUpdate: Button by lazy {
-        findViewById(R.id.button_update)
-    }
-    private val buttonClearSearchHistory: Button by lazy {
-        findViewById(R.id.button_clear_search_history)
-    }
-    private val loadingTime: ProgressBar by lazy {
-        findViewById(R.id.loading_time)
+    private val binding by lazy {
+        ActivitySearchBinding.inflate(layoutInflater)
     }
 
     // visible views
     private val viewArray: Array<View> by lazy {
-        arrayOf(loadingTime, layoutSearchHistory, trackListView, layoutNothingFound, layoutCommunicationProblems)
+        arrayOf(binding.loadingTime, binding.layoutSearchHistory, binding.trackList, binding.layoutNothingFound, binding.layoutCommunicationProblems)
     }
 
     // data
@@ -114,26 +79,27 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(binding.root)
 
-        trackListView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        trackListHistoryView.layoutManager =
+        binding.trackList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.searchHistoryTrackList.layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         // output list tracks in RecyclerView trackListView
-        trackListView.adapter = trackListAdapter
+        binding.trackList.adapter = trackListAdapter
 
         // output list tracks in RecyclerView trackListHistoryView
         readTrackListHistory()
         trackListHistoryAdapter.notifyDataSetChanged()
-        trackListHistoryView.adapter = trackListHistoryAdapter
+        binding.searchHistoryTrackList.adapter = trackListHistoryAdapter
 
         // listeners
-        inputSearch.setOnFocusChangeListener(focusChangeListener)
-        inputSearch.addTextChangedListener(inputSearchWatcher)
-        buttonBack.setOnClickListener(listener)
-        buttonClear.setOnClickListener(listener)
-        buttonUpdate.setOnClickListener(listener)
-        buttonClearSearchHistory.setOnClickListener(listener)
+        binding.inputSearch.setOnFocusChangeListener(focusChangeListener)
+        binding.inputSearch.addTextChangedListener(inputSearchWatcher)
+        binding.buttonBack.setOnClickListener(listener)
+        binding.buttonClear.setOnClickListener(listener)
+        binding.buttonUpdate.setOnClickListener(listener)
+        binding.buttonClearSearchHistory.setOnClickListener(listener)
     }
 
     private fun readTrackListHistory() {
@@ -179,18 +145,18 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
     @SuppressLint("NotifyDataSetChanged")
     private fun visibleLayoutSearchHistory(flag: Boolean) {
         readTrackListHistory()
-        if (flag && inputSearch.text.isEmpty() && inputSearch.hasFocus() && trackListHistory.isNotEmpty()) {
-            Utils.visibilityView(viewArray, layoutSearchHistory)
+        if (flag && binding.inputSearch.text.isEmpty() && binding.inputSearch.hasFocus() && trackListHistory.isNotEmpty()) {
+            Utils.visibilityView(viewArray, binding.layoutSearchHistory)
             trackListHistoryAdapter.setTrackList(trackListHistory)
             trackListHistoryAdapter.notifyDataSetChanged()
         } else {
-            layoutSearchHistory.visibility = View.GONE
+            binding.layoutSearchHistory.visibility = View.GONE
         }
     }
 
     private fun searchTracks(searchNameTracks: String) {
         if (searchNameTracks.isNotEmpty()) {
-            Utils.visibilityView(viewArray, loadingTime)
+            Utils.visibilityView(viewArray, binding.loadingTime)
             tracksInteractor.searchTracks(
                 searchNameTracks,
                 object : TracksInteractor.TracksConsumer {
@@ -198,15 +164,15 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
                     override fun consume(listTracks: List<Track>) {
                         handlerSearchTrack.post {
                             if (listTracks.isNotEmpty()) {
-                                Utils.visibilityView(viewArray, trackListView)
+                                Utils.visibilityView(viewArray, binding.trackList)
                                 trackList.clear()
                                 trackList.addAll(listTracks)
                                 trackListAdapter.notifyDataSetChanged()
                             } else {
-                                Utils.visibilityView(viewArray, layoutCommunicationProblems)
+                                Utils.visibilityView(viewArray, binding.layoutCommunicationProblems)
                             }
                             if (listTracks.isEmpty()) {
-                                Utils.visibilityView(viewArray, layoutNothingFound)
+                                Utils.visibilityView(viewArray, binding.layoutNothingFound)
                             }
                         }
                     }
@@ -224,14 +190,14 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
                 }
 
                 R.id.button_clear -> {
-                    inputSearch.setText("")
+                    binding.inputSearch.setText("")
                     val keyboardOnOff =
                         getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-                    keyboardOnOff?.hideSoftInputFromWindow(inputSearch.windowToken, 0)
+                    keyboardOnOff?.hideSoftInputFromWindow(binding.inputSearch.windowToken, 0)
                     trackList.clear()
                     trackListAdapter.notifyDataSetChanged()
                     visibleLayoutSearchHistory(true)
-                    Utils.visibilityView(viewArray, layoutSearchHistory)
+                    Utils.visibilityView(viewArray, binding.layoutSearchHistory)
                 }
 
                 R.id.button_update -> {
@@ -255,7 +221,7 @@ class SearchActivity : AppCompatActivity(R.layout.activity_search) {
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             // просмотр введённого текста
             val isInputText = !p0.isNullOrEmpty()
-            buttonClear.isVisible = isInputText
+            binding.buttonClear.isVisible = isInputText
             if (isInputText) {
                 searchTrack = p0.toString()
                 searchTracksDebounce()
