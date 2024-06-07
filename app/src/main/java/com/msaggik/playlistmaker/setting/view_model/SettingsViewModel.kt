@@ -18,18 +18,6 @@ class SettingsViewModel (
     private val settingsInteractor: SettingsInteractor,
 ) : ViewModel() {
 
-    private val mutableSettingsTheme = MutableLiveData<Boolean>()
-    private var isDarkTheme = false
-
-    init {
-        isDarkTheme = settingsInteractor.getThemeSettings().isDarkTheme
-//        readDarkThemeSp()
-        Utils.setApplicationTheme(isDarkTheme)
-        mutableSettingsTheme.postValue(isDarkTheme)
-    }
-
-    fun getSettingsTheme(): LiveData<Boolean> = mutableSettingsTheme
-
     companion object {
         fun getViewModelFactory() : ViewModelProvider.Factory = viewModelFactory {
             initializer {
@@ -43,29 +31,33 @@ class SettingsViewModel (
         }
     }
 
-//    private fun readDarkThemeSp(){
-//        settingsInteractor.getThemeSettingsConsumer(object : SettingsInteractor.ThemeConsumer {
-//            override fun consume(themeSettings: ThemeSettings) {
-//                isDarkTheme = themeSettings.isDarkTheme
-//            }
-//        })
-//    }
+    // setting theme
+    private val mutableSettingsTheme = MutableLiveData<Boolean>()
+    private var isDarkTheme = false
 
-//    private fun setApplicationTheme(darkThemeEnabled: Boolean) {
-//        isDarkTheme = darkThemeEnabled
-//        AppCompatDelegate.setDefaultNightMode(
-//            if(isDarkTheme) {
-//                AppCompatDelegate.MODE_NIGHT_YES
-//            } else {
-//                AppCompatDelegate.MODE_NIGHT_NO
-//            }
-//        )
-//    }
+    init {
+        isDarkTheme = settingsInteractor.getThemeSettings().isDarkTheme
+        Utils.setApplicationTheme(isDarkTheme)
+        mutableSettingsTheme.postValue(isDarkTheme)
+    }
+
+    fun getSettingsTheme(): LiveData<Boolean> = mutableSettingsTheme
 
     fun switchTheme(darkThemeEnabled: Boolean) {
         isDarkTheme = darkThemeEnabled
         settingsInteractor.updateThemeSetting(ThemeSettings((isDarkTheme)))
         mutableSettingsTheme.postValue(isDarkTheme)
         Utils.setApplicationTheme(isDarkTheme)
+    }
+
+    // setting sharing
+    fun shareApp() {
+        sharingInteractor.shareApp()
+    }
+    fun openSupport() {
+        sharingInteractor.openSupport()
+    }
+    fun openTerms() {
+        sharingInteractor.openTerms()
     }
 }

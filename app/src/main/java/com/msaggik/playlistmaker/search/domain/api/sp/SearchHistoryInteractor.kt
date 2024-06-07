@@ -2,7 +2,7 @@ package com.msaggik.playlistmaker.search.domain.api.sp
 
 import com.msaggik.playlistmaker.search.domain.models.Track
 
-interface SearchHistoryInteractor { // интерфейс для связи domain - presentation
+interface SearchHistoryInteractor { // // интерфейс для связи domain - view-model
 
     fun clearTrackListHistory()
     fun readTrackListHistory(consumer: SpTracksHistoryConsumer)

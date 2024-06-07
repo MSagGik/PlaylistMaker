@@ -2,7 +2,7 @@ package com.msaggik.playlistmaker.setting.domain.api
 
 import com.msaggik.playlistmaker.setting.domain.model.ThemeSettings
 
-interface SettingsInteractor { // интерфейс для связи domain - presentation
+interface SettingsInteractor { // интерфейс для связи domain - view-model
 
     fun getThemeSettings() : ThemeSettings
     fun getThemeSettingsConsumer(consumer: ThemeConsumer)
