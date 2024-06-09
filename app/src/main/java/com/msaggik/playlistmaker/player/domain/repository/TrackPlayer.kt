@@ -1,4 +1,4 @@
-package com.msaggik.playlistmaker.player.data
+package com.msaggik.playlistmaker.player.domain.repository
 
 import com.msaggik.playlistmaker.player.domain.state.PlayerState
 import com.msaggik.playlistmaker.search.domain.models.Track

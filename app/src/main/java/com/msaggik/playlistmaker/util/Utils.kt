@@ -27,11 +27,11 @@ internal object Utils {
     }
 
     fun dateFormatMillisToMinSecShort(dateFormatMillis: Long) : String? {
-        return SimpleDateFormat("m:ss", Locale.getDefault()).format(dateFormatMillis)
+        return SimpleDateFormat("m:ss", Locale.getDefault()).format(roundingToThousandths(dateFormatMillis))
     }
 
     fun dateFormatMillisToMinSecFull(dateFormatMillis: Long) : String? {
-        return SimpleDateFormat("mm:ss", Locale.getDefault()).format(dateFormatMillis)
+        return SimpleDateFormat("mm:ss", Locale.getDefault()).format(roundingToThousandths(dateFormatMillis))
     }
 
     fun setApplicationTheme(darkThemeEnabled: Boolean) {
@@ -42,5 +42,14 @@ internal object Utils {
                 AppCompatDelegate.MODE_NIGHT_NO
             }
         )
+    }
+
+    private fun roundingToThousandths(inputValue: Long) : Long {
+        var value = inputValue
+        val remainder = value % 1000
+        if(remainder > 401) {
+            value += 1000 - remainder
+        }
+        return value
     }
 }

@@ -1,12 +1,13 @@
-package com.msaggik.playlistmaker.search.data.repository.sp.impl
+package com.msaggik.playlistmaker.search.data.repository_impl.sp
 
 import com.msaggik.playlistmaker.search.data.dto.response.TrackDto
-import com.msaggik.playlistmaker.search.data.repository.sp.SearchHistorySpRepository
 import com.msaggik.playlistmaker.search.data.base.sp.SearchHistorySp
 import com.msaggik.playlistmaker.search.data.base.sp.impl.SearchHistorySpImpl
 import com.msaggik.playlistmaker.search.domain.models.Track
+import com.msaggik.playlistmaker.search.domain.repository.sp.SearchHistorySpRepository
 
-class SearchHistorySpRepositoryImpl(private val manageSp: SearchHistorySp) : SearchHistorySpRepository {
+class SearchHistorySpRepositoryImpl(private val manageSp: SearchHistorySp) :
+    SearchHistorySpRepository {
 
     override fun clearTrackListHistoryDomain() {
         (manageSp as SearchHistorySpImpl).clearTrackListHistorySharedPreferences()

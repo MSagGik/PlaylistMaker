@@ -1,6 +1,6 @@
 package com.msaggik.playlistmaker.sharing.domain.api.impl
 
-import com.msaggik.playlistmaker.sharing.data.ExternalNavigator
+import com.msaggik.playlistmaker.sharing.domain.repository.ExternalNavigator
 import com.msaggik.playlistmaker.sharing.domain.api.SharingInteractor
 import com.msaggik.playlistmaker.sharing.domain.model.EmailData
 

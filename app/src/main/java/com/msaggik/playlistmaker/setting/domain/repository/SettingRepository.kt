@@ -1,4 +1,4 @@
-package com.msaggik.playlistmaker.setting.data.repository
+package com.msaggik.playlistmaker.setting.domain.repository
 
 import com.msaggik.playlistmaker.setting.domain.model.ThemeSettings
 

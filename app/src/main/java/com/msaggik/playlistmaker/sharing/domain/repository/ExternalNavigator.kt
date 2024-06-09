@@ -1,4 +1,4 @@
-package com.msaggik.playlistmaker.sharing.data
+package com.msaggik.playlistmaker.sharing.domain.repository
 
 import com.msaggik.playlistmaker.sharing.domain.model.EmailData
 

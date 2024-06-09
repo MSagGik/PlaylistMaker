@@ -1,4 +1,4 @@
-package com.msaggik.playlistmaker.search.data.repository.sp
+package com.msaggik.playlistmaker.search.domain.repository.sp
 
 import com.msaggik.playlistmaker.search.domain.models.Track
 

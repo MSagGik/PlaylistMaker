@@ -1,12 +1,12 @@
-package com.msaggik.playlistmaker.sharing.data.impl
+package com.msaggik.playlistmaker.sharing.data
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import com.msaggik.playlistmaker.R
-import com.msaggik.playlistmaker.sharing.data.ExternalNavigator
 import com.msaggik.playlistmaker.sharing.domain.model.EmailData
+import com.msaggik.playlistmaker.sharing.domain.repository.ExternalNavigator
 
 class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
 

@@ -22,8 +22,6 @@ class PlayerViewModel(
 ) : ViewModel() {
     companion object {
         private const val PLAYER_DELAY_UPDATE_TRACK_LIST = 250L
-        private const val START = "0.00"
-        private const val END = "00.30"
         fun getViewModelFactory(trackId: Int): ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val interactor = (this[APPLICATION_KEY] as App).providePlayerInteractor(trackId)
@@ -51,17 +49,7 @@ class PlayerViewModel(
 
     fun isReverse() {
         isReverse = !isReverse
-        currentTimePlayingLiveData.postValue(
-            when (currentTimePlayingLiveData.value) {
-                START -> END
-                END -> START
-                else -> Utils.dateFormatMillisToMinSecShort(
-                    playerInteractor.getPlayerCurrentPosition(
-                        isReverse
-                    ).toLong()
-                )
-            }
-        )
+        currentTimePlayingLiveData.postValue(Utils.dateFormatMillisToMinSecShort(playerInteractor.getPlayerCurrentPosition(isReverse).toLong()))
     }
 
     override fun onCleared() {
@@ -82,7 +70,7 @@ class PlayerViewModel(
         handler.postDelayed(object : Runnable {
             override fun run() {
                 if (playerInteractor.getPlayerState() == PlayerState.PLAYER_STATE_PREPARED) {
-                    currentTimePlayingLiveData.postValue(if (isReverse) END else START)
+                    currentTimePlayingLiveData.postValue(Utils.dateFormatMillisToMinSecShort(playerInteractor.getPlayerCurrentPosition(isReverse).toLong()))
                     buttonStateLiveData.postValue(PlayState.Play)
                     handler.removeCallbacksAndMessages(null)
                 } else {

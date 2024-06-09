@@ -1,7 +1,7 @@
 package com.msaggik.playlistmaker.search.domain.api.network.impl
 
 import com.msaggik.playlistmaker.search.domain.api.network.TracksInteractor
-import com.msaggik.playlistmaker.search.data.repository.network.TracksRepository
+import com.msaggik.playlistmaker.search.domain.repository.network.TracksRepository
 import com.msaggik.playlistmaker.util.Resource
 import java.util.concurrent.Executors
 

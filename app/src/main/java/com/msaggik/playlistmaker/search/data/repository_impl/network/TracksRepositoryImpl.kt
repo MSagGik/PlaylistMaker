@@ -1,12 +1,12 @@
-package com.msaggik.playlistmaker.search.data.repository.network.impl
+package com.msaggik.playlistmaker.search.data.repository_impl.network
 
 import android.content.Context
 import com.msaggik.playlistmaker.R
 import com.msaggik.playlistmaker.search.data.dto.request.TracksSearchRequest
 import com.msaggik.playlistmaker.search.data.dto.response.TrackResponse
 import com.msaggik.playlistmaker.search.data.base.network.NetworkClient
-import com.msaggik.playlistmaker.search.data.repository.network.TracksRepository
 import com.msaggik.playlistmaker.search.domain.models.Track
+import com.msaggik.playlistmaker.search.domain.repository.network.TracksRepository
 import com.msaggik.playlistmaker.util.Resource
 
 class TracksRepositoryImpl(

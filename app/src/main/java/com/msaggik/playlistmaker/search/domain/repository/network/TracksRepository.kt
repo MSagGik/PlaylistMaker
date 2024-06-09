@@ -1,4 +1,4 @@
-package com.msaggik.playlistmaker.search.data.repository.network
+package com.msaggik.playlistmaker.search.domain.repository.network
 
 import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.util.Resource

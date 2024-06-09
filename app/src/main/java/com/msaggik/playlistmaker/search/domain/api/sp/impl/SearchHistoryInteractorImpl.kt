@@ -1,7 +1,7 @@
 package com.msaggik.playlistmaker.search.domain.api.sp.impl
 
 import com.msaggik.playlistmaker.search.domain.api.sp.SearchHistoryInteractor
-import com.msaggik.playlistmaker.search.data.repository.sp.SearchHistorySpRepository
+import com.msaggik.playlistmaker.search.domain.repository.sp.SearchHistorySpRepository
 import com.msaggik.playlistmaker.search.domain.models.Track
 import java.util.concurrent.Executors
 

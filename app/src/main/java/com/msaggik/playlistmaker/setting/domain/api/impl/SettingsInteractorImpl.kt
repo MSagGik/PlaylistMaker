@@ -1,6 +1,6 @@
 package com.msaggik.playlistmaker.setting.domain.api.impl
 
-import com.msaggik.playlistmaker.setting.data.repository.SettingRepository
+import com.msaggik.playlistmaker.setting.domain.repository.SettingRepository
 import com.msaggik.playlistmaker.setting.domain.api.SettingsInteractor
 import com.msaggik.playlistmaker.setting.domain.model.ThemeSettings
 import java.util.concurrent.Executors

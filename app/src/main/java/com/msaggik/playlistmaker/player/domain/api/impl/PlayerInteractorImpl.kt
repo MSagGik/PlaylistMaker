@@ -1,6 +1,6 @@
 package com.msaggik.playlistmaker.player.domain.api.impl
 
-import com.msaggik.playlistmaker.player.data.TrackPlayer
+import com.msaggik.playlistmaker.player.domain.repository.TrackPlayer
 import com.msaggik.playlistmaker.player.domain.api.PlayerInteractor
 import com.msaggik.playlistmaker.player.domain.state.PlayerState
 import com.msaggik.playlistmaker.search.domain.models.Track

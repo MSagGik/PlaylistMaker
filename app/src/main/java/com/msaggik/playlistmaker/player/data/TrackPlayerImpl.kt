@@ -1,8 +1,8 @@
-package com.msaggik.playlistmaker.player.data.impl
+package com.msaggik.playlistmaker.player.data
 
 import android.content.Context
 import android.media.MediaPlayer
-import com.msaggik.playlistmaker.player.data.TrackPlayer
+import com.msaggik.playlistmaker.player.domain.repository.TrackPlayer
 import com.msaggik.playlistmaker.player.domain.state.PlayerState
 import com.msaggik.playlistmaker.search.data.base.sp.impl.SearchHistorySpImpl
 import com.msaggik.playlistmaker.search.domain.models.Track
