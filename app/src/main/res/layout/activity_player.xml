@@ -5,7 +5,19 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.ui.activity.PlayerActivity">
+    tools:context=".player.ui.PlayerActivity">
+
+    <ProgressBar
+        android:id="@+id/loading_time_player"
+        android:layout_width="@dimen/dimen_44"
+        android:layout_height="@dimen/dimen_44"
+        android:layout_gravity="center_horizontal"
+        android:indeterminateTint="@color/violet_170"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_start_one"
@@ -263,13 +275,19 @@
     <TextView
         android:id="@+id/track_album_name"
         style="@style/TextViewYSMediumThreeTheme"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:gravity="end"
+        android:paddingStart="@dimen/dimen_16"
         android:text="@string/default_string"
         app:layout_constraintBottom_toBottomOf="@+id/header_album_name"
         app:layout_constraintEnd_toStartOf="@+id/guideline_end_two"
+        app:layout_constraintStart_toEndOf="@+id/header_album_name"
         app:layout_constraintTag="album_name"
-        app:layout_constraintTop_toTopOf="@+id/header_album_name" />
+        app:layout_constraintTop_toTopOf="@+id/header_album_name"
+        tools:ignore="RtlSymmetry" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/group_album_name"
