@@ -2,16 +2,7 @@ package com.msaggik.playlistmaker.root
 
 import android.app.Application
 import com.msaggik.playlistmaker.player.di.playerModule
-import com.msaggik.playlistmaker.search.data.base.network.retrofit.RetrofitNetworkClient
-import com.msaggik.playlistmaker.search.data.base.sp.impl.SearchHistorySpImpl
-import com.msaggik.playlistmaker.search.domain.repository.network.TracksRepository
-import com.msaggik.playlistmaker.search.data.repository_impl.network.TracksRepositoryImpl
-import com.msaggik.playlistmaker.search.domain.repository.sp.SearchHistorySpRepository
-import com.msaggik.playlistmaker.search.data.repository_impl.sp.SearchHistorySpRepositoryImpl
-import com.msaggik.playlistmaker.search.domain.api.network.TracksInteractor
-import com.msaggik.playlistmaker.search.domain.api.network.impl.TracksInteractorImpl
-import com.msaggik.playlistmaker.search.domain.api.sp.SearchHistoryInteractor
-import com.msaggik.playlistmaker.search.domain.api.sp.impl.SearchHistoryInteractorImpl
+import com.msaggik.playlistmaker.search.di.searchModule
 import com.msaggik.playlistmaker.setting.data.base.impl.ThemeSpImpl
 import com.msaggik.playlistmaker.setting.domain.repository.SettingRepository
 import com.msaggik.playlistmaker.setting.data.repository_impl.SettingRepositoryImpl
@@ -40,17 +31,10 @@ class App : Application() {
         startKoin{
             androidContext(this@App)
             modules(
-                playerModule
+                playerModule,
+                searchModule,
             )
         }
-    }
-
-    fun provideTracksInteractor(): TracksInteractor {
-        return TracksInteractorImpl(getTracksRepository())
-    }
-
-    fun provideSearchHistoryInteractor(): SearchHistoryInteractor {
-        return SearchHistoryInteractorImpl(getSearchHistoryRepository())
     }
 
     fun provideThemeInteractor(): SettingsInteractor {
@@ -59,18 +43,6 @@ class App : Application() {
 
     fun provideSharingInteractor(): SharingInteractor {
         return SharingInteractorImpl(getSharingRepository())
-    }
-
-//    fun providePlayerInteractor(trackId: Int): PlayerInteractor {
-//        return PlayerInteractorImpl(TrackPlayerImpl(trackId = trackId, applicationContext))
-//    }
-
-    private fun getTracksRepository(): TracksRepository {
-        return TracksRepositoryImpl(RetrofitNetworkClient(applicationContext), applicationContext)
-    }
-
-    private fun getSearchHistoryRepository(): SearchHistorySpRepository {
-        return SearchHistorySpRepositoryImpl(SearchHistorySpImpl(applicationContext))
     }
 
     private fun getThemeRepository(): SettingRepository {

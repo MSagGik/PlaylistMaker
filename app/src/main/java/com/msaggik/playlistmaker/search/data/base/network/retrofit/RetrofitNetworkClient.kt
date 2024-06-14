@@ -6,11 +6,12 @@ import android.net.NetworkCapabilities
 import com.msaggik.playlistmaker.search.data.dto.request.TracksSearchRequest
 import com.msaggik.playlistmaker.search.data.dto.response.Response
 import com.msaggik.playlistmaker.search.data.base.network.NetworkClient
+import retrofit2.Retrofit
 
-private const val ITUNES_BASE_URL = "https://itunes.apple.com"
-class RetrofitNetworkClient(private val context: Context) : NetworkClient {
-
-    private val retrofit = RestItunes.createRetrofitObject(ITUNES_BASE_URL)
+class RetrofitNetworkClient(
+    private val context: Context,
+    retrofit: Retrofit
+) : NetworkClient {
     private val itunesRestService = retrofit.create(RestItunes::class.java)
     override fun doRequest(dto: Any): Response {
         if (isConnected() == false) {

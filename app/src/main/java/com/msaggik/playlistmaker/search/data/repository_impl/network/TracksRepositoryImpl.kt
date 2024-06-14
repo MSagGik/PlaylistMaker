@@ -10,9 +10,9 @@ import com.msaggik.playlistmaker.search.domain.repository.network.TracksReposito
 import com.msaggik.playlistmaker.util.Resource
 
 class TracksRepositoryImpl(
-    private val networkClient: NetworkClient,
-    private val context: Context
-    ) : TracksRepository {
+    private val context: Context,
+    private val networkClient: NetworkClient
+) : TracksRepository {
     override fun searchTracksDomain(trackSearch: String): Resource<List<Track>> {
         val response = networkClient.doRequest(TracksSearchRequest(trackSearch))
         return when(response.resultCode) {

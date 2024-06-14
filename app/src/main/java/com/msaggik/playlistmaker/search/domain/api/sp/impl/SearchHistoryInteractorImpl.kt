@@ -5,7 +5,9 @@ import com.msaggik.playlistmaker.search.domain.repository.sp.SearchHistorySpRepo
 import com.msaggik.playlistmaker.search.domain.models.Track
 import java.util.concurrent.Executors
 
-class SearchHistoryInteractorImpl(private val repository: SearchHistorySpRepository) : SearchHistoryInteractor {
+class SearchHistoryInteractorImpl(
+    private val repository: SearchHistorySpRepository
+) : SearchHistoryInteractor {
 
     val executor = Executors.newCachedThreadPool()
 

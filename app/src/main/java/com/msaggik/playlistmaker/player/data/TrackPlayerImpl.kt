@@ -1,22 +1,23 @@
 package com.msaggik.playlistmaker.player.data
 
-import android.content.Context
 import android.media.MediaPlayer
 import com.msaggik.playlistmaker.player.domain.repository.TrackPlayer
 import com.msaggik.playlistmaker.player.domain.state.PlayerState
-import com.msaggik.playlistmaker.search.data.base.sp.impl.SearchHistorySpImpl
+import com.msaggik.playlistmaker.search.data.base.sp.SearchHistorySp
 import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.util.Utils
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class TrackPlayerImpl(
-    private val context: Context,
     private val mediaPlayer: MediaPlayer
-) : TrackPlayer {
+) : TrackPlayer, KoinComponent {
 
     override var playerState = PlayerState.PLAYER_STATE_DEFAULT
 
+    private val searchHistorySp: SearchHistorySp by inject()
     private val tracksHistory by lazy {
-        SearchHistorySpImpl(context).readTrackListHistorySharedPreferences()
+        searchHistorySp.readTrackListHistorySharedPreferences()
     }
 
     override fun onPlay() {

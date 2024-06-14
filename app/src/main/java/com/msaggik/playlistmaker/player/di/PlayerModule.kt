@@ -6,7 +6,6 @@ import com.msaggik.playlistmaker.player.domain.api.PlayerInteractor
 import com.msaggik.playlistmaker.player.domain.api.impl.PlayerInteractorImpl
 import com.msaggik.playlistmaker.player.domain.repository.TrackPlayer
 import com.msaggik.playlistmaker.player.view_model.PlayerViewModel
-import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -29,7 +28,6 @@ val playerModule = module {
     // data
     factory<TrackPlayer> {
         TrackPlayerImpl(
-            androidContext(),
             mediaPlayer = get(),
         )
     }

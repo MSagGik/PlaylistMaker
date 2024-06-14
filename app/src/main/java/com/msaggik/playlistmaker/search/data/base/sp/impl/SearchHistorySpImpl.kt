@@ -1,6 +1,5 @@
 package com.msaggik.playlistmaker.search.data.base.sp.impl
 
-import android.content.Context
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.msaggik.playlistmaker.search.data.base.sp.SearchHistorySp
@@ -8,10 +7,13 @@ import com.msaggik.playlistmaker.search.data.dto.response.TrackDto
 
 private const val TRACK_LIST_LIMIT = 10
 private const val TRACK_LIST_HISTORY_KEY = "track_list_history_key"
-class SearchHistorySpImpl (context: Context) : SearchHistorySp {
+class SearchHistorySpImpl (
+//    private val context: Context,
+    private val spSearchHistory: SharedPreferences
+) : SearchHistorySp {
 
     private var trackListHistory: MutableList<TrackDto> = ArrayList()
-    private val spSearchHistory = SearchHistorySp.createObjectSpSearchHistory(context)
+//    private val spSearchHistory = SearchHistorySp.createObjectSpSearchHistory(context)
 
     override fun clearTrackListHistorySharedPreferences() {
         spSearchHistory.edit()
