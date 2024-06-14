@@ -34,7 +34,7 @@ class PlayerViewModel(
 
     fun isReverse() {
         isReverse = !isReverse
-        currentTimePlayingLiveData.postValue(Utils.dateFormatMillisToMinSecShort(playerInteractor.getPlayerCurrentPosition(isReverse).toLong()))
+        currentTimePlayingLiveData.postValue(Utils.dateFormatMillisToMinSecShort(playerInteractor.getPlayerCurrentPosition(isReverse)))
     }
 
     override fun onCleared() {
@@ -55,13 +55,13 @@ class PlayerViewModel(
         handler.postDelayed(object : Runnable {
             override fun run() {
                 if (playerInteractor.getPlayerState() == PlayerState.PLAYER_STATE_PREPARED) {
-                    currentTimePlayingLiveData.postValue(Utils.dateFormatMillisToMinSecShort(playerInteractor.getPlayerCurrentPosition(isReverse).toLong()))
+                    currentTimePlayingLiveData.postValue(Utils.dateFormatMillisToMinSecShort(playerInteractor.getPlayerCurrentPosition(isReverse)))
                     buttonStateLiveData.postValue(PlayState.Play)
                     handler.removeCallbacksAndMessages(null)
                 } else {
                     currentTimePlayingLiveData.postValue(
                         Utils.dateFormatMillisToMinSecShort(
-                            playerInteractor.getPlayerCurrentPosition(isReverse).toLong()
+                            playerInteractor.getPlayerCurrentPosition(isReverse)
                         )
                     )
                     handler.postDelayed(this, PLAYER_DELAY_UPDATE_TRACK_LIST)
@@ -88,12 +88,6 @@ class PlayerViewModel(
 
     fun releasePlayer() {
         playerInteractor.release()
-        buttonStateLiveData.postValue(PlayState.Play)
-        handler.removeCallbacksAndMessages(null)
-    }
-
-    fun resetPlayer() {
-        playerInteractor.reset()
         buttonStateLiveData.postValue(PlayState.Play)
         handler.removeCallbacksAndMessages(null)
     }

@@ -40,11 +40,11 @@ class TrackPlayerImpl(
         return track
     }
 
-    override fun getCurrentPosition(isReverse: Boolean): Int {
+    override fun getCurrentPosition(isReverse: Boolean): Long {
         return if(isReverse) {
-            mediaPlayer.duration - mediaPlayer.currentPosition
+            (mediaPlayer.duration - mediaPlayer.currentPosition).toLong()
         } else {
-            mediaPlayer.currentPosition
+            mediaPlayer.currentPosition.toLong()
         }
     }
 

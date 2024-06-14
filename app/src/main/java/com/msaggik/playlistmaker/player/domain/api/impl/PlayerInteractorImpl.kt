@@ -5,7 +5,9 @@ import com.msaggik.playlistmaker.player.domain.api.PlayerInteractor
 import com.msaggik.playlistmaker.player.domain.state.PlayerState
 import com.msaggik.playlistmaker.search.domain.models.Track
 
-class PlayerInteractorImpl(private val trackPlayer: TrackPlayer) : PlayerInteractor {
+class PlayerInteractorImpl(
+    private val trackPlayer: TrackPlayer
+) : PlayerInteractor {
     override fun getPlayerState(): PlayerState {
         return trackPlayer.playerState
     }
@@ -26,7 +28,7 @@ class PlayerInteractorImpl(private val trackPlayer: TrackPlayer) : PlayerInterac
         return trackPlayer.loading(trackId)
     }
 
-    override fun getPlayerCurrentPosition(isReverse: Boolean): Int {
+    override fun getPlayerCurrentPosition(isReverse: Boolean): Long {
         return trackPlayer.getCurrentPosition(isReverse)
     }
 
