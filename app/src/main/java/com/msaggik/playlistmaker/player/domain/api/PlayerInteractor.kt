@@ -10,5 +10,6 @@ interface PlayerInteractor {
     fun stop()
     fun loading(trackId: Int) : Track
     fun getPlayerCurrentPosition(isReverse: Boolean): Int
+    fun reset()
     fun release()
 }

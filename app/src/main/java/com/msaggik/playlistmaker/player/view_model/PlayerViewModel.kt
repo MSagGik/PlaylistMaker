@@ -5,32 +5,17 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.msaggik.playlistmaker.player.domain.api.PlayerInteractor
 import com.msaggik.playlistmaker.player.domain.state.PlayerState
 import com.msaggik.playlistmaker.player.view_model.state.PlayState
-import com.msaggik.playlistmaker.root.App
 import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.util.Utils
 
 class PlayerViewModel(
-    private val trackId: Int,
     private val playerInteractor: PlayerInteractor,
 ) : ViewModel() {
     companion object {
         private const val PLAYER_DELAY_UPDATE_TRACK_LIST = 250L
-        fun getViewModelFactory(trackId: Int): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val interactor = (this[APPLICATION_KEY] as App).providePlayerInteractor(trackId)
-                PlayerViewModel(
-                    trackId,
-                    interactor,
-                )
-            }
-        }
     }
 
     private val handler = Handler(Looper.getMainLooper())
@@ -54,7 +39,7 @@ class PlayerViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        playerInteractor.stop()
+        playerInteractor.release()
         handler.removeCallbacksAndMessages(null)
     }
 
@@ -103,6 +88,12 @@ class PlayerViewModel(
 
     fun releasePlayer() {
         playerInteractor.release()
+        buttonStateLiveData.postValue(PlayState.Play)
+        handler.removeCallbacksAndMessages(null)
+    }
+
+    fun resetPlayer() {
+        playerInteractor.reset()
         buttonStateLiveData.postValue(PlayState.Play)
         handler.removeCallbacksAndMessages(null)
     }

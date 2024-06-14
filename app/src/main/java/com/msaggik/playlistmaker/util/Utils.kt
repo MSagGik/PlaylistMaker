@@ -5,6 +5,8 @@ import android.content.Context
 import android.util.TypedValue
 import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
+import com.msaggik.playlistmaker.search.data.dto.response.TrackDto
+import com.msaggik.playlistmaker.search.domain.models.Track
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -51,5 +53,17 @@ internal object Utils {
             value += 1000 - remainder
         }
         return value
+    }
+
+    fun searchTrackInList(trackId: Int, list: MutableList<TrackDto>) : TrackDto {
+        return list.firstOrNull { track -> track.trackId == trackId } ?: TrackDto()
+    }
+
+    fun convertTrackDtoToTrack(track: TrackDto): Track {
+        return Track(
+            track.trackId, track.trackName, track.artistName,
+            track.trackTimeMillis, track.artworkUrl100, track.collectionName,
+            track.releaseDate, track.primaryGenreName, track.country, track.previewUrl
+        )
     }
 }

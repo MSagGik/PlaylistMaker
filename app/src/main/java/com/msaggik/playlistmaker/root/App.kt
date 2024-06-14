@@ -1,9 +1,7 @@
 package com.msaggik.playlistmaker.root
 
 import android.app.Application
-import com.msaggik.playlistmaker.player.data.TrackPlayerImpl
-import com.msaggik.playlistmaker.player.domain.api.PlayerInteractor
-import com.msaggik.playlistmaker.player.domain.api.impl.PlayerInteractorImpl
+import com.msaggik.playlistmaker.player.di.playerModule
 import com.msaggik.playlistmaker.search.data.base.network.retrofit.RetrofitNetworkClient
 import com.msaggik.playlistmaker.search.data.base.sp.impl.SearchHistorySpImpl
 import com.msaggik.playlistmaker.search.domain.repository.network.TracksRepository
@@ -25,16 +23,26 @@ import com.msaggik.playlistmaker.sharing.data.ExternalNavigatorImpl
 import com.msaggik.playlistmaker.sharing.domain.api.SharingInteractor
 import com.msaggik.playlistmaker.sharing.domain.api.impl.SharingInteractorImpl
 import com.msaggik.playlistmaker.util.Utils
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 
 class App : Application() {
     override fun onCreate() {
         super.onCreate()
+
         provideThemeInteractor().getThemeSettingsConsumer(object : SettingsInteractor.ThemeConsumer {
             override fun consume(themeSettings: ThemeSettings) {
                 Utils.setApplicationTheme(themeSettings.isDarkTheme)
             }
         })
+
+        startKoin{
+            androidContext(this@App)
+            modules(
+                playerModule
+            )
+        }
     }
 
     fun provideTracksInteractor(): TracksInteractor {
@@ -53,9 +61,9 @@ class App : Application() {
         return SharingInteractorImpl(getSharingRepository())
     }
 
-    fun providePlayerInteractor(trackId: Int): PlayerInteractor {
-        return PlayerInteractorImpl(TrackPlayerImpl(trackId = trackId, applicationContext))
-    }
+//    fun providePlayerInteractor(trackId: Int): PlayerInteractor {
+//        return PlayerInteractorImpl(TrackPlayerImpl(trackId = trackId, applicationContext))
+//    }
 
     private fun getTracksRepository(): TracksRepository {
         return TracksRepositoryImpl(RetrofitNetworkClient(applicationContext), applicationContext)

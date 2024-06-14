@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
+
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.msaggik.playlistmaker.R
@@ -14,6 +14,7 @@ import com.msaggik.playlistmaker.databinding.ActivityPlayerBinding
 import com.msaggik.playlistmaker.player.view_model.PlayerViewModel
 import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.util.Utils
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlayerActivity : AppCompatActivity() {
 
@@ -32,9 +33,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     // view-model
-    private val playerViewModel by lazy {
-        ViewModelProvider(this, PlayerViewModel.getViewModelFactory(track?.trackId ?: -1))[PlayerViewModel::class.java]
-    }
+    private val playerViewModel: PlayerViewModel by viewModel()
 
     @SuppressLint("SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {

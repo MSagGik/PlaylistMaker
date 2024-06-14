@@ -10,5 +10,6 @@ interface TrackPlayer {
     fun onStop()
     fun loading(trackId: Int) : Track
     fun getCurrentPosition(isReverse: Boolean): Int
+    fun onReset()
     fun onRelease()
 }

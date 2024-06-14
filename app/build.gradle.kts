@@ -55,4 +55,5 @@ dependencies {
     annotationProcessor(libs.compiler)
     implementation(libs.logging.interceptor)
     implementation(libs.gson)
+    implementation(libs.koin.android)
 }
