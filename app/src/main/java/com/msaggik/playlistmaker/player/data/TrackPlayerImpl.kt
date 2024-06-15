@@ -37,7 +37,7 @@ class TrackPlayerImpl(
     }
 
     override fun loading(trackId: Int): Track {
-        trackListHistory = Utils.readSharePreferences(spSearchHistory, TRACK_LIST_HISTORY_KEY, gson)
+        trackListHistory = Utils.readSharedPreferences(spSearchHistory, TRACK_LIST_HISTORY_KEY, gson)
         val track = Utils.convertTrackDtoToTrack(
             track = Utils.searchTrackInList(
                 trackId = trackId,

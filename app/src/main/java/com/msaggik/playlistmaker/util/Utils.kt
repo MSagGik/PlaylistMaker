@@ -99,17 +99,16 @@ internal object Utils {
         return trackList
     }
 
-    fun readSharePreferences(sharedPreferences: SharedPreferences, trackListKey: String, gson: Gson): MutableList<TrackDto> {
+    fun readSharedPreferences(sharedPreferences: SharedPreferences, trackListKey: String, gson: Gson): MutableList<TrackDto> {
         val trackList: MutableList<TrackDto> = ArrayList()
         val json = sharedPreferences.getString(trackListKey, null)
         if(json != null) {
-            trackList.clear()
             trackList.addAll(gson.fromJson(json, Array<TrackDto>::class.java))
         }
         return trackList
     }
 
-    fun writeSharePreferences(sharedPreferences: SharedPreferences, trackListKey: String, trackList: MutableList<TrackDto>, gson: Gson) {
+    fun writeSharedPreferences(sharedPreferences: SharedPreferences, trackListKey: String, trackList: MutableList<TrackDto>, gson: Gson) {
         val json = gson.toJson(trackList)
         sharedPreferences.edit()
             .putString(trackListKey, json)

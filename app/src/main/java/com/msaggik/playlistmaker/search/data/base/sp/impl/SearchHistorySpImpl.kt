@@ -23,7 +23,7 @@ class SearchHistorySpImpl (
     }
 
     override fun readTrackListHistorySharedPreferences(): MutableList<TrackDto> {
-        trackListHistory = Utils.readSharePreferences(spSearchHistory, TRACK_LIST_HISTORY_KEY, gson)
+        trackListHistory = Utils.readSharedPreferences(spSearchHistory, TRACK_LIST_HISTORY_KEY, gson)
         return trackListHistory
     }
 
@@ -33,7 +33,7 @@ class SearchHistorySpImpl (
             trackList = readTrackListHistorySharedPreferences(),
             limit = TRACK_LIST_LIMIT
         )
-        Utils.writeSharePreferences(spSearchHistory, TRACK_LIST_HISTORY_KEY, trackListHistory, gson)
+        Utils.writeSharedPreferences(spSearchHistory, TRACK_LIST_HISTORY_KEY, trackListHistory, gson)
         return trackListHistory
     }
 }
