@@ -9,14 +9,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.msaggik.playlistmaker.search.domain.api.network.TracksInteractor
-import com.msaggik.playlistmaker.search.domain.api.sp.SearchHistoryInteractor
+import com.msaggik.playlistmaker.search.domain.api.TracksInteractor
 import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.search.ui.state.TracksState
 
 class SearchViewModel (
     private val tracksInteractor: TracksInteractor,
-    private val searchHistoryInteractor: SearchHistoryInteractor,
 ) : ViewModel() {
 
     companion object {
@@ -32,7 +30,7 @@ class SearchViewModel (
     }
 
     private fun readTrackListHistory() {
-        searchHistoryInteractor.readTrackListHistory(object : SearchHistoryInteractor.SpTracksHistoryConsumer {
+        tracksInteractor.readTrackListHistory(object : TracksInteractor.SpTracksHistoryConsumer {
             @SuppressLint("NotifyDataSetChanged")
             override fun consume(listHistoryTracks: List<Track>) {
                 trackListHistoryLiveData.postValue(listHistoryTracks)
@@ -41,9 +39,9 @@ class SearchViewModel (
     }
 
     fun addTrackListHistory(track: Track) {
-        searchHistoryInteractor.addTrackListHistory(
+        tracksInteractor.addTrackListHistory(
             track,
-            object : SearchHistoryInteractor.SpTracksHistoryConsumer {
+            object : TracksInteractor.SpTracksHistoryConsumer {
                 @SuppressLint("NotifyDataSetChanged")
                 override fun consume(listHistoryTracks: List<Track>) {
                     trackListHistoryLiveData.postValue(listHistoryTracks)
@@ -52,7 +50,7 @@ class SearchViewModel (
     }
 
     fun clearTrackListHistory() {
-        searchHistoryInteractor.clearTrackListHistory()
+        tracksInteractor.clearTrackListHistory()
     }
 
     fun getTrackListHistoryLiveData(): LiveData<List<Track>> = trackListHistoryLiveData

@@ -1,18 +1,15 @@
 package com.msaggik.playlistmaker.search.di
 
 import androidx.appcompat.app.AppCompatActivity
+import com.google.gson.Gson
 import com.msaggik.playlistmaker.search.data.base.network.NetworkClient
 import com.msaggik.playlistmaker.search.data.base.network.retrofit.RetrofitNetworkClient
 import com.msaggik.playlistmaker.search.data.base.sp.SearchHistorySp
 import com.msaggik.playlistmaker.search.data.base.sp.impl.SearchHistorySpImpl
-import com.msaggik.playlistmaker.search.data.repository_impl.network.TracksRepositoryImpl
-import com.msaggik.playlistmaker.search.data.repository_impl.sp.SearchHistorySpRepositoryImpl
-import com.msaggik.playlistmaker.search.domain.api.network.TracksInteractor
-import com.msaggik.playlistmaker.search.domain.api.network.impl.TracksInteractorImpl
-import com.msaggik.playlistmaker.search.domain.api.sp.SearchHistoryInteractor
-import com.msaggik.playlistmaker.search.domain.api.sp.impl.SearchHistoryInteractorImpl
-import com.msaggik.playlistmaker.search.domain.repository.network.TracksRepository
-import com.msaggik.playlistmaker.search.domain.repository.sp.SearchHistorySpRepository
+import com.msaggik.playlistmaker.search.data.repository_impl.TracksRepositoryImpl
+import com.msaggik.playlistmaker.search.domain.api.TracksInteractor
+import com.msaggik.playlistmaker.search.domain.api.impl.TracksInteractorImpl
+import com.msaggik.playlistmaker.search.domain.repository.TracksRepository
 import com.msaggik.playlistmaker.search.view_model.SearchViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -29,34 +26,25 @@ val searchModule = module {
     viewModel{
         SearchViewModel(
             tracksInteractor = get(),
-            searchHistoryInteractor = get()
         )
     }
 
     // domain
-    // network
     single<TracksInteractor> {
         TracksInteractorImpl(
             repository = get()
         )
     }
 
-    // sp
-    single<SearchHistoryInteractor> {
-        SearchHistoryInteractorImpl(
-            repository = get()
-        )
-    }
-
     // data
-    // network
     single<TracksRepository> {
         TracksRepositoryImpl(
             androidContext(),
-            networkClient = get()
+            networkClient = get(),
+            searchHistorySp = get()
         )
     }
-
+    // network
     single<NetworkClient> {
         RetrofitNetworkClient(
             androidContext(),
@@ -72,20 +60,19 @@ val searchModule = module {
     }
 
     //sp
-    single<SearchHistorySpRepository> {
-        SearchHistorySpRepositoryImpl(
-            searchHistorySp = get()
-        )
-    }
-
     single<SearchHistorySp> {
         SearchHistorySpImpl(
-            spSearchHistory = get()
+            spSearchHistory = get(),
+            gson = get()
         )
     }
 
     single {
         androidContext()
             .getSharedPreferences(TRACK_LIST_PREFERENCES, AppCompatActivity.MODE_PRIVATE)
+    }
+
+    single {
+        Gson()
     }
 }
