@@ -8,14 +8,13 @@ import com.msaggik.playlistmaker.player.domain.state.PlayerState
 import com.msaggik.playlistmaker.search.data.dto.response.TrackDto
 import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.util.Utils
-import org.koin.core.component.KoinComponent
 
 private const val TRACK_LIST_HISTORY_KEY = "track_list_history_key"
 class TrackPlayerImpl(
     private val mediaPlayer: MediaPlayer,
     private val spSearchHistory: SharedPreferences,
     private val gson: Gson
-) : TrackPlayer, KoinComponent {
+) : TrackPlayer {
 
     override var playerState = PlayerState.PLAYER_STATE_DEFAULT
 
