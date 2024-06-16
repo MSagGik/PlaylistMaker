@@ -9,34 +9,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.msaggik.playlistmaker.search.domain.api.network.TracksInteractor
-import com.msaggik.playlistmaker.search.domain.api.sp.SearchHistoryInteractor
+import com.msaggik.playlistmaker.search.domain.api.TracksInteractor
 import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.search.ui.state.TracksState
-import com.msaggik.playlistmaker.root.App
 
 class SearchViewModel (
     private val tracksInteractor: TracksInteractor,
-    private val searchHistoryInteractor: SearchHistoryInteractor,
 ) : ViewModel() {
 
     companion object {
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
         private val SEARCH_REQUEST_TOKEN = Any()
-        fun getViewModelFactory() : ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val tracksInt = (this[APPLICATION_KEY] as App).provideTracksInteractor()
-                val searchHistoryInt= (this[APPLICATION_KEY] as App).provideSearchHistoryInteractor()
-                SearchViewModel(
-                    tracksInt,
-                    searchHistoryInt,
-                )
-            }
-        }
     }
 
     // trackListHistoryLiveData
@@ -47,7 +30,7 @@ class SearchViewModel (
     }
 
     private fun readTrackListHistory() {
-        searchHistoryInteractor.readTrackListHistory(object : SearchHistoryInteractor.SpTracksHistoryConsumer {
+        tracksInteractor.readTrackListHistory(object : TracksInteractor.SpTracksHistoryConsumer {
             @SuppressLint("NotifyDataSetChanged")
             override fun consume(listHistoryTracks: List<Track>) {
                 trackListHistoryLiveData.postValue(listHistoryTracks)
@@ -56,9 +39,9 @@ class SearchViewModel (
     }
 
     fun addTrackListHistory(track: Track) {
-        searchHistoryInteractor.addTrackListHistory(
+        tracksInteractor.addTrackListHistory(
             track,
-            object : SearchHistoryInteractor.SpTracksHistoryConsumer {
+            object : TracksInteractor.SpTracksHistoryConsumer {
                 @SuppressLint("NotifyDataSetChanged")
                 override fun consume(listHistoryTracks: List<Track>) {
                     trackListHistoryLiveData.postValue(listHistoryTracks)
@@ -67,7 +50,7 @@ class SearchViewModel (
     }
 
     fun clearTrackListHistory() {
-        searchHistoryInteractor.clearTrackListHistory()
+        tracksInteractor.clearTrackListHistory()
     }
 
     fun getTrackListHistoryLiveData(): LiveData<List<Track>> = trackListHistoryLiveData

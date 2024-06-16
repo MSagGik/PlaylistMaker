@@ -1,12 +1,12 @@
 package com.msaggik.playlistmaker.setting.data.base.impl
 
-import android.content.Context
+import android.content.SharedPreferences
 import com.msaggik.playlistmaker.setting.data.base.ThemeSp
 
 private const val APP_THEME_KEY = "app_theme_key"
-class ThemeSpImpl (context: Context) : ThemeSp {
-
-    private val spTheme = ThemeSp.createObjectSpTheme(context)
+class ThemeSpImpl(
+    private val spTheme: SharedPreferences
+) : ThemeSp {
     override fun isDarkThemeSharedPreferences(): Boolean {
         return spTheme.getBoolean(APP_THEME_KEY, false)
     }

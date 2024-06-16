@@ -8,7 +8,9 @@ import com.msaggik.playlistmaker.R
 import com.msaggik.playlistmaker.sharing.domain.model.EmailData
 import com.msaggik.playlistmaker.sharing.domain.repository.ExternalNavigator
 
-class ExternalNavigatorImpl(private val context: Context) : ExternalNavigator {
+class ExternalNavigatorImpl(
+    private val context: Context
+) : ExternalNavigator {
 
     @SuppressLint("QueryPermissionsNeeded")
     override fun shareApp(shareAppLink: String) {

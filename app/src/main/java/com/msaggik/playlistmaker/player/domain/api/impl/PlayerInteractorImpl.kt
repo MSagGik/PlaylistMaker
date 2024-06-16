@@ -5,32 +5,38 @@ import com.msaggik.playlistmaker.player.domain.api.PlayerInteractor
 import com.msaggik.playlistmaker.player.domain.state.PlayerState
 import com.msaggik.playlistmaker.search.domain.models.Track
 
-class PlayerInteractorImpl(private val player: TrackPlayer) : PlayerInteractor {
+class PlayerInteractorImpl(
+    private val trackPlayer: TrackPlayer
+) : PlayerInteractor {
     override fun getPlayerState(): PlayerState {
-        return player.playerState
+        return trackPlayer.playerState
     }
 
     override fun play() {
-        player.onPlay()
+        trackPlayer.onPlay()
     }
 
     override fun pause() {
-        player.onPause()
+        trackPlayer.onPause()
     }
 
     override fun stop() {
-        player.onStop()
+        trackPlayer.onStop()
     }
 
     override fun loading(trackId: Int) : Track {
-        return player.loading(trackId)
+        return trackPlayer.loading(trackId)
     }
 
-    override fun getPlayerCurrentPosition(isReverse: Boolean): Int {
-        return player.getCurrentPosition(isReverse)
+    override fun getPlayerCurrentPosition(isReverse: Boolean): Long {
+        return trackPlayer.getCurrentPosition(isReverse)
+    }
+
+    override fun reset() {
+        trackPlayer.onReset()
     }
 
     override fun release() {
-        player.onRelease()
+        trackPlayer.onRelease()
     }
 }

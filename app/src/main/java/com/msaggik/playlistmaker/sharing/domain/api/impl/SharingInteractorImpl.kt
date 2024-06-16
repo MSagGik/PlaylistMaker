@@ -4,7 +4,9 @@ import com.msaggik.playlistmaker.sharing.domain.repository.ExternalNavigator
 import com.msaggik.playlistmaker.sharing.domain.api.SharingInteractor
 import com.msaggik.playlistmaker.sharing.domain.model.EmailData
 
-class SharingInteractorImpl(private val externalNavigator: ExternalNavigator) : SharingInteractor {
+class SharingInteractorImpl(
+    private val externalNavigator: ExternalNavigator
+) : SharingInteractor {
     override fun shareApp() {
         externalNavigator.shareApp(getShareAppLink())
     }

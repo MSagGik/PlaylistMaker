@@ -5,7 +5,9 @@ import com.msaggik.playlistmaker.setting.data.base.impl.ThemeSpImpl
 import com.msaggik.playlistmaker.setting.domain.model.ThemeSettings
 import com.msaggik.playlistmaker.setting.domain.repository.SettingRepository
 
-class SettingRepositoryImpl (private val themeSp: ThemeSp) : SettingRepository {
+class SettingRepositoryImpl (
+    private val themeSp: ThemeSp
+) : SettingRepository {
     override fun getThemeSettings(): ThemeSettings {
         val isDarkTheme = (themeSp as ThemeSpImpl).isDarkThemeSharedPreferences()
         return ThemeSettings(isDarkTheme)

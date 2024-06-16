@@ -5,32 +5,17 @@ import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.msaggik.playlistmaker.player.domain.api.PlayerInteractor
 import com.msaggik.playlistmaker.player.domain.state.PlayerState
 import com.msaggik.playlistmaker.player.view_model.state.PlayState
-import com.msaggik.playlistmaker.root.App
 import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.util.Utils
 
 class PlayerViewModel(
-    private val trackId: Int,
     private val playerInteractor: PlayerInteractor,
 ) : ViewModel() {
     companion object {
         private const val PLAYER_DELAY_UPDATE_TRACK_LIST = 250L
-        fun getViewModelFactory(trackId: Int): ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val interactor = (this[APPLICATION_KEY] as App).providePlayerInteractor(trackId)
-                PlayerViewModel(
-                    trackId,
-                    interactor,
-                )
-            }
-        }
     }
 
     private val handler = Handler(Looper.getMainLooper())
@@ -49,12 +34,12 @@ class PlayerViewModel(
 
     fun isReverse() {
         isReverse = !isReverse
-        currentTimePlayingLiveData.postValue(Utils.dateFormatMillisToMinSecShort(playerInteractor.getPlayerCurrentPosition(isReverse).toLong()))
+        currentTimePlayingLiveData.postValue(Utils.dateFormatMillisToMinSecShort(playerInteractor.getPlayerCurrentPosition(isReverse)))
     }
 
     override fun onCleared() {
         super.onCleared()
-        playerInteractor.stop()
+        playerInteractor.release()
         handler.removeCallbacksAndMessages(null)
     }
 
@@ -70,13 +55,13 @@ class PlayerViewModel(
         handler.postDelayed(object : Runnable {
             override fun run() {
                 if (playerInteractor.getPlayerState() == PlayerState.PLAYER_STATE_PREPARED) {
-                    currentTimePlayingLiveData.postValue(Utils.dateFormatMillisToMinSecShort(playerInteractor.getPlayerCurrentPosition(isReverse).toLong()))
+                    currentTimePlayingLiveData.postValue(Utils.dateFormatMillisToMinSecShort(playerInteractor.getPlayerCurrentPosition(isReverse)))
                     buttonStateLiveData.postValue(PlayState.Play)
                     handler.removeCallbacksAndMessages(null)
                 } else {
                     currentTimePlayingLiveData.postValue(
                         Utils.dateFormatMillisToMinSecShort(
-                            playerInteractor.getPlayerCurrentPosition(isReverse).toLong()
+                            playerInteractor.getPlayerCurrentPosition(isReverse)
                         )
                     )
                     handler.postDelayed(this, PLAYER_DELAY_UPDATE_TRACK_LIST)

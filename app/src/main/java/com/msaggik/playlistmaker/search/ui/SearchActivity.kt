@@ -14,7 +14,6 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.msaggik.playlistmaker.R
 import com.msaggik.playlistmaker.main.ui.MainActivity
@@ -25,6 +24,7 @@ import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.search.ui.state.TracksState
 import com.msaggik.playlistmaker.search.view_model.SearchViewModel
 import com.msaggik.playlistmaker.util.Utils
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
@@ -45,9 +45,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     // view-model
-    private val searchViewModel by lazy {
-        ViewModelProvider(this, SearchViewModel.getViewModelFactory())[SearchViewModel::class.java]
-    }
+    private val searchViewModel: SearchViewModel by viewModel()
 
     // data
     private var searchTrack = ""

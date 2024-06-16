@@ -4,17 +4,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.msaggik.playlistmaker.R
 import com.msaggik.playlistmaker.databinding.ActivitySettingBinding
 import com.msaggik.playlistmaker.main.ui.MainActivity
 import com.msaggik.playlistmaker.setting.view_model.SettingsViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SettingActivity : AppCompatActivity() {
 
-    private val settingsViewModel by lazy {
-        ViewModelProvider(this, SettingsViewModel.getViewModelFactory())[SettingsViewModel::class.java]
-    }
+    private val settingsViewModel: SettingsViewModel by viewModel()
 
     private val binding by lazy {
         ActivitySettingBinding.inflate(layoutInflater)
