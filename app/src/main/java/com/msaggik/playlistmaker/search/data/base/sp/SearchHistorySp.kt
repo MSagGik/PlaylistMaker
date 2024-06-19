@@ -1,6 +1,6 @@
 package com.msaggik.playlistmaker.search.data.base.sp
 
-import com.msaggik.playlistmaker.search.data.dto.response.TrackDto
+import com.msaggik.playlistmaker.media.data.dto.TrackDto
 
 interface SearchHistorySp {
     fun clearTrackListHistorySharedPreferences()

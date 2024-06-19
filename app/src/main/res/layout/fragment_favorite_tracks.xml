@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".media.ui.fragments.FavoriteTracksFragment">
+
+    <FrameLayout
+        android:id="@+id/placeholder_empty_media_library"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="@dimen/dimen_120"
+            android:layout_height="@dimen/dimen_120"
+            android:layout_marginTop="@dimen/dimen_106"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/ic_nothing_found" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_242"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/empty_media_library"
+            style="@style/TextPlaceHolderMedia"/>
+    </FrameLayout>
+
+    <ScrollView
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/track_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_14"
+            android:visibility="visible"/>
+
+    </ScrollView>
+
+</FrameLayout>

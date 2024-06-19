@@ -83,4 +83,18 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <style name="TabLayout" parent="BaseTabLayout">
+        <item name="tabTextColor">@color/white</item>
+        <item name="tabIndicatorColor">@color/white</item>
+    </style>
+
+    <style name="TextPlaceHolderMedia" parent="BaseTextPlaceHolderMedia">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="ButtonNewPlaylist">
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:textColor">@color/grey_100</item>
+    </style>
+
 </resources>
