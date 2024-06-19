@@ -9,6 +9,7 @@ import com.msaggik.playlistmaker.media.domain.api.MediaInteractor
 import com.msaggik.playlistmaker.media.domain.api.impl.MediaInteractorImpl
 import com.msaggik.playlistmaker.media.domain.repository.MediaRepository
 import com.msaggik.playlistmaker.media.view_model.FavoriteTracksViewModel
+import com.msaggik.playlistmaker.media.view_model.PlaylistsViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -22,6 +23,10 @@ val mediaModule = module {
         FavoriteTracksViewModel(
             mediaInteractor = get(),
         )
+    }
+
+    viewModel{
+        PlaylistsViewModel()
     }
 
     // domain
