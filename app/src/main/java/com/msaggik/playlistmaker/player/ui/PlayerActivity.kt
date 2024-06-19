@@ -73,7 +73,7 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun showTrackCover(artworkUrl: String) {
         Glide.with(binding.cover)
-            .load(artworkUrl)
+            .load(artworkUrl.replaceAfterLast('/',"512x512bb.jpg"))
             .placeholder(R.drawable.ic_placeholder)
             .transform(RoundedCorners(Utils.doToPx(8f, this)))
             .into(binding.cover)
