@@ -43,4 +43,11 @@
     <string name="no_connection" translatable="false">Проверьте подключение к интернету</string>
     <string name="server_error" translatable="false">Ошибка сервера</string>
     <string name="something_went_wrong" translatable="false">Что-то пошло не так</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="media_library" translatable="false">Медиатека</string>
+    <string name="empty_media_library" translatable="false">Ваша медиатека пуста</string>
+    <string name="empty_playlists" translatable="false">Вы не создали\nни одного плейлиста</string>
+    <string name="new_playlist" translatable="false">Новый плейлист</string>
+    <string name="favorite_tracks" translatable="false">Избранные треки</string>
+    <string name="playlists" translatable="false">Плейлисты</string>
 </resources>

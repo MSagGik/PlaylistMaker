@@ -3,7 +3,7 @@ package com.msaggik.playlistmaker.search.data.base.sp.impl
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.msaggik.playlistmaker.search.data.base.sp.SearchHistorySp
-import com.msaggik.playlistmaker.search.data.dto.response.TrackDto
+import com.msaggik.playlistmaker.media.data.dto.TrackDto
 import com.msaggik.playlistmaker.util.Utils
 
 private const val TRACK_LIST_LIMIT = 10

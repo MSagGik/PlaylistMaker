@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".media.ui.fragments.PlaylistsFragment">
+
+    <Button
+        android:id="@+id/button_new_playlist"
+        style="@style/ButtonNewPlaylist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/dimen_14"
+        android:layout_marginBottom="@dimen/dimen_16"
+        android:fontFamily="@font/ys_display_medium"
+        android:foreground="?attr/selectableItemBackground"
+        android:paddingHorizontal="@dimen/dimen_14"
+        android:paddingVertical="@dimen/dimen_5"
+        android:text="@string/new_playlist"
+        android:textAllCaps="false"
+        android:textFontWeight="500"
+        android:textSize="@dimen/dimen_14s"
+        app:cornerRadius="@dimen/dimen_54" />
+
+    <FrameLayout
+        android:id="@+id/placeholder_empty_playlists"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="@dimen/dimen_120"
+            android:layout_height="@dimen/dimen_120"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dimen_106"
+            android:src="@drawable/ic_nothing_found" />
+
+        <TextView
+            android:id="@+id/textView"
+            style="@style/TextPlaceHolderMedia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dimen_242"
+            android:text="@string/empty_playlists" />
+    </FrameLayout>
+
+</FrameLayout>
