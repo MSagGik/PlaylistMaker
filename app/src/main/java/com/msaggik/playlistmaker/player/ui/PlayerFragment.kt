@@ -3,46 +3,67 @@ package com.msaggik.playlistmaker.player.ui
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-
+import androidx.core.os.bundleOf
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.msaggik.playlistmaker.R
-import com.msaggik.playlistmaker.databinding.ActivityPlayerBinding
+import com.msaggik.playlistmaker.databinding.FragmentPlayerBinding
 import com.msaggik.playlistmaker.player.view_model.PlayerViewModel
 import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.util.Utils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class PlayerActivity : AppCompatActivity() {
+
+class PlayerFragment : Fragment() {
+
+    companion object {
+
+        private const val TRACK_INSTANCE = "track_instance"
+
+        fun createArgs(track: Track): Bundle =
+            bundleOf(
+                TRACK_INSTANCE to track
+            )
+    }
 
     // view
-    private val binding by lazy {
-        ActivityPlayerBinding.inflate(layoutInflater)
-    }
+    private lateinit var binding: FragmentPlayerBinding
 
     // track
     private val track by lazy {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getSerializableExtra(Track::class.java.simpleName, Track::class.java)
+            requireArguments().getSerializable(TRACK_INSTANCE, Track::class.java)
         } else {
-            intent.getSerializableExtra(Track::class.java.simpleName) as Track
+            requireArguments().getSerializable(TRACK_INSTANCE)
         }
     }
 
     // view-model
     private val playerViewModel: PlayerViewModel by viewModel()
 
-    @SuppressLint("SimpleDateFormat")
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentPlayerBinding.inflate(inflater, container, false)
+        return binding.root
+    }
 
-        track?.let { playerViewModel.loadingTrack(it.trackId) }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        playerViewModel.getTrackLiveData().observe(this) { track ->
+        if (track != null) {
+            (track as Track).let { playerViewModel.loadingTrack(it.trackId) }
+        }
+
+        playerViewModel.getTrackLiveData().observe(viewLifecycleOwner) { track ->
             showTrackCover(track.artworkUrl100)
             binding.trackName.text = track.trackName
             binding.artistName.text = track.artistName
@@ -58,12 +79,17 @@ class PlayerActivity : AppCompatActivity() {
             binding.trackCountry.text = track.country
         }
 
-        playerViewModel.getCurrentTimePlayingLiveData().observe(this) { currentTime ->
+        playerViewModel.getCurrentTimePlayingLiveData().observe(viewLifecycleOwner) { currentTime ->
             binding.timeTrack.text = currentTime
         }
 
-        playerViewModel.getButtonStateLiveData().observe(this) { state ->
-            binding.buttonPlayPause.setImageDrawable(ContextCompat.getDrawable(this@PlayerActivity, state.stateViewButton))
+        playerViewModel.getButtonStateLiveData().observe(viewLifecycleOwner) { state ->
+            binding.buttonPlayPause.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    state.stateViewButton
+                )
+            )
         }
 
         binding.buttonBack.setOnClickListener(listener)
@@ -73,9 +99,9 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun showTrackCover(artworkUrl: String) {
         Glide.with(binding.cover)
-            .load(artworkUrl.replaceAfterLast('/',"512x512bb.jpg"))
+            .load(artworkUrl.replaceAfterLast('/', "512x512bb.jpg"))
             .placeholder(R.drawable.ic_placeholder)
-            .transform(RoundedCorners(Utils.doToPx(8f, this)))
+            .transform(RoundedCorners(Utils.doToPx(8f, requireContext())))
             .into(binding.cover)
     }
 
@@ -94,7 +120,7 @@ class PlayerActivity : AppCompatActivity() {
         override fun onClick(p0: View?) {
             when (p0?.id) {
                 R.id.button_back -> {
-                    finish()
+                    findNavController().navigateUp()
                 }
 
                 R.id.button_play_pause -> {

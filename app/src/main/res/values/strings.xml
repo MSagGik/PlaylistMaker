@@ -6,9 +6,9 @@
     <string name="no">Нет</string>
     <string name="yes">Да</string>
     <string name="panel_header" translatable="false">Playlist maker</string>
-    <string name="search">Поиск</string>
-    <string name="media">Медиатека</string>
-    <string name="setting">Настройки</string>
+    <string name="search" translatable="false">Поиск</string>
+    <string name="media" translatable="false">Медиатека</string>
+    <string name="setting" translatable="false">Настройки</string>
     <string name="light_theme">Светлая тема</string>
     <string name="dark_theme">Темная тема</string>
     <string name="header_share">Поделиться приложением</string>

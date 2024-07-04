@@ -97,4 +97,8 @@
         <item name="android:textColor">@color/grey_100</item>
     </style>
 
+    <style name="StyleTopBottomNavigationView">
+        <item name="android:background">@color/grey_100</item>
+    </style>
+
 </resources>
