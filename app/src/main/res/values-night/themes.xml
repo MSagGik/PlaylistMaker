@@ -6,6 +6,5 @@
         <!-- <item name="android:textColorPrimary">@color/white</item>-->
         <!-- <item name="android:textColorSecondary">@color/white</item>-->
         <!-- цвета фона -->
-        <item name="android:background">@color/grey_100</item>
     </style>
 </resources>

@@ -12,6 +12,7 @@ import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.util.Utils
 
 class PlayerViewModel(
+    private val trackId: Int,
     private val playerInteractor: PlayerInteractor,
 ) : ViewModel() {
     companion object {
@@ -43,8 +44,8 @@ class PlayerViewModel(
         handler.removeCallbacksAndMessages(null)
     }
 
-    fun loadingTrack(trackId: Int) {
-        val track = playerInteractor.loading(trackId)
+    fun loadingTrack() {
+        val track = playerInteractor.loading(trackId = trackId)
         playerTrackLiveData.postValue(track)
     }
 

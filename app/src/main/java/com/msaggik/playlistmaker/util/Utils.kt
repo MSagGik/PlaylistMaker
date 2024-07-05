@@ -19,9 +19,11 @@ internal object Utils {
             .toInt()
     }
 
-    fun visibilityView(views: Array<View>, v: View? = null) {
-        for(view in views) view.visibility = View.GONE
-        v?.visibility = View.VISIBLE
+    fun visibilityView(views: Array<View>? = emptyArray(), v: View) {
+        if (views != null) {
+            for(view in views) view.visibility = View.GONE
+        }
+        v.visibility = View.VISIBLE
     }
 
     @SuppressLint("SimpleDateFormat")

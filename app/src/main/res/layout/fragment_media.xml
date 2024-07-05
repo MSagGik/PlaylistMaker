@@ -6,25 +6,19 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".media.ui.MediaActivity">
+    tools:context=".media.ui.MediaFragment">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_56"
         android:padding="@dimen/dimen_4">
 
-        <ImageView
-            android:id="@+id/button_back"
-            android:layout_width="@dimen/dimen_48"
-            android:layout_height="@dimen/dimen_48"
-            android:foreground="?attr/selectableItemBackground"
-            app:srcCompat="@drawable/ic_back"
-            style="@style/ImageButtonSettingHeader"/>
-
         <TextView
             android:id="@+id/panel_header"
             android:text="@string/media_library"
+            android:layout_marginStart="@dimen/dimen_16"
             style="@style/TextViewSettingHeader"/>
+
     </FrameLayout>
 
     <com.google.android.material.tabs.TabLayout
