@@ -16,8 +16,9 @@ private const val TRACK_LIST_PREFERENCES = "track_list_preferences"
 val playerModule = module {
 
     // view-model
-    viewModel{
+    viewModel { (trackId: Int) ->
         PlayerViewModel(
+            trackId = trackId,
             playerInteractor = get()
         )
     }

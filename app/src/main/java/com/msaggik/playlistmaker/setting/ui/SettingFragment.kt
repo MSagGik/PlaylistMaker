@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.msaggik.playlistmaker.R
+import com.msaggik.playlistmaker.databinding.FragmentSearchBinding
 import com.msaggik.playlistmaker.databinding.FragmentSettingBinding
 import com.msaggik.playlistmaker.setting.view_model.SettingsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -13,10 +14,11 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class SettingFragment : Fragment() {
     private val settingsViewModel: SettingsViewModel by viewModel()
 
-    private lateinit var binding: FragmentSettingBinding
+    private var _binding: FragmentSettingBinding? = null
+    private val binding: FragmentSettingBinding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentSettingBinding.inflate(inflater, container, false)
+        _binding = FragmentSettingBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -31,6 +33,11 @@ class SettingFragment : Fragment() {
         binding.buttonShare.setOnClickListener(listener)
         binding.buttonSupport.setOnClickListener(listener)
         binding.buttonAgreement.setOnClickListener(listener)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private val listener: View.OnClickListener = object: View.OnClickListener {

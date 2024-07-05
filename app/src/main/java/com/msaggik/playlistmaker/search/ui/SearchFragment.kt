@@ -36,18 +36,11 @@ class SearchFragment : Fragment() {
     }
 
     // view
-    private lateinit var binding: FragmentSearchBinding
+    private var _binding: FragmentSearchBinding? = null
+    private val binding: FragmentSearchBinding get() = _binding!!
 
     // visible views
-    private val viewArray: Array<View> by lazy {
-        arrayOf(
-            binding.loadingTime,
-            binding.layoutSearchHistory,
-            binding.trackList,
-            binding.layoutNothingFound,
-            binding.layoutCommunicationProblems
-        )
-    }
+    private var viewArray: Array<View>? = null
 
     // view-model
     private val searchViewModel: SearchViewModel by viewModel()
@@ -55,16 +48,11 @@ class SearchFragment : Fragment() {
     // data
     private var searchTrack = ""
     private var searchTrackResult = ""
+
     private var trackList: MutableList<Track> = mutableListOf()
+
     private val trackListAdapter: TrackListAdapter by lazy {
         TrackListAdapter(trackList) {
-            if (clickTracksDebounce()) {
-                trackSelection(it)
-            }
-        }
-    }
-    private val trackListHistoryAdapter: TrackListAdapter by lazy {
-        TrackListAdapter(trackListHistory) {
             if (clickTracksDebounce()) {
                 trackSelection(it)
             }
@@ -74,12 +62,27 @@ class SearchFragment : Fragment() {
     // shared preferences data MutableList<Track>
     private var trackListHistory: MutableList<Track> = mutableListOf()
 
+    private val trackListHistoryAdapter: TrackListAdapter by lazy {
+        TrackListAdapter(trackListHistory) {
+            if (clickTracksDebounce()) {
+                trackSelection(it)
+            }
+        }
+    }
+
     // click tracks debounce
     private val handlerClickTrack = Handler(Looper.getMainLooper())
     private var isClickTrackAllowed = true
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
+        viewArray = arrayOf(
+            binding.loadingTime,
+            binding.layoutSearchHistory,
+            binding.trackList,
+            binding.layoutNothingFound,
+            binding.layoutCommunicationProblems
+        )
         return binding.root
     }
 
@@ -110,7 +113,7 @@ class SearchFragment : Fragment() {
         binding.searchHistoryTrackList.adapter = trackListHistoryAdapter
 
         // listeners
-        binding.inputSearch.setOnFocusChangeListener(focusChangeListener)
+        binding.inputSearch.onFocusChangeListener = focusChangeListener
         binding.inputSearch.addTextChangedListener(inputSearchWatcher)
         binding.buttonClear.setOnClickListener(listener)
         binding.buttonUpdate.setOnClickListener(listener)
@@ -214,6 +217,9 @@ class SearchFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         inputSearchWatcher.let { binding.inputSearch.removeTextChangedListener(it) }
+        _binding = null
+        viewArray = emptyArray()
+        viewArray = null
     }
 
     private fun clickTracksDebounce(): Boolean {

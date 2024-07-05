@@ -18,7 +18,7 @@ import com.msaggik.playlistmaker.player.view_model.PlayerViewModel
 import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.util.Utils
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
+import org.koin.core.parameter.parametersOf
 
 class PlayerFragment : Fragment() {
 
@@ -33,35 +33,37 @@ class PlayerFragment : Fragment() {
     }
 
     // view
-    private lateinit var binding: FragmentPlayerBinding
+    private var _binding: FragmentPlayerBinding? = null
+    private val binding: FragmentPlayerBinding get() = _binding!!
 
     // track
     private val track by lazy {
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requireArguments().getSerializable(TRACK_INSTANCE, Track::class.java)
+            requireArguments().getParcelable(TRACK_INSTANCE, Track::class.java)
         } else {
-            requireArguments().getSerializable(TRACK_INSTANCE)
+            requireArguments().getParcelable(TRACK_INSTANCE)
         }
     }
 
     // view-model
-    private val playerViewModel: PlayerViewModel by viewModel()
+    private val playerViewModel: PlayerViewModel by viewModel{
+        parametersOf(track?.trackId)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentPlayerBinding.inflate(inflater, container, false)
+        _binding = FragmentPlayerBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (track != null) {
-            (track as Track).let { playerViewModel.loadingTrack(it.trackId) }
-        }
+        playerViewModel.loadingTrack()
 
         playerViewModel.getTrackLiveData().observe(viewLifecycleOwner) { track ->
             showTrackCover(track.artworkUrl100)
@@ -97,6 +99,11 @@ class PlayerFragment : Fragment() {
         binding.timeTrack.setOnClickListener(listener)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun showTrackCover(artworkUrl: String) {
         Glide.with(binding.cover)
             .load(artworkUrl.replaceAfterLast('/', "512x512bb.jpg"))
@@ -120,7 +127,7 @@ class PlayerFragment : Fragment() {
         override fun onClick(p0: View?) {
             when (p0?.id) {
                 R.id.button_back -> {
-                    findNavController().navigateUp()
+                    findNavController().popBackStack(R.id.searchFragment, false)
                 }
 
                 R.id.button_play_pause -> {
