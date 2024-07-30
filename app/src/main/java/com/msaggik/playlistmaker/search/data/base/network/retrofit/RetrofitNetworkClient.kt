@@ -9,7 +9,6 @@ import com.msaggik.playlistmaker.search.data.base.network.NetworkClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
-import java.io.IOException
 
 class RetrofitNetworkClient(
     private val context: Context,
@@ -24,12 +23,16 @@ class RetrofitNetworkClient(
             return Response().apply { resultCode = 400 }
         }
         return withContext(Dispatchers.IO) {
-            try {
-                val response = itunesRestService.search(dto.searchTracks)
-                response.apply { resultCode = 200 }
-            } catch (e: IOException) {
-                Response().apply { resultCode = 500 }
-            }
+            runCatching {
+                itunesRestService.search(dto.searchTracks)
+            }.fold(
+                onSuccess = { response ->
+                    response.apply { resultCode = 200 }
+                },
+                onFailure = { e ->
+                    Response().apply { resultCode = 500 }
+                }
+            )
         }
     }
 
