@@ -20,7 +20,7 @@ class TracksRepositoryImpl (
 ) : TracksRepository {
 
     // network
-    override fun searchTracksDomain(trackSearch: String): Flow<Resource<List<Track>>> = flow {
+    override fun searchTracks(trackSearch: String): Flow<Resource<List<Track>>> = flow {
         val response = networkClient.doRequest(TracksSearchRequest(trackSearch))
         when(response.resultCode) {
             -1 -> {
@@ -42,18 +42,18 @@ class TracksRepositoryImpl (
     }
 
     // sp
-    override fun clearTrackListHistoryDomain() {
+    override fun clearTrackListHistory() {
         searchHistorySp.clearTrackListHistorySharedPreferences()
     }
 
-    override fun readTrackListHistoryDomain(): List<Track> {
+    override fun readTrackListHistory(): List<Track> {
         return searchHistorySp.readTrackListHistorySharedPreferences()
             .map {
                 Utils.convertTrackDtoToTrack(it)
             }
     }
 
-    override fun addTrackListHistoryDomain(track: Track): List<Track> {
+    override fun addTrackListHistory(track: Track): List<Track> {
         val trackDto = Utils.convertTrackToTrackDto(track)
         val trackListHistory = searchHistorySp.addTrackListHistorySharedPreferences(trackDto)
         return trackListHistory.map {

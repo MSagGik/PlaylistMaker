@@ -6,9 +6,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface TracksRepository {
     // network
-    fun searchTracksDomain(trackSearch: String): Flow<Resource<List<Track>>>
+    fun searchTracks(trackSearch: String): Flow<Resource<List<Track>>>
     // sp
-    fun clearTrackListHistoryDomain()
-    fun readTrackListHistoryDomain() : List<Track>
-    fun addTrackListHistoryDomain(track: Track) : List<Track>
+    fun clearTrackListHistory()
+    fun readTrackListHistory() : List<Track>
+    fun addTrackListHistory(track: Track) : List<Track>
 }

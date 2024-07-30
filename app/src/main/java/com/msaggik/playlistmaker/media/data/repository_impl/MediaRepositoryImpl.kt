@@ -7,7 +7,7 @@ import com.msaggik.playlistmaker.media.domain.repository.MediaRepository
 class MediaRepositoryImpl(
     private val favoriteTracks: FavoriteTracks
 ) : MediaRepository {
-    override fun readTrackListHistoryDomain(): List<Track> {
+    override fun readTrackListHistory(): List<Track> {
         return favoriteTracks.readTrackListHistorySharedPreferences()
             .map {
                 with(it) {

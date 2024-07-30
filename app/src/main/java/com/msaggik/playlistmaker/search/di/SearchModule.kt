@@ -75,4 +75,5 @@ val searchModule = module {
     single {
         Gson()
     }
+
 }
