@@ -1,15 +1,17 @@
 package com.msaggik.playlistmaker.player.view_model
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.msaggik.playlistmaker.player.domain.api.PlayerInteractor
 import com.msaggik.playlistmaker.player.domain.state.PlayerState
 import com.msaggik.playlistmaker.player.view_model.state.PlayState
 import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.util.Utils
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     private val trackId: Int,
@@ -19,7 +21,7 @@ class PlayerViewModel(
         private const val PLAYER_DELAY_UPDATE_TRACK_LIST = 250L
     }
 
-    private val handler = Handler(Looper.getMainLooper())
+    private var timerJob: Job? = null
 
     private var playerTrackLiveData = MutableLiveData<Track>()
     fun getTrackLiveData(): LiveData<Track> = playerTrackLiveData
@@ -41,7 +43,7 @@ class PlayerViewModel(
     override fun onCleared() {
         super.onCleared()
         playerInteractor.release()
-        handler.removeCallbacksAndMessages(null)
+        timerJob?.cancel()
     }
 
     fun loadingTrack() {
@@ -53,29 +55,28 @@ class PlayerViewModel(
         playerInteractor.play()
         buttonStateLiveData.postValue(PlayState.Pause)
 
-        handler.postDelayed(object : Runnable {
-            override fun run() {
-                if (playerInteractor.getPlayerState() == PlayerState.PLAYER_STATE_PREPARED) {
-                    currentTimePlayingLiveData.postValue(Utils.dateFormatMillisToMinSecShort(playerInteractor.getPlayerCurrentPosition(isReverse)))
-                    buttonStateLiveData.postValue(PlayState.Play)
-                    handler.removeCallbacksAndMessages(null)
-                } else {
-                    currentTimePlayingLiveData.postValue(
-                        Utils.dateFormatMillisToMinSecShort(
-                            playerInteractor.getPlayerCurrentPosition(isReverse)
-                        )
+        timerJob = viewModelScope.launch {
+            while (playerInteractor.getPlayerState() == PlayerState.PLAYER_STATE_PLAYING) {
+                currentTimePlayingLiveData.postValue(
+                    Utils.dateFormatMillisToMinSecShort(
+                        playerInteractor.getPlayerCurrentPosition(isReverse)
                     )
-                    handler.postDelayed(this, PLAYER_DELAY_UPDATE_TRACK_LIST)
-                }
+                )
+                delay(PLAYER_DELAY_UPDATE_TRACK_LIST)
             }
-        }, PLAYER_DELAY_UPDATE_TRACK_LIST)
+            if (playerInteractor.getPlayerState() == PlayerState.PLAYER_STATE_PREPARED) {
+                currentTimePlayingLiveData.postValue(Utils.dateFormatMillisToMinSecShort(playerInteractor.getPlayerCurrentPosition(isReverse)))
+                buttonStateLiveData.postValue(PlayState.Play)
+                timerJob?.cancel()
+            }
+        }
     }
 
     fun pausePlayer() {
         if (playerInteractor.getPlayerState() == PlayerState.PLAYER_STATE_PLAYING) {
             playerInteractor.pause()
             buttonStateLiveData.postValue(PlayState.Play)
-            handler.removeCallbacksAndMessages(null)
+            timerJob?.cancel()
         }
     }
 
@@ -90,6 +91,6 @@ class PlayerViewModel(
     fun releasePlayer() {
         playerInteractor.release()
         buttonStateLiveData.postValue(PlayState.Play)
-        handler.removeCallbacksAndMessages(null)
+        timerJob?.cancel()
     }
 }
