@@ -16,25 +16,25 @@ class TracksInteractorImpl(
 
     // network
     override fun searchTracks(searchTracks: String) : Flow<Pair<List<Track>?, String?>> {
-        return repository.searchTracksDomain(searchTracks).map { resource -> Resource.handleResource(resource) }
+        return repository.searchTracks(searchTracks).map { resource -> Resource.handleResource(resource) }
     }
 
     // sp
     override fun clearTrackListHistory() {
         executor.execute {
-            repository.clearTrackListHistoryDomain()
+            repository.clearTrackListHistory()
         }
     }
 
     override fun readTrackListHistory(consumer: TracksInteractor.SpTracksHistoryConsumer) {
         executor.execute {
-            consumer.consume(repository.readTrackListHistoryDomain())
+            consumer.consume(repository.readTrackListHistory())
         }
     }
 
     override fun addTrackListHistory(track: Track, consumer: TracksInteractor.SpTracksHistoryConsumer) {
         executor.execute {
-            consumer.consume(repository.addTrackListHistoryDomain(track))
+            consumer.consume(repository.addTrackListHistory(track))
         }
     }
 }

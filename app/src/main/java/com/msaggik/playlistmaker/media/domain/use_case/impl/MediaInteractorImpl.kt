@@ -11,7 +11,7 @@ class MediaInteractorImpl (
     val executor = Executors.newCachedThreadPool()
     override fun readTrackListMedia(consumer: MediaInteractor.MediaConsumer) {
         executor.execute {
-            consumer.consume(repository.readTrackListHistoryDomain())
+            consumer.consume(repository.readTrackListHistory())
         }
     }
 }
