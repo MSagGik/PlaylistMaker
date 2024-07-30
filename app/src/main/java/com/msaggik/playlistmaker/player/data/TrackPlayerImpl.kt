@@ -49,9 +49,11 @@ class TrackPlayerImpl(
 
     override fun getCurrentPosition(isReverse: Boolean): Long {
         return if(isReverse) {
-            (mediaPlayer.duration - mediaPlayer.currentPosition).toLong()
+            val reversTimeTrack = (mediaPlayer.duration - mediaPlayer.currentPosition).toLong()
+            if(reversTimeTrack == 0L) mediaPlayer.duration.toLong() else reversTimeTrack
         } else {
-            mediaPlayer.currentPosition.toLong()
+            val timeTrack = mediaPlayer.currentPosition.toLong()
+            if(timeTrack == mediaPlayer.duration.toLong()) 0L else timeTrack
         }
     }
 
