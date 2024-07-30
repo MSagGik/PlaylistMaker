@@ -3,7 +3,6 @@ package com.msaggik.playlistmaker.search.data.base.network.retrofit
 import com.msaggik.playlistmaker.search.data.dto.response.TrackResponse
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -32,5 +31,5 @@ interface RestItunes {
     }
 
     @GET("/search?entity=song")
-    fun search(@Query("term") text: String): Call<TrackResponse>
+    suspend fun search(@Query("term") text: String): TrackResponse
 }

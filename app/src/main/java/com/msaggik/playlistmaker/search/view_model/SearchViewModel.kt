@@ -10,6 +10,7 @@ import com.msaggik.playlistmaker.search.domain.api.TracksInteractor
 import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.search.ui.state.TracksState
 import com.msaggik.playlistmaker.util.debounce
+import kotlinx.coroutines.launch
 
 class SearchViewModel (
     private val tracksInteractor: TracksInteractor,
@@ -89,39 +90,30 @@ class SearchViewModel (
         if (searchNameTracks.isNotEmpty()) {
             renderState(TracksState.Loading)
 
-            tracksInteractor.searchTracks(searchNameTracks, object : TracksInteractor.TracksConsumer {
-                @SuppressLint("NotifyDataSetChanged")
-                override fun consume(listTracks: List<Track>?, errorMessage: String?) {
-                    val tracks = mutableListOf<Track>()
-                    if (listTracks != null) {
-                        tracks.addAll(listTracks)
-                    }
-                    // create TracksState
-                    when {
-                        errorMessage != null -> {
-                            renderState(
-                                TracksState.Error(
-                                    errorMessage = errorMessage,
-                                )
-                            )
-                        }
+            viewModelScope.launch {
+                tracksInteractor
+                    .searchTracks(searchNameTracks)
+                    .collect{ pair -> searchTracksResult(pair.first, pair.second)}
+            }
+        }
+    }
 
-                        tracks.isEmpty() -> {
-                            renderState(
-                                TracksState.Empty
-                            )
-                        }
+    private fun searchTracksResult(foundTracks: List<Track>?, errorMessage: String?) {
+        val tracks = mutableListOf<Track>()
+        if (foundTracks != null) {
+            tracks.addAll(foundTracks)
+        }
 
-                        else -> {
-                            renderState(
-                                TracksState.Content(
-                                    tracks = tracks,
-                                )
-                            )
-                        }
-                    }
-                }
-            })
+        when {
+            errorMessage != null -> {
+                renderState(TracksState.Error(errorMessage = errorMessage,))
+            }
+            tracks.isEmpty() -> {
+                renderState(TracksState.Empty)
+            }
+            else -> {
+                renderState(TracksState.Content(tracks = tracks))
+            }
         }
     }
 

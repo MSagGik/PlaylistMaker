@@ -4,6 +4,8 @@ import com.msaggik.playlistmaker.search.domain.api.TracksInteractor
 import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.search.domain.repository.TracksRepository
 import com.msaggik.playlistmaker.util.Resource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import java.util.concurrent.Executors
 
 class TracksInteractorImpl(
@@ -13,13 +15,8 @@ class TracksInteractorImpl(
     val executor = Executors.newCachedThreadPool()
 
     // network
-    override fun searchTracks(searchTracks: String, consumer: TracksInteractor.TracksConsumer) {
-        executor.execute {
-            when(val resource = repository.searchTracksDomain(searchTracks)) {
-                is Resource.Success -> { consumer.consume(resource.data, null)}
-                is Resource.Error -> { consumer.consume(null, resource.message)}
-            }
-        }
+    override fun searchTracks(searchTracks: String) : Flow<Pair<List<Track>?, String?>> {
+        return repository.searchTracksDomain(searchTracks).map { resource -> Resource.handleResource(resource) }
     }
 
     // sp

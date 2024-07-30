@@ -1,13 +1,11 @@
 package com.msaggik.playlistmaker.search.domain.api
 
 import com.msaggik.playlistmaker.search.domain.models.Track
+import kotlinx.coroutines.flow.Flow
 
 interface TracksInteractor { // интерфейс для связи domain - view-model
     // network
-    fun searchTracks(searchTracks: String, consumer: TracksConsumer)
-    interface TracksConsumer { // Callback между IO и UI потоками
-        fun consume(listTracks: List<Track>?, errorMessage: String?)
-    }
+    fun searchTracks(searchTracks: String): Flow<Pair<List<Track>?, String?>>
     // sp
     fun clearTrackListHistory()
     fun readTrackListHistory(consumer: SpTracksHistoryConsumer)

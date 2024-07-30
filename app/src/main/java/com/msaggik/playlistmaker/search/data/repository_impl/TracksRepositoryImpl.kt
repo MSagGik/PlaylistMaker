@@ -10,6 +10,8 @@ import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.search.domain.repository.TracksRepository
 import com.msaggik.playlistmaker.util.Resource
 import com.msaggik.playlistmaker.util.Utils
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 class TracksRepositoryImpl (
     private val context: Context,
@@ -18,23 +20,23 @@ class TracksRepositoryImpl (
 ) : TracksRepository {
 
     // network
-    override fun searchTracksDomain(trackSearch: String): Resource<List<Track>> {
+    override fun searchTracksDomain(trackSearch: String): Flow<Resource<List<Track>>> = flow {
         val response = networkClient.doRequest(TracksSearchRequest(trackSearch))
-        return when(response.resultCode) {
+        when(response.resultCode) {
             -1 -> {
-                Resource.Error(context.getString(R.string.no_connection))
+                emit(Resource.Error(context.getString(R.string.no_connection)))
             }
             200 -> {
-                Resource.Success((response as TrackResponse).results.map {
+                emit(Resource.Success((response as TrackResponse).results.map {
                     Track(
                         it.trackId, it.trackName, it.artistName,
                         it.trackTimeMillis, it.artworkUrl100, it.collectionName,
                         it.releaseDate, it.primaryGenreName, it.country, it.previewUrl
                     )
-                })
+                }))
             }
             else -> {
-                Resource.Error(context.getString(R.string.server_error))
+                emit(Resource.Error(context.getString(R.string.server_error)))
             }
         }
     }
