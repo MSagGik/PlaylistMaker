@@ -3,8 +3,6 @@ package com.msaggik.playlistmaker.search.ui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.fragment.app.Fragment
@@ -15,6 +13,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.msaggik.playlistmaker.R
@@ -25,6 +24,7 @@ import com.msaggik.playlistmaker.search.ui.adapter.TrackListAdapter
 import com.msaggik.playlistmaker.search.ui.state.TracksState
 import com.msaggik.playlistmaker.search.view_model.SearchViewModel
 import com.msaggik.playlistmaker.util.Utils
+import com.msaggik.playlistmaker.util.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
@@ -49,13 +49,13 @@ class SearchFragment : Fragment() {
     private var searchTrack = ""
     private var searchTrackResult = ""
 
+    private lateinit var onTrackClickDebounce: (Track) -> Unit
+
     private var trackList: MutableList<Track> = mutableListOf()
 
     private val trackListAdapter: TrackListAdapter by lazy {
         TrackListAdapter(trackList) {
-            if (clickTracksDebounce()) {
-                trackSelection(it)
-            }
+            onTrackClickDebounce(it)
         }
     }
 
@@ -64,17 +64,15 @@ class SearchFragment : Fragment() {
 
     private val trackListHistoryAdapter: TrackListAdapter by lazy {
         TrackListAdapter(trackListHistory) {
-            if (clickTracksDebounce()) {
-                trackSelection(it)
-            }
+            onTrackClickDebounce(it)
         }
     }
 
-    // click tracks debounce
-    private val handlerClickTrack = Handler(Looper.getMainLooper())
-    private var isClickTrackAllowed = true
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         viewArray = arrayOf(
             binding.loadingTime,
@@ -89,6 +87,13 @@ class SearchFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        onTrackClickDebounce = debounce<Track>(
+            DELAY_CLICK_TRACK,
+            viewLifecycleOwner.lifecycleScope,
+            false,
+            true
+        ) { track -> trackSelection(track) }
 
         binding.trackList.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -129,6 +134,7 @@ class SearchFragment : Fragment() {
                 Utils.visibilityView(viewArray, binding.layoutCommunicationProblems)
                 Toast.makeText(requireContext(), state.errorMessage, Toast.LENGTH_SHORT).show()
             }
+
             is TracksState.Empty -> Utils.visibilityView(viewArray, binding.layoutNothingFound)
         }
     }
@@ -147,7 +153,8 @@ class SearchFragment : Fragment() {
         // navigate and send in PlayerFragment data track
         findNavController().navigate(
             R.id.action_searchFragment_to_playerFragment,
-            PlayerFragment.createArgs(track))
+            PlayerFragment.createArgs(track)
+        )
     }
 
     private val focusChangeListener = object : OnFocusChangeListener {
@@ -174,7 +181,8 @@ class SearchFragment : Fragment() {
             when (p0?.id) {
                 R.id.button_clear -> {
                     binding.inputSearch.setText("")
-                    val keyboardOnOff = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                    val keyboardOnOff =
+                        requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
                     keyboardOnOff?.hideSoftInputFromWindow(binding.inputSearch.windowToken, 0)
                     trackList.clear()
                     trackListAdapter.notifyDataSetChanged()
@@ -220,15 +228,6 @@ class SearchFragment : Fragment() {
         _binding = null
         viewArray = emptyArray()
         viewArray = null
-    }
-
-    private fun clickTracksDebounce(): Boolean {
-        val current = isClickTrackAllowed
-        if (isClickTrackAllowed) {
-            isClickTrackAllowed = false
-            handlerClickTrack.postDelayed({ isClickTrackAllowed = true }, DELAY_CLICK_TRACK)
-        }
-        return current
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
