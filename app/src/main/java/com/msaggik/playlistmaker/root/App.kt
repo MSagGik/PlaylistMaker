@@ -5,7 +5,7 @@ import com.msaggik.playlistmaker.media.di.mediaModule
 import com.msaggik.playlistmaker.player.di.playerModule
 import com.msaggik.playlistmaker.search.di.searchModule
 import com.msaggik.playlistmaker.setting.di.settingModule
-import com.msaggik.playlistmaker.setting.domain.api.SettingsInteractor
+import com.msaggik.playlistmaker.setting.domain.use_case.SettingsInteractor
 import com.msaggik.playlistmaker.setting.domain.model.ThemeSettings
 import com.msaggik.playlistmaker.sharing.di.sharingModule
 import com.msaggik.playlistmaker.util.Utils

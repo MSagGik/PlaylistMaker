@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".search.ui.SearchFragment">
+    tools:context=".search.presentation.ui.SearchFragment">
 
     <!--    Используемые иллюстрации (иконки) и шрифты в образовательных целях предоставлены Яндекс-Практикумом (practicum.yandex.ru)-->
     <FrameLayout
@@ -43,6 +43,7 @@
             android:paddingStart="@dimen/dimen_12"
             android:textSize="@dimen/dimen_16s"
             style="@style/EditTextSearch"
+            android:textCursorDrawable="@drawable/cursor_for_edit_text"
             android:drawablePadding="@dimen/dimen_8"
             tools:ignore="RtlSymmetry"
             android:imeOptions="actionDone"
@@ -73,7 +74,7 @@
         android:layout_height="@dimen/dimen_44"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/dimen_140"
-        android:indeterminateTint="@color/violet_170"
+        android:indeterminateTint="@color/blue_100"
         android:visibility="gone"/>
 
     <LinearLayout

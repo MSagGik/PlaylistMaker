@@ -2,9 +2,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.PlaylistMaker" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- цвета текста -->
-        <!-- <item name="android:textColorPrimary">@color/white</item>-->
-        <!-- <item name="android:textColorSecondary">@color/white</item>-->
-        <!-- цвета фона -->
+        <item name="android:statusBarColor">@color/grey_100</item>
     </style>
 </resources>
