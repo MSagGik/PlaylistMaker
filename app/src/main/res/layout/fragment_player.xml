@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".player.ui.PlayerFragment">
+    tools:context=".player.presentation.ui.PlayerFragment">
 
     <ProgressBar
         android:id="@+id/loading_time_player"
@@ -218,9 +218,11 @@
     <TextView
         android:id="@+id/time_track"
         style="@style/TextViewYSMediumTimeTrack"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/dimen_36"
         android:layout_height="wrap_content"
         android:text="@string/time_track"
+        android:gravity="start"
+        android:layout_marginStart="@dimen/dimen_3"
         app:layout_constraintBottom_toTopOf="@+id/guideline_vertical_12"
         app:layout_constraintEnd_toStartOf="@+id/guideline_end_one"
         app:layout_constraintStart_toStartOf="@+id/guideline_start_one"

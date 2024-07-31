@@ -8,7 +8,7 @@ class ThemeSpImpl(
     private val spTheme: SharedPreferences
 ) : ThemeSp {
     override fun isDarkThemeSharedPreferences(): Boolean {
-        return spTheme.getBoolean(APP_THEME_KEY, false)
+        return spTheme.getBoolean(APP_THEME_KEY, true)
     }
 
     override fun updateThemeSettingSharedPreferences(isDarkTheme: Boolean) {

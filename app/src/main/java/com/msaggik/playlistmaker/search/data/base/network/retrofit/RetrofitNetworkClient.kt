@@ -6,6 +6,8 @@ import android.net.NetworkCapabilities
 import com.msaggik.playlistmaker.search.data.dto.request.TracksSearchRequest
 import com.msaggik.playlistmaker.search.data.dto.response.Response
 import com.msaggik.playlistmaker.search.data.base.network.NetworkClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
 
 class RetrofitNetworkClient(
@@ -13,18 +15,24 @@ class RetrofitNetworkClient(
     retrofit: Retrofit
 ) : NetworkClient {
     private val itunesRestService = retrofit.create(RestItunes::class.java)
-    override fun doRequest(dto: Any): Response {
-        if (isConnected() == false) {
+    override suspend fun doRequest(dto: Any): Response {
+        if (!isConnected()) {
             return Response().apply { resultCode = -1 }
         }
-        return if (dto is TracksSearchRequest) {
-            val response = itunesRestService.search(dto.searchTracks).execute() // get object Response<TrackResponse>, class Response is Retrofit
-
-            val body = response.body() ?: Response() // get object TrackResponse
-
-            body.apply { resultCode = response.code() }
-        } else {
-            Response().apply { resultCode = 400 }
+        if (dto !is TracksSearchRequest) {
+            return Response().apply { resultCode = 400 }
+        }
+        return withContext(Dispatchers.IO) {
+            runCatching {
+                itunesRestService.search(dto.searchTracks)
+            }.fold(
+                onSuccess = { response ->
+                    response.apply { resultCode = 200 }
+                },
+                onFailure = { e ->
+                    Response().apply { resultCode = 500 }
+                }
+            )
         }
     }
 

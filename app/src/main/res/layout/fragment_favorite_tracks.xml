@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".media.ui.fragments.FavoriteTracksFragment">
+    tools:context=".media.presentation.ui.fragments.FavoriteTracksFragment">
 
     <FrameLayout
         android:id="@+id/placeholder_empty_media_library"

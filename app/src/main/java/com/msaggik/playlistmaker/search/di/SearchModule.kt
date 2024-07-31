@@ -7,10 +7,10 @@ import com.msaggik.playlistmaker.search.data.base.network.retrofit.RetrofitNetwo
 import com.msaggik.playlistmaker.search.data.base.sp.SearchHistorySp
 import com.msaggik.playlistmaker.search.data.base.sp.impl.SearchHistorySpImpl
 import com.msaggik.playlistmaker.search.data.repository_impl.TracksRepositoryImpl
-import com.msaggik.playlistmaker.search.domain.api.TracksInteractor
-import com.msaggik.playlistmaker.search.domain.api.impl.TracksInteractorImpl
+import com.msaggik.playlistmaker.search.domain.use_case.TracksInteractor
+import com.msaggik.playlistmaker.search.domain.use_case.impl.TracksInteractorImpl
 import com.msaggik.playlistmaker.search.domain.repository.TracksRepository
-import com.msaggik.playlistmaker.search.view_model.SearchViewModel
+import com.msaggik.playlistmaker.search.presentation.view_model.SearchViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -75,4 +75,5 @@ val searchModule = module {
     single {
         Gson()
     }
+
 }

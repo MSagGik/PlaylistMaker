@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.msaggik.playlistmaker.search.ui.SearchFragment"
+        android:name="com.msaggik.playlistmaker.search.presentation.ui.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" >
         <action
@@ -20,17 +20,17 @@
     </fragment>
     <fragment
         android:id="@+id/playerFragment"
-        android:name="com.msaggik.playlistmaker.player.ui.PlayerFragment"
+        android:name="com.msaggik.playlistmaker.player.presentation.ui.PlayerFragment"
         android:label="PlayerFragment"
         tools:layout="@layout/fragment_player"/>
     <fragment
         android:id="@+id/settingFragment"
-        android:name="com.msaggik.playlistmaker.setting.ui.SettingFragment"
+        android:name="com.msaggik.playlistmaker.setting.presentation.ui.SettingFragment"
         android:label="fragment_setting"
         tools:layout="@layout/fragment_setting" />
     <fragment
         android:id="@+id/mediaFragment"
-        android:name="com.msaggik.playlistmaker.media.ui.MediaFragment"
+        android:name="com.msaggik.playlistmaker.media.presentation.ui.MediaFragment"
         android:label="fragment_media"
         tools:layout="@layout/fragment_media" />
 </navigation>
