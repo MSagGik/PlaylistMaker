@@ -15,6 +15,4 @@ sealed interface TracksState {
     ) : TracksState
 
     object  Empty : TracksState
-
-    object  HistoryTracks : TracksState
 }

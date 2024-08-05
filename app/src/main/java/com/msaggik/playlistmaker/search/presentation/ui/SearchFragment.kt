@@ -135,7 +135,6 @@ class SearchFragment : Fragment() {
                 Toast.makeText(requireContext(), state.errorMessage, Toast.LENGTH_SHORT).show()
             }
             is TracksState.Empty -> Utils.visibilityView(viewArray, binding.layoutNothingFound)
-            is TracksState.HistoryTracks -> Utils.visibilityView(viewArray, binding.layoutSearchHistory)
         }
     }
 
@@ -150,7 +149,6 @@ class SearchFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     private fun trackSelection(track: Track) {
         searchViewModel.addTrackListHistory(track)
-        // navigate and send in PlayerFragment data track
         findNavController().navigate(
             R.id.action_searchFragment_to_playerFragment,
             PlayerFragment.createArgs(track)
@@ -163,11 +161,9 @@ class SearchFragment : Fragment() {
         }
     }
 
-    // show search history
     @SuppressLint("NotifyDataSetChanged")
     private fun visibleLayoutSearchHistory(flag: Boolean) {
-        if (flag && binding.inputSearch.text.isEmpty() && trackListHistory.isNotEmpty()) {
-//        if (flag && binding.inputSearch.text.isEmpty() && binding.inputSearch.hasFocus() && trackListHistory.isNotEmpty()) {
+        if (flag && binding.inputSearch.text.isEmpty() && binding.inputSearch.hasFocus() && trackListHistory.isNotEmpty()) {
             Utils.visibilityView(viewArray, binding.layoutSearchHistory)
             trackListHistoryAdapter.setTrackList(trackListHistory)
             trackListHistoryAdapter.notifyDataSetChanged()
