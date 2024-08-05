@@ -12,14 +12,14 @@ class TracksInteractorImpl(
     private val repository: TracksRepository
 ) : TracksInteractor {
 
-    val executor = Executors.newCachedThreadPool()
-
     // network
     override fun searchTracks(searchTracks: String) : Flow<Pair<List<Track>?, String?>> {
         return repository.searchTracks(searchTracks).map { resource -> Resource.handleResource(resource) }
     }
 
     // sp
+    val executor = Executors.newCachedThreadPool()
+
     override fun clearTrackListHistory() {
         executor.execute {
             repository.clearTrackListHistory()
