@@ -134,8 +134,8 @@ class SearchFragment : Fragment() {
                 Utils.visibilityView(viewArray, binding.layoutCommunicationProblems)
                 Toast.makeText(requireContext(), state.errorMessage, Toast.LENGTH_SHORT).show()
             }
-
             is TracksState.Empty -> Utils.visibilityView(viewArray, binding.layoutNothingFound)
+            is TracksState.HistoryTracks -> Utils.visibilityView(viewArray, binding.layoutSearchHistory)
         }
     }
 
@@ -166,7 +166,8 @@ class SearchFragment : Fragment() {
     // show search history
     @SuppressLint("NotifyDataSetChanged")
     private fun visibleLayoutSearchHistory(flag: Boolean) {
-        if (flag && binding.inputSearch.text.isEmpty() && binding.inputSearch.hasFocus() && trackListHistory.isNotEmpty()) {
+        if (flag && binding.inputSearch.text.isEmpty() && trackListHistory.isNotEmpty()) {
+//        if (flag && binding.inputSearch.text.isEmpty() && binding.inputSearch.hasFocus() && trackListHistory.isNotEmpty()) {
             Utils.visibilityView(viewArray, binding.layoutSearchHistory)
             trackListHistoryAdapter.setTrackList(trackListHistory)
             trackListHistoryAdapter.notifyDataSetChanged()
@@ -186,6 +187,7 @@ class SearchFragment : Fragment() {
                     keyboardOnOff?.hideSoftInputFromWindow(binding.inputSearch.windowToken, 0)
                     trackList.clear()
                     trackListAdapter.notifyDataSetChanged()
+                    searchViewModel.clearSearchLiveData()
                     visibleLayoutSearchHistory(true)
                     Utils.visibilityView(viewArray, binding.layoutSearchHistory)
                 }
@@ -197,6 +199,7 @@ class SearchFragment : Fragment() {
                 R.id.button_clear_search_history -> {
                     searchViewModel.clearTrackListHistory()
                     trackListHistory.clear()
+                    trackListHistoryAdapter.notifyDataSetChanged()
                     visibleLayoutSearchHistory(true)
                 }
             }

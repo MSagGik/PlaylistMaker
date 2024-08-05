@@ -49,6 +49,7 @@ class SearchViewModel (
 
     fun clearTrackListHistory() {
         tracksInteractor.clearTrackListHistory()
+        trackListHistoryLiveData.postValue(emptyList())
     }
 
     fun getTrackListHistoryLiveData(): LiveData<List<Track>> = trackListHistoryLiveData
@@ -58,6 +59,9 @@ class SearchViewModel (
 
     private var latestSearchText: String? = null
     fun getStateLiveData(): LiveData<TracksState> = mediatorStateLiveData
+    fun clearSearchLiveData() {
+        stateLiveData.postValue(TracksState.HistoryTracks)
+    }
 
     private val mediatorStateLiveData = MediatorLiveData<TracksState>().also { liveData ->
         liveData.addSource(stateLiveData) { state ->
@@ -66,6 +70,7 @@ class SearchViewModel (
                 is TracksState.Empty -> state
                 is TracksState.Error -> state
                 is TracksState.Loading -> state
+                is TracksState.HistoryTracks -> state
             }
         }
     }
