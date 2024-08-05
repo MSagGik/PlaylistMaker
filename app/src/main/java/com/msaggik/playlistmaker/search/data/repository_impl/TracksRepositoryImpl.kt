@@ -2,6 +2,7 @@ package com.msaggik.playlistmaker.search.data.repository_impl
 
 import android.content.Context
 import com.msaggik.playlistmaker.R
+import com.msaggik.playlistmaker.media.data.favorite_tracks_db.TracksDatabase
 import com.msaggik.playlistmaker.search.data.base.network.NetworkClient
 import com.msaggik.playlistmaker.search.data.base.sp.SearchHistorySp
 import com.msaggik.playlistmaker.search.data.dto.request.TracksSearchRequest
@@ -16,23 +17,30 @@ import kotlinx.coroutines.flow.flow
 class TracksRepositoryImpl (
     private val context: Context,
     private val networkClient: NetworkClient,
-    private val searchHistorySp: SearchHistorySp
+    private val searchHistorySp: SearchHistorySp,
+    private val tracksDatabase: TracksDatabase
 ) : TracksRepository {
 
     // network
     override fun searchTracks(trackSearch: String): Flow<Resource<List<Track>>> = flow {
         val response = networkClient.doRequest(TracksSearchRequest(trackSearch))
+        val listIds = tracksDatabase.favoriteTracksDao().getFavoriteTracksIds()
         when(response.resultCode) {
             -1 -> {
                 emit(Resource.Error(context.getString(R.string.no_connection)))
             }
             200 -> {
                 emit(Resource.Success((response as TrackResponse).results.map {
-                    Track(
+                    var track = Track(
                         it.trackId, it.trackName, it.artistName,
                         it.trackTimeMillis, it.artworkUrl100, it.collectionName,
                         it.releaseDate, it.primaryGenreName, it.country, it.previewUrl
                     )
+                    for(idFavorite in listIds) {
+                        val id = track.trackId.toLong()
+                        if(idFavorite == id) track.apply { isFavorite = true }
+                    }
+                    track
                 }))
             }
             else -> {

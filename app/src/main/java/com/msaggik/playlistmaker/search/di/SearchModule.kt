@@ -41,7 +41,8 @@ val searchModule = module {
         TracksRepositoryImpl(
             androidContext(),
             networkClient = get(),
-            searchHistorySp = get()
+            searchHistorySp = get(),
+            tracksDatabase = get()
         )
     }
     // network
