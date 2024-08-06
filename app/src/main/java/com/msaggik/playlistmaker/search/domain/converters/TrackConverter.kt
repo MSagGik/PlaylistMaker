@@ -16,7 +16,27 @@ object TrackConverter {
                 primaryGenreName = primaryGenreName,
                 country = country,
                 previewUrl = previewUrl,
-                isFavorite = isFavorite
+                isFavorite = isFavorite,
+                dateAddTrack = dateAddTrack
+            )
+        }
+    }
+
+    fun map(track: com.msaggik.playlistmaker.media.domain.models.Track): Track {
+        return with(track) {
+            Track(
+                trackId = trackId,
+                trackName = trackName,
+                artistName = artistName,
+                trackTimeMillis = trackTimeMillis,
+                artworkUrl100 = artworkUrl100,
+                collectionName = collectionName,
+                releaseDate = releaseDate,
+                primaryGenreName = primaryGenreName,
+                country = country,
+                previewUrl = previewUrl,
+                isFavorite = isFavorite,
+                dateAddTrack = dateAddTrack
             )
         }
     }

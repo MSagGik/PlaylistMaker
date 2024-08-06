@@ -7,7 +7,8 @@ import com.msaggik.playlistmaker.media.data.favorite_tracks_db.entity.config_db.
 
 @Entity(tableName = FavoriteTracksConfig.FAVORITE_TRACKS_TABLE)
 data class TrackEntity(
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = FavoriteTracksConfig.TRACK_ID)
+    @PrimaryKey
+    @ColumnInfo(name = FavoriteTracksConfig.TRACK_ID)
     val trackId: Long,
     @ColumnInfo(name = FavoriteTracksConfig.TRACK_NAME)
     val trackName: String = "",
@@ -25,5 +26,7 @@ data class TrackEntity(
     val primaryGenreName: String = "",
     val country: String = "",
     @ColumnInfo(name = FavoriteTracksConfig.PREVIEW_URL)
-    val previewUrl: String = ""
+    val previewUrl: String = "",
+    @ColumnInfo(name = FavoriteTracksConfig.DATE_ADD_TRACK)
+    val dateAddTrack: Long = -1L
 )

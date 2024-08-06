@@ -1,18 +1,16 @@
 package com.msaggik.playlistmaker.media.presentation.view_model
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.msaggik.playlistmaker.R
 import com.msaggik.playlistmaker.media.domain.use_case.MediaInteractor
 import com.msaggik.playlistmaker.media.domain.models.Track
 import com.msaggik.playlistmaker.media.presentation.view_model.state.FavoriteTracksState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class FavoriteTracksViewModel(
-    private val context: Context,
     private val mediaInteractor: MediaInteractor
 ) : ViewModel() {
 
@@ -20,12 +18,21 @@ class FavoriteTracksViewModel(
     fun getFavoriteTrackListLiveData(): LiveData<FavoriteTracksState> = favoriteTrackListLiveData
 
     fun getFavoriteTrackList() {
-        renderState(FavoriteTracksState.Loading)
         viewModelScope.launch {
             mediaInteractor
                 .getFavoriteTracks()
-                .collect{ tracks -> processResult(tracks) }
+                .collect { tracks ->
+                    processResult(tracks)
+                }
         }
+    }
+
+    fun addTrackListHistory(track: Track) {
+        viewModelScope.launch(Dispatchers.IO){
+            mediaInteractor
+                .addFavoriteTrack(track)
+        }
+        getFavoriteTrackList()
     }
 
     private fun processResult(tracks: List<Track>) {

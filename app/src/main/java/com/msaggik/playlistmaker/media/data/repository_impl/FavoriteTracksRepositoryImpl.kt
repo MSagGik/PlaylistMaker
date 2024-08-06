@@ -20,7 +20,12 @@ class FavoriteTracksRepositoryImpl(
     }
 
     override fun getFavoriteTracks(): Flow<List<Track>> = flow {
-        tracksDataBase.favoriteTracksDao().getFavoriteTracks().map { trackEntity -> TrackDbConverter.map(trackEntity) }
+        emit(
+            tracksDataBase
+                .favoriteTracksDao()
+                .getFavoriteTracks()
+                .map { trackEntity -> TrackDbConverter.map(trackEntity)}
+        )
     }
 
 }

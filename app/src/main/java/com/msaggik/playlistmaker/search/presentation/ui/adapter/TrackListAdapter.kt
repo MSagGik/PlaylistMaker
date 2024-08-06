@@ -10,7 +10,10 @@ import com.msaggik.playlistmaker.databinding.ItemTrackListBinding
 import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.util.Utils
 
-class TrackListAdapter (trackListAdd: List<Track>, private val trackClickListener: TrackClickListener) : RecyclerView.Adapter<TrackListAdapter.TrackViewHolder> () {
+class TrackListAdapter (
+    trackListAdd: List<Track>,
+    private val trackClickListener: TrackClickListener
+) : RecyclerView.Adapter<TrackListAdapter.TrackViewHolder> () {
 
     private var trackList = trackListAdd
 
@@ -47,7 +50,6 @@ class TrackListAdapter (trackListAdd: List<Track>, private val trackClickListene
             binding.trackName.text = model.trackName
             binding.artistName.text = model.artistName
             binding.lengthTrack.text = Utils.dateFormatMillisToMinSecFull(model.trackTimeMillis)
-//            binding.lengthTrack.text = if(model.isFavorite)  "${Utils.dateFormatMillisToMinSecFull(model.trackTimeMillis)} isFavorite" else Utils.dateFormatMillisToMinSecFull(model.trackTimeMillis)
         }
     }
 }

@@ -14,4 +14,5 @@ object FavoriteTracksConfig {
     const val RELEASE_DATE: String = "release_date"
     const val PRIMARY_GENRE_NAME: String = "primary_genre_name"
     const val PREVIEW_URL: String = "preview_url"
+    const val DATE_ADD_TRACK: String = "dateAddTrack"
 }

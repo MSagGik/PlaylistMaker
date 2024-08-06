@@ -60,7 +60,10 @@ class PlayerViewModel(
                     likeStateLiveData.postValue(FavoriteState.NotFavorite)
                 }
             } else {
-                val idFavoriteTrack = mediaInteractor.addFavoriteTrack(TrackConverter.map(track))
+                val idFavoriteTrack = mediaInteractor
+                    .addFavoriteTrack(
+                        TrackConverter.map(track).apply { dateAddTrack = System.currentTimeMillis() }
+                    )
                 if(idFavoriteTrack != -1L) {
                     track.isFavorite = true
                     likeStateLiveData.postValue(FavoriteState.Favorite)

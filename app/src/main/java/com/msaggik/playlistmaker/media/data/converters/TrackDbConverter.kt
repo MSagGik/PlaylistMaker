@@ -17,7 +17,8 @@ object TrackDbConverter {
                 releaseDate = releaseDate,
                 primaryGenreName = primaryGenreName,
                 country = country,
-                previewUrl = previewUrl
+                previewUrl = previewUrl,
+                dateAddTrack = dateAddTrack
             )
         }
     }
@@ -34,7 +35,8 @@ object TrackDbConverter {
                 releaseDate = releaseDate,
                 primaryGenreName = primaryGenreName,
                 country = country,
-                previewUrl = previewUrl
+                previewUrl = previewUrl,
+                dateAddTrack = dateAddTrack
             )
         }
     }
