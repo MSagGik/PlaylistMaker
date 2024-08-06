@@ -24,7 +24,6 @@ class TracksRepositoryImpl(
     // network
     override fun searchTracks(trackSearch: String): Flow<Resource<List<Track>>> = flow {
         val response = networkClient.doRequest(TracksSearchRequest(trackSearch))
-        val listIds = tracksDatabase.favoriteTracksDao().getFavoriteTracksIds()
         when (response.resultCode) {
             -1 -> {
                 emit(Resource.Error(context.getString(R.string.no_connection)))
@@ -37,11 +36,7 @@ class TracksRepositoryImpl(
                         it.trackTimeMillis, it.artworkUrl100, it.collectionName,
                         it.releaseDate, it.primaryGenreName, it.country, it.previewUrl
                     )
-                    for (idFavorite in listIds) {
-                        val id = track.trackId.toLong()
-                        if (idFavorite == id) track.apply { isFavorite = true }
-                    }
-                    track
+                    actualizingTrack(track)
                 }))
             }
 
@@ -57,19 +52,32 @@ class TracksRepositoryImpl(
     }
 
     override fun readTrackListHistory(): Flow<List<Track>> = flow {
-        emit(searchHistorySp.readTrackListHistorySharedPreferences()
-            .map {
-                Utils.convertTrackDtoToTrack(it)
-            }
+        emit(
+            searchHistorySp.readTrackListHistorySharedPreferences()
+                .map {
+                    val track = Utils.convertTrackDtoToTrack(it)
+                    actualizingTrack(track)
+                }
         )
     }
 
     override fun addTrackListHistory(track: Track): Flow<List<Track>> = flow {
         val trackDto = Utils.convertTrackToTrackDto(track)
-        emit(searchHistorySp.addTrackListHistorySharedPreferences(trackDto)
-            .map {
-                Utils.convertTrackDtoToTrack(it)
-            }
+        emit(
+            searchHistorySp.addTrackListHistorySharedPreferences(trackDto)
+                .map {
+                    val track = Utils.convertTrackDtoToTrack(it)
+                    actualizingTrack(track)
+                }
         )
+    }
+
+    private suspend fun actualizingTrack(track: Track): Track {
+        val listIds = tracksDatabase.favoriteTracksDao().getFavoriteTracksIds()
+        for (idFavorite in listIds) {
+            val id = track.trackId.toLong()
+            if (idFavorite == id) track.apply { isFavorite = true }
+        }
+        return track
     }
 }

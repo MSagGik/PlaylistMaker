@@ -27,7 +27,7 @@ class SearchViewModel (
         readTrackListHistory()
     }
 
-    private fun readTrackListHistory() {
+    fun readTrackListHistory() {
         viewModelScope.launch(Dispatchers.IO){
             tracksInteractor
                 .readTrackListHistory()
@@ -90,6 +90,7 @@ class SearchViewModel (
         if (latestSearchText != changedText) {
             latestSearchText = changedText
             trackSearchDebounce(changedText)
+            latestSearchText = null
         }
     }
 

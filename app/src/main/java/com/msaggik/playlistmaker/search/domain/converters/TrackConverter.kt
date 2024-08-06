@@ -15,7 +15,8 @@ object TrackConverter {
                 releaseDate = releaseDate,
                 primaryGenreName = primaryGenreName,
                 country = country,
-                previewUrl = previewUrl
+                previewUrl = previewUrl,
+                isFavorite = isFavorite
             )
         }
     }

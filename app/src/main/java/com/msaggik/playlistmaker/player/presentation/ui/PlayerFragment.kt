@@ -3,6 +3,7 @@ package com.msaggik.playlistmaker.player.presentation.ui
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -94,6 +95,7 @@ class PlayerFragment : Fragment() {
             )
         }
 
+        track?.let { playerViewModel.onFavorite(it) }
         playerViewModel.getLikeStateLiveData().observe(viewLifecycleOwner) { state ->
             binding.buttonLike.setImageDrawable(
                 ContextCompat.getDrawable(

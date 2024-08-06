@@ -47,6 +47,7 @@ class TrackListAdapter (trackListAdd: List<Track>, private val trackClickListene
             binding.trackName.text = model.trackName
             binding.artistName.text = model.artistName
             binding.lengthTrack.text = Utils.dateFormatMillisToMinSecFull(model.trackTimeMillis)
+//            binding.lengthTrack.text = if(model.isFavorite)  "${Utils.dateFormatMillisToMinSecFull(model.trackTimeMillis)} isFavorite" else Utils.dateFormatMillisToMinSecFull(model.trackTimeMillis)
         }
     }
 }

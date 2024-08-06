@@ -100,24 +100,22 @@ class SearchFragment : Fragment() {
         binding.searchHistoryTrackList.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
-        // output list tracks in RecyclerView trackListView
         binding.trackList.adapter = trackListAdapter
 
-        // subscription to TrackListHistoryLiveData
+        searchViewModel.readTrackListHistory()
+
         searchViewModel.getTrackListHistoryLiveData().observe(viewLifecycleOwner) { list ->
             trackListHistory.clear()
             trackListHistory.addAll(list)
             trackListHistoryAdapter.notifyDataSetChanged()
         }
 
-        // subscription to StateLiveData
         searchViewModel.getStateLiveData().observe(viewLifecycleOwner) {
             render(it)
         }
 
         binding.searchHistoryTrackList.adapter = trackListHistoryAdapter
 
-        // listeners
         binding.inputSearch.onFocusChangeListener = focusChangeListener
         binding.inputSearch.addTextChangedListener(inputSearchWatcher)
         binding.buttonClear.setOnClickListener(listener)
@@ -125,7 +123,6 @@ class SearchFragment : Fragment() {
         binding.buttonClearSearchHistory.setOnClickListener(listener)
     }
 
-    // methods visible state screen
     private fun render(state: TracksState) {
         when (state) {
             is TracksState.Loading -> Utils.visibilityView(viewArray, binding.loadingTime)
