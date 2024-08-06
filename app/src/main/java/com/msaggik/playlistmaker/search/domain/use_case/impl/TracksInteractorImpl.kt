@@ -6,7 +6,6 @@ import com.msaggik.playlistmaker.search.domain.repository.TracksRepository
 import com.msaggik.playlistmaker.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import java.util.concurrent.Executors
 
 class TracksInteractorImpl(
     private val repository: TracksRepository
@@ -18,23 +17,16 @@ class TracksInteractorImpl(
     }
 
     // sp
-    val executor = Executors.newCachedThreadPool()
 
-    override fun clearTrackListHistory() {
-        executor.execute {
-            repository.clearTrackListHistory()
-        }
+    override suspend fun clearTrackListHistory() {
+        repository.clearTrackListHistory()
     }
 
-    override fun readTrackListHistory(consumer: TracksInteractor.SpTracksHistoryConsumer) {
-        executor.execute {
-            consumer.consume(repository.readTrackListHistory())
-        }
+    override fun readTrackListHistory() : Flow<List<Track>> {
+        return repository.readTrackListHistory()
     }
 
-    override fun addTrackListHistory(track: Track, consumer: TracksInteractor.SpTracksHistoryConsumer) {
-        executor.execute {
-            consumer.consume(repository.addTrackListHistory(track))
-        }
+    override fun addTrackListHistory(track: Track) : Flow<List<Track>> {
+        return repository.addTrackListHistory(track)
     }
 }

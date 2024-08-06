@@ -1,6 +1,5 @@
 package com.msaggik.playlistmaker.search.presentation.view_model
 
-import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,6 +9,7 @@ import com.msaggik.playlistmaker.search.domain.use_case.TracksInteractor
 import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.search.presentation.ui.state.TracksState
 import com.msaggik.playlistmaker.util.debounce
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SearchViewModel (
@@ -28,27 +28,29 @@ class SearchViewModel (
     }
 
     private fun readTrackListHistory() {
-        tracksInteractor.readTrackListHistory(object : TracksInteractor.SpTracksHistoryConsumer {
-            @SuppressLint("NotifyDataSetChanged")
-            override fun consume(listHistoryTracks: List<Track>) {
-                trackListHistoryLiveData.postValue(listHistoryTracks)
-            }
-        })
+        viewModelScope.launch(Dispatchers.IO){
+            tracksInteractor
+                .readTrackListHistory()
+                .collect{
+                    listHistoryTracks -> trackListHistoryLiveData.postValue(listHistoryTracks)
+                }
+        }
     }
 
     fun addTrackListHistory(track: Track) {
-        tracksInteractor.addTrackListHistory(
-            track,
-            object : TracksInteractor.SpTracksHistoryConsumer {
-                @SuppressLint("NotifyDataSetChanged")
-                override fun consume(listHistoryTracks: List<Track>) {
-                    trackListHistoryLiveData.postValue(listHistoryTracks)
+        viewModelScope.launch(Dispatchers.IO){
+            tracksInteractor
+                .addTrackListHistory(track)
+                .collect{
+                    listHistoryTracks -> trackListHistoryLiveData.postValue(listHistoryTracks)
                 }
-            })
+        }
     }
 
     fun clearTrackListHistory() {
-        tracksInteractor.clearTrackListHistory()
+        viewModelScope.launch(Dispatchers.IO) {
+            tracksInteractor.clearTrackListHistory()
+        }
         trackListHistoryLiveData.postValue(emptyList())
     }
 

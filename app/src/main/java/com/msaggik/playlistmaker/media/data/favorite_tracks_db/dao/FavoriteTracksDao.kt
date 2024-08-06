@@ -13,8 +13,8 @@ interface FavoriteTracksDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTrack(track: TrackEntity) : Long
 
-    @Delete
-    suspend fun deleteTrack(trackId: Long) : Boolean
+    @Delete(entity = TrackEntity::class)
+    suspend fun deleteTrack(track: TrackEntity) : Int
 
     @Query("SELECT * FROM FAVORITE_TRACKS_TABLE")
     suspend fun getFavoriteTracks(): List<TrackEntity>

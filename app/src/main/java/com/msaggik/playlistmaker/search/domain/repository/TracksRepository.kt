@@ -8,7 +8,7 @@ interface TracksRepository {
     // network
     fun searchTracks(trackSearch: String): Flow<Resource<List<Track>>>
     // sp
-    fun clearTrackListHistory()
-    fun readTrackListHistory() : List<Track>
-    fun addTrackListHistory(track: Track) : List<Track>
+    suspend fun clearTrackListHistory()
+    fun readTrackListHistory() : Flow<List<Track>>
+    fun addTrackListHistory(track: Track) : Flow<List<Track>>
 }

@@ -5,7 +5,7 @@ import android.media.MediaPlayer
 import com.google.gson.Gson
 import com.msaggik.playlistmaker.player.domain.repository.TrackPlayer
 import com.msaggik.playlistmaker.player.domain.state.PlayerState
-import com.msaggik.playlistmaker.media.data.dto.TrackDto
+import com.msaggik.playlistmaker.search.data.dto.response.TrackDto
 import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.util.Utils
 

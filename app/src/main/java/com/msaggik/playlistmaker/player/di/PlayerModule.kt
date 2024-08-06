@@ -19,7 +19,8 @@ val playerModule = module {
     viewModel { (trackId: Int) ->
         PlayerViewModel(
             trackId = trackId,
-            playerInteractor = get()
+            playerInteractor = get(),
+            mediaInteractor = get()
         )
     }
 

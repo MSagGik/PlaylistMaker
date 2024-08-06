@@ -14,7 +14,7 @@ import com.msaggik.playlistmaker.util.Utils
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class TracksRepositoryImpl (
+class TracksRepositoryImpl(
     private val context: Context,
     private val networkClient: NetworkClient,
     private val searchHistorySp: SearchHistorySp,
@@ -25,10 +25,11 @@ class TracksRepositoryImpl (
     override fun searchTracks(trackSearch: String): Flow<Resource<List<Track>>> = flow {
         val response = networkClient.doRequest(TracksSearchRequest(trackSearch))
         val listIds = tracksDatabase.favoriteTracksDao().getFavoriteTracksIds()
-        when(response.resultCode) {
+        when (response.resultCode) {
             -1 -> {
                 emit(Resource.Error(context.getString(R.string.no_connection)))
             }
+
             200 -> {
                 emit(Resource.Success((response as TrackResponse).results.map {
                     var track = Track(
@@ -36,13 +37,14 @@ class TracksRepositoryImpl (
                         it.trackTimeMillis, it.artworkUrl100, it.collectionName,
                         it.releaseDate, it.primaryGenreName, it.country, it.previewUrl
                     )
-                    for(idFavorite in listIds) {
+                    for (idFavorite in listIds) {
                         val id = track.trackId.toLong()
-                        if(idFavorite == id) track.apply { isFavorite = true }
+                        if (idFavorite == id) track.apply { isFavorite = true }
                     }
                     track
                 }))
             }
+
             else -> {
                 emit(Resource.Error(context.getString(R.string.server_error)))
             }
@@ -50,22 +52,24 @@ class TracksRepositoryImpl (
     }
 
     // sp
-    override fun clearTrackListHistory() {
+    override suspend fun clearTrackListHistory() {
         searchHistorySp.clearTrackListHistorySharedPreferences()
     }
 
-    override fun readTrackListHistory(): List<Track> {
-        return searchHistorySp.readTrackListHistorySharedPreferences()
+    override fun readTrackListHistory(): Flow<List<Track>> = flow {
+        emit(searchHistorySp.readTrackListHistorySharedPreferences()
             .map {
                 Utils.convertTrackDtoToTrack(it)
             }
+        )
     }
 
-    override fun addTrackListHistory(track: Track): List<Track> {
+    override fun addTrackListHistory(track: Track): Flow<List<Track>> = flow {
         val trackDto = Utils.convertTrackToTrackDto(track)
-        val trackListHistory = searchHistorySp.addTrackListHistorySharedPreferences(trackDto)
-        return trackListHistory.map {
-            Utils.convertTrackDtoToTrack(it)
-        }
+        emit(searchHistorySp.addTrackListHistorySharedPreferences(trackDto)
+            .map {
+                Utils.convertTrackDtoToTrack(it)
+            }
+        )
     }
 }

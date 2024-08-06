@@ -94,9 +94,19 @@ class PlayerFragment : Fragment() {
             )
         }
 
+        playerViewModel.getLikeStateLiveData().observe(viewLifecycleOwner) { state ->
+            binding.buttonLike.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    state.stateViewButton
+                )
+            )
+        }
+
         binding.buttonBack.setOnClickListener(listener)
         binding.buttonPlayPause.setOnClickListener(listener)
         binding.timeTrack.setOnClickListener(listener)
+        binding.buttonLike.setOnClickListener(listener)
     }
 
     override fun onDestroyView() {
@@ -136,6 +146,11 @@ class PlayerFragment : Fragment() {
 
                 R.id.time_track -> {
                     playerViewModel.isReverse()
+                }
+                R.id.button_like -> {
+                    track?.let {
+                        playerViewModel.onFavoriteClicked(it)
+                    }
                 }
             }
         }

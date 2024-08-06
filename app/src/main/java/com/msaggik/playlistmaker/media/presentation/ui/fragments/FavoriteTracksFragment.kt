@@ -48,7 +48,7 @@ class FavoriteTracksFragment : Fragment() {
             LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         binding.trackList.adapter = trackListAdapter
 
-        favoriteTracksViewModel.getTrackListMediaLiveData().observe(viewLifecycleOwner) {
+        favoriteTracksViewModel.getFavoriteTrackListLiveData().observe(viewLifecycleOwner) {
             listMediaTracks.clear()
             render(it)
         }

@@ -7,10 +7,7 @@ interface TracksInteractor { // интерфейс для связи domain - vi
     // network
     fun searchTracks(searchTracks: String): Flow<Pair<List<Track>?, String?>>
     // sp
-    fun clearTrackListHistory()
-    fun readTrackListHistory(consumer: SpTracksHistoryConsumer)
-    fun addTrackListHistory(track: Track, consumer: SpTracksHistoryConsumer)
-    interface SpTracksHistoryConsumer { // Callback между IO и UI потоками
-        fun consume(listHistoryTracks: List<Track>)
-    }
+    suspend fun clearTrackListHistory()
+    fun readTrackListHistory() : Flow<List<Track>>
+    fun addTrackListHistory(track: Track) : Flow<List<Track>>
 }

@@ -7,7 +7,7 @@ import android.util.TypedValue
 import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.gson.Gson
-import com.msaggik.playlistmaker.media.data.dto.TrackDto
+import com.msaggik.playlistmaker.search.data.dto.response.TrackDto
 import com.msaggik.playlistmaker.search.domain.models.Track
 import java.text.SimpleDateFormat
 import java.util.Locale

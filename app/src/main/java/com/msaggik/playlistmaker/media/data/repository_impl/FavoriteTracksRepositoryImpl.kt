@@ -15,8 +15,8 @@ class FavoriteTracksRepositoryImpl(
         return tracksDataBase.favoriteTracksDao().insertTrack(TrackDbConverter.map(track))
     }
 
-    override suspend fun deleteFavoriteTrack(idTrack: Long): Boolean {
-        return tracksDataBase.favoriteTracksDao().deleteTrack(idTrack)
+    override suspend fun deleteFavoriteTrack(track: Track): Int {
+        return tracksDataBase.favoriteTracksDao().deleteTrack(TrackDbConverter.map(track))
     }
 
     override fun getFavoriteTracks(): Flow<List<Track>> = flow {
