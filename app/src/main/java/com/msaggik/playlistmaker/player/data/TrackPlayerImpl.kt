@@ -9,6 +9,7 @@ import com.msaggik.playlistmaker.search.data.dto.response.TrackDto
 import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.util.Utils
 
+private const val DELTA_TIME_TRACK = 190L
 private const val TRACK_LIST_HISTORY_KEY = "track_list_history_key"
 class TrackPlayerImpl(
     private val mediaPlayer: MediaPlayer,
@@ -50,10 +51,10 @@ class TrackPlayerImpl(
     override fun getCurrentPosition(isReverse: Boolean): Long {
         return if(isReverse) {
             val reversTimeTrack = (mediaPlayer.duration - mediaPlayer.currentPosition).toLong()
-            if(reversTimeTrack == 0L) mediaPlayer.duration.toLong() else reversTimeTrack
+            if(reversTimeTrack <= DELTA_TIME_TRACK) mediaPlayer.duration.toLong() else reversTimeTrack
         } else {
             val timeTrack = mediaPlayer.currentPosition.toLong()
-            if(timeTrack == mediaPlayer.duration.toLong()) 0L else timeTrack
+            if(timeTrack >= mediaPlayer.duration.toLong() - DELTA_TIME_TRACK) 0L else timeTrack
         }
     }
 

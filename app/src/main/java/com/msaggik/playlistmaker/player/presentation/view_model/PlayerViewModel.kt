@@ -74,7 +74,11 @@ class PlayerViewModel(
 
     fun isReverse() {
         isReverse = !isReverse
-        currentTimePlayingLiveData.postValue(Utils.dateFormatMillisToMinSecShort(playerInteractor.getPlayerCurrentPosition(isReverse)))
+        currentTimePlayingLiveData.postValue(
+            Utils.dateFormatMillisToMinSecShort(
+                playerInteractor.getPlayerCurrentPosition(isReverse)
+            )
+        )
     }
 
     override fun onCleared() {
@@ -94,19 +98,23 @@ class PlayerViewModel(
 
         timerJob = viewModelScope.launch {
             while (playerInteractor.getPlayerState() == PlayerState.PLAYER_STATE_PLAYING) {
-                currentTimePlayingLiveData.postValue(
-                    Utils.dateFormatMillisToMinSecShort(
-                        playerInteractor.getPlayerCurrentPosition(isReverse)
-                    )
-                )
+                updateTimePlayingLiveData(isReverse)
                 delay(PLAYER_DELAY_UPDATE_TRACK_LIST)
             }
             if (playerInteractor.getPlayerState() == PlayerState.PLAYER_STATE_PREPARED) {
-                currentTimePlayingLiveData.postValue(Utils.dateFormatMillisToMinSecShort(playerInteractor.getPlayerCurrentPosition(isReverse)))
+                updateTimePlayingLiveData(isReverse)
                 buttonStateLiveData.postValue(PlayState.Play)
                 timerJob?.cancel()
             }
         }
+    }
+
+    fun updateTimePlayingLiveData(isReverse: Boolean) {
+        currentTimePlayingLiveData.postValue(
+            Utils.dateFormatMillisToMinSecShort(
+                playerInteractor.getPlayerCurrentPosition(isReverse)
+            )
+        )
     }
 
     fun pausePlayer() {
