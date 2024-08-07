@@ -20,7 +20,8 @@ val playerModule = module {
         PlayerViewModel(
             trackId = trackId,
             playerInteractor = get(),
-            mediaInteractor = get()
+            mediaInteractor = get(),
+            converter = get()
         )
     }
 
@@ -36,6 +37,7 @@ val playerModule = module {
         TrackPlayerImpl(
             mediaPlayer = get(),
             spSearchHistory = get(),
+            converters = get(),
             gson = get()
         )
     }

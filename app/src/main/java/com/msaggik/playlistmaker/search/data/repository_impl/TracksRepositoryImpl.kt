@@ -5,12 +5,12 @@ import com.msaggik.playlistmaker.R
 import com.msaggik.playlistmaker.media.data.favorite_tracks_db.TracksDatabase
 import com.msaggik.playlistmaker.search.data.base.network.NetworkClient
 import com.msaggik.playlistmaker.search.data.base.sp.SearchHistorySp
+import com.msaggik.playlistmaker.search.data.converters.ConvertersSearch
 import com.msaggik.playlistmaker.search.data.dto.request.TracksSearchRequest
 import com.msaggik.playlistmaker.search.data.dto.response.TrackResponse
 import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.search.domain.repository.TracksRepository
 import com.msaggik.playlistmaker.util.Resource
-import com.msaggik.playlistmaker.util.Utils
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -18,7 +18,8 @@ class TracksRepositoryImpl(
     private val context: Context,
     private val networkClient: NetworkClient,
     private val searchHistorySp: SearchHistorySp,
-    private val tracksDatabase: TracksDatabase
+    private val tracksDatabase: TracksDatabase,
+    private val converters: ConvertersSearch
 ) : TracksRepository {
 
     // network
@@ -31,11 +32,7 @@ class TracksRepositoryImpl(
 
             200 -> {
                 emit(Resource.Success((response as TrackResponse).results.map {
-                    var track = Track(
-                        it.trackId, it.trackName, it.artistName,
-                        it.trackTimeMillis, it.artworkUrl100, it.collectionName,
-                        it.releaseDate, it.primaryGenreName, it.country, it.previewUrl
-                    )
+                    val track = converters.convertTrackDtoToTrack(it)
                     actualizingTrack(track)
                 }))
             }
@@ -55,19 +52,19 @@ class TracksRepositoryImpl(
         emit(
             searchHistorySp.readTrackListHistorySharedPreferences()
                 .map {
-                    val track = Utils.convertTrackDtoToTrack(it)
+                    val track = converters.convertTrackDtoToTrack(it)
                     actualizingTrack(track)
                 }
         )
     }
 
     override fun addTrackListHistory(track: Track): Flow<List<Track>> = flow {
-        val trackDto = Utils.convertTrackToTrackDto(track)
+        val trackDto = converters.convertTrackToTrackDto(track)
         emit(
             searchHistorySp.addTrackListHistorySharedPreferences(trackDto)
                 .map {
-                    val track = Utils.convertTrackDtoToTrack(it)
-                    actualizingTrack(track)
+                    val trackBuf = converters.convertTrackDtoToTrack(it)
+                    actualizingTrack(trackBuf)
                 }
         )
     }

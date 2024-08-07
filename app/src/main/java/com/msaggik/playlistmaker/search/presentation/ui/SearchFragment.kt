@@ -88,15 +88,6 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        Log.e("onViewCreated", "onViewCreated")
-//        for(track in trackList) {
-//            Log.e("${track.trackName}", "${track.isFavorite}")
-//        }
-
-//        if(trackList.isNotEmpty()) {
-//            searchViewModel.searchTracks(searchTrack)
-//        }
-
         onTrackClickDebounce = debounce<Track>(
             DELAY_CLICK_TRACK,
             viewLifecycleOwner.lifecycleScope,

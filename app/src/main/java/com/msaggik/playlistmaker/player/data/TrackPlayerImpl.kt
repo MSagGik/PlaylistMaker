@@ -5,6 +5,7 @@ import android.media.MediaPlayer
 import com.google.gson.Gson
 import com.msaggik.playlistmaker.player.domain.repository.TrackPlayer
 import com.msaggik.playlistmaker.player.domain.state.PlayerState
+import com.msaggik.playlistmaker.search.data.converters.ConvertersSearch
 import com.msaggik.playlistmaker.search.data.dto.response.TrackDto
 import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.util.Utils
@@ -14,6 +15,7 @@ private const val TRACK_LIST_HISTORY_KEY = "track_list_history_key"
 class TrackPlayerImpl(
     private val mediaPlayer: MediaPlayer,
     private val spSearchHistory: SharedPreferences,
+    private val converters: ConvertersSearch,
     private val gson: Gson
 ) : TrackPlayer {
 
@@ -38,7 +40,7 @@ class TrackPlayerImpl(
 
     override fun loading(trackId: Int): Track {
         trackListHistory = Utils.readSharedPreferences(spSearchHistory, TRACK_LIST_HISTORY_KEY, gson)
-        val track = Utils.convertTrackDtoToTrack(
+        val track = converters.convertTrackDtoToTrack(
             track = Utils.searchTrackInList(
                 trackId = trackId,
                 list = trackListHistory

@@ -11,14 +11,15 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.msaggik.playlistmaker.R
 import com.msaggik.playlistmaker.databinding.FragmentFavoriteTracksBinding
+import com.msaggik.playlistmaker.media.data.converters.TrackDbConverter
 import com.msaggik.playlistmaker.media.domain.models.Track
 import com.msaggik.playlistmaker.media.presentation.ui.adapters.FavoriteTracksAdapter
 import com.msaggik.playlistmaker.media.presentation.view_model.FavoriteTracksViewModel
 import com.msaggik.playlistmaker.media.presentation.view_model.state.FavoriteTracksState
 import com.msaggik.playlistmaker.player.presentation.ui.PlayerFragment
-import com.msaggik.playlistmaker.search.domain.converters.TrackConverter
 import com.msaggik.playlistmaker.util.Utils
 import com.msaggik.playlistmaker.util.debounce
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoriteTracksFragment : Fragment() {
@@ -27,6 +28,7 @@ class FavoriteTracksFragment : Fragment() {
         const val DELAY_CLICK_TRACK = 1000L
     }
 
+    private val trackDbConverter: TrackDbConverter by inject()
     private val favoriteTracksViewModel: FavoriteTracksViewModel by viewModel()
 
     private var viewArray: Array<View>? = null
@@ -85,7 +87,7 @@ class FavoriteTracksFragment : Fragment() {
         favoriteTracksViewModel.addTrackListHistory(track)
         findNavController().navigate(
             R.id.action_mediaFragment_to_playerFragment,
-            PlayerFragment.createArgs(TrackConverter.map(track))
+            PlayerFragment.createArgs(trackDbConverter.mapMediaToSearch(track))
         )
     }
 
@@ -101,6 +103,7 @@ class FavoriteTracksFragment : Fragment() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun showFavoriteTracks(favoriteTracks: List<Track>) {
         Utils.visibilityView(viewArray, binding.content)
         listMediaTracks.clear()

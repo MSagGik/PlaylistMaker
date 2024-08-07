@@ -9,14 +9,15 @@ import kotlinx.coroutines.flow.flow
 
 class FavoriteTracksRepositoryImpl(
     private val tracksDataBase: TracksDatabase,
+    private val trackDbConverter: TrackDbConverter
 ) : FavoriteTracksRepository {
 
     override suspend fun addFavoriteTrack(track: Track): Long {
-        return tracksDataBase.favoriteTracksDao().insertTrack(TrackDbConverter.map(track))
+        return tracksDataBase.favoriteTracksDao().insertTrack(trackDbConverter.map(track))
     }
 
     override suspend fun deleteFavoriteTrack(track: Track): Int {
-        return tracksDataBase.favoriteTracksDao().deleteTrack(TrackDbConverter.map(track))
+        return tracksDataBase.favoriteTracksDao().deleteTrack(trackDbConverter.map(track))
     }
 
     override fun getFavoriteTracks(): Flow<List<Track>> = flow {
@@ -24,7 +25,7 @@ class FavoriteTracksRepositoryImpl(
             tracksDataBase
                 .favoriteTracksDao()
                 .getFavoriteTracks()
-                .map { trackEntity -> TrackDbConverter.map(trackEntity)}
+                .map { trackEntity -> trackDbConverter.map(trackEntity)}
         )
     }
 

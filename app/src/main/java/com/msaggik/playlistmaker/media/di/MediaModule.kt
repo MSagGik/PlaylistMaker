@@ -1,6 +1,7 @@
 package com.msaggik.playlistmaker.media.di
 
 import androidx.room.Room
+import com.msaggik.playlistmaker.media.data.converters.TrackDbConverter
 import com.msaggik.playlistmaker.media.data.favorite_tracks_db.TracksDatabase
 import com.msaggik.playlistmaker.media.data.favorite_tracks_db.entity.config_db.FavoriteTracksConfig.DATABASE_NAME
 import com.msaggik.playlistmaker.media.data.repository_impl.FavoriteTracksRepositoryImpl
@@ -36,13 +37,18 @@ val mediaModule = module {
     // data
     single<FavoriteTracksRepository> {
         FavoriteTracksRepositoryImpl(
-            tracksDataBase = get()
+            tracksDataBase = get(),
+            trackDbConverter = get()
         )
     }
 
     // db
     single {
         Room.databaseBuilder(androidContext(), TracksDatabase::class.java, DATABASE_NAME).build()
+    }
+
+    single {
+        TrackDbConverter()
     }
 
 }
