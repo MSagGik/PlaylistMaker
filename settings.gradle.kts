@@ -21,3 +21,10 @@ dependencyResolutionManagement {
 
 rootProject.name = "Playlist Maker"
 include(":app")
+include(":data")
+include(":search")
+include(":media")
+include(":settings")
+include(":player")
+include(":common_ui")
+include(":common_util")

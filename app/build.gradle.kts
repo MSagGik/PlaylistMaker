@@ -73,4 +73,12 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
+
+    implementation(project(":search"))
+    implementation(project(":media"))
+    implementation(project(":player"))
+    implementation(project(":settings"))
+    implementation(project(":data"))
+    implementation(project(":common_util"))
+    implementation(project(":common_ui"))
 }

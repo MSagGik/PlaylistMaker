@@ -1,19 +1,21 @@
 package com.msaggik.playlistmaker.root
 
 import android.app.Application
-import com.msaggik.playlistmaker.media.di.mediaModule
-import com.msaggik.playlistmaker.player.di.playerModule
-import com.msaggik.playlistmaker.search.di.searchModule
-import com.msaggik.playlistmaker.setting.di.settingModule
-import com.msaggik.playlistmaker.setting.domain.use_case.SettingsInteractor
-import com.msaggik.playlistmaker.setting.domain.model.ThemeSettings
-import com.msaggik.playlistmaker.sharing.di.sharingModule
-import com.msaggik.playlistmaker.util.Utils
+import com.msaggik.common_util.Utils
+import com.msaggik.data.di.mediaDataModule
+import com.msaggik.data.di.playerDataModule
+import com.msaggik.data.di.searchDataModule
+import com.msaggik.data.di.settingDataModule
+import com.msaggik.media.di.mediaModule
+import com.msaggik.player.di.playerModule
+import com.msaggik.search.di.searchModule
+import com.msaggik.settings.di.settingModule
+import com.msaggik.settings.domain.model.ThemeSettings
+import com.msaggik.settings.domain.use_case.settings.SettingsInteractor
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.koin.core.context.startKoin
-
 
 class App : Application(), KoinComponent {
     override fun onCreate() {
@@ -22,11 +24,14 @@ class App : Application(), KoinComponent {
         startKoin{
             androidContext(this@App)
             modules(
+                mediaDataModule,
+                playerDataModule,
+                searchDataModule,
+                settingDataModule,
+                mediaModule,
                 playerModule,
                 searchModule,
-                settingModule,
-                sharingModule,
-                mediaModule,
+                settingModule
             )
         }
 
