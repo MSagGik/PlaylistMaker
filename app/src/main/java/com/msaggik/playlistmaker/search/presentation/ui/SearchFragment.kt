@@ -88,6 +88,15 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+//        Log.e("onViewCreated", "onViewCreated")
+//        for(track in trackList) {
+//            Log.e("${track.trackName}", "${track.isFavorite}")
+//        }
+
+//        if(trackList.isNotEmpty()) {
+//            searchViewModel.searchTracks(searchTrack)
+//        }
+
         onTrackClickDebounce = debounce<Track>(
             DELAY_CLICK_TRACK,
             viewLifecycleOwner.lifecycleScope,
@@ -161,8 +170,7 @@ class SearchFragment : Fragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun visibleLayoutSearchHistory(flag: Boolean) {
-        if (flag && binding.inputSearch.text.isEmpty() && trackListHistory.isNotEmpty()) {
-//        if (flag && binding.inputSearch.text.isEmpty() && binding.inputSearch.hasFocus() && trackListHistory.isNotEmpty()) {
+        if (flag && binding.inputSearch.text.isEmpty() && binding.inputSearch.hasFocus() && trackListHistory.isNotEmpty()) {
             Utils.visibilityView(viewArray, binding.layoutSearchHistory)
             trackListHistoryAdapter.setTrackList(trackListHistory)
             trackListHistoryAdapter.notifyDataSetChanged()
@@ -182,9 +190,12 @@ class SearchFragment : Fragment() {
                     keyboardOnOff?.hideSoftInputFromWindow(binding.inputSearch.windowToken, 0)
                     trackList.clear()
                     trackListAdapter.notifyDataSetChanged()
-                    searchViewModel.setSearchHistoryLiveData()
+                    searchViewModel.clearSearchAndSetStateLiveData()
                     visibleLayoutSearchHistory(true)
-                    Utils.visibilityView(viewArray, binding.layoutSearchHistory)
+                }
+
+                R.id.button_update -> {
+                    searchViewModel.searchTracks(searchTrack)
                 }
 
                 R.id.button_clear_search_history -> {

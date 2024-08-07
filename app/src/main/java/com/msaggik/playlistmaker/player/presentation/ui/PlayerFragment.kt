@@ -3,7 +3,6 @@ package com.msaggik.playlistmaker.player.presentation.ui
 import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -57,6 +56,7 @@ class PlayerFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        track?.let { playerViewModel.updateFavoriteStatusTrack(it) }
         _binding = FragmentPlayerBinding.inflate(inflater, container, false)
         return binding.root
     }

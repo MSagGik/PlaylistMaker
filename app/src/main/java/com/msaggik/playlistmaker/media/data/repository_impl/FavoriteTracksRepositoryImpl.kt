@@ -28,4 +28,12 @@ class FavoriteTracksRepositoryImpl(
         )
     }
 
+    override fun getFavoriteTracksId(): Flow<List<Long>> = flow {
+        emit(
+            tracksDataBase
+                .favoriteTracksDao()
+                .getFavoriteTracksIds()
+        )
+    }
+
 }

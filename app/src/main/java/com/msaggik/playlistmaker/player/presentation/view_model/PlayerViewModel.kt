@@ -44,27 +44,45 @@ class PlayerViewModel(
     fun getLikeStateLiveData(): LiveData<FavoriteState> = likeStateLiveData
 
     fun onFavorite(track: Track) {
-        if(track.isFavorite) {
+        if (track.isFavorite) {
             likeStateLiveData.postValue(FavoriteState.Favorite)
         } else {
             likeStateLiveData.postValue(FavoriteState.NotFavorite)
         }
     }
 
+    fun updateFavoriteStatusTrack(track: Track) {
+        viewModelScope.launch(Dispatchers.IO) {
+            mediaInteractor
+                .getFavoriteTracksId()
+                .collect { listFavoriteIdTracks ->
+                    updateFavoriteStatus(
+                        listFavoriteIdTracks,
+                        track
+                    )
+                }
+        }
+    }
+
+    fun updateFavoriteStatus(listId: List<Long>, track: Track) {
+        track.isFavorite = (listId.isNotEmpty() && listId.contains(track.trackId.toLong()))
+    }
+
     fun onFavoriteClicked(track: Track) {
         viewModelScope.launch(Dispatchers.IO) {
-            if(track.isFavorite) {
+            if (track.isFavorite) {
                 val isDeleted = mediaInteractor.deleteFavoriteTrack(TrackConverter.map(track))
-                if(isDeleted != -1) {
+                if (isDeleted != -1) {
                     track.isFavorite = false
                     likeStateLiveData.postValue(FavoriteState.NotFavorite)
                 }
             } else {
                 val idFavoriteTrack = mediaInteractor
                     .addFavoriteTrack(
-                        TrackConverter.map(track).apply { dateAddTrack = System.currentTimeMillis() }
+                        TrackConverter.map(track)
+                            .apply { dateAddTrack = System.currentTimeMillis() }
                     )
-                if(idFavoriteTrack != -1L) {
+                if (idFavoriteTrack != -1L) {
                     track.isFavorite = true
                     likeStateLiveData.postValue(FavoriteState.Favorite)
                 }

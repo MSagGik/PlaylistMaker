@@ -11,4 +11,6 @@ interface FavoriteTracksRepository {
 
     fun getFavoriteTracks() : Flow<List<Track>>
 
+    fun getFavoriteTracksId() : Flow<List<Long>>
+
 }

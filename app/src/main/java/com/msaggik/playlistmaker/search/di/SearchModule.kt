@@ -25,7 +25,7 @@ val searchModule = module {
     // view-model
     viewModel{
         SearchViewModel(
-            tracksInteractor = get(),
+            tracksInteractor = get()
         )
     }
 

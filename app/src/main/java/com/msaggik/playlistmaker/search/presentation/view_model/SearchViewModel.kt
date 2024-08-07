@@ -12,8 +12,8 @@ import com.msaggik.playlistmaker.util.debounce
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class SearchViewModel (
-    private val tracksInteractor: TracksInteractor,
+class SearchViewModel(
+    private val tracksInteractor: TracksInteractor
 ) : ViewModel() {
 
     companion object {
@@ -28,21 +28,21 @@ class SearchViewModel (
     }
 
     fun readTrackListHistory() {
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch(Dispatchers.IO) {
             tracksInteractor
                 .readTrackListHistory()
-                .collect{
-                    listHistoryTracks -> trackListHistoryLiveData.postValue(listHistoryTracks)
+                .collect { listHistoryTracks ->
+                    trackListHistoryLiveData.postValue(listHistoryTracks)
                 }
         }
     }
 
     fun addTrackListHistory(track: Track) {
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch(Dispatchers.IO) {
             tracksInteractor
                 .addTrackListHistory(track)
-                .collect{
-                    listHistoryTracks -> trackListHistoryLiveData.postValue(listHistoryTracks)
+                .collect { listHistoryTracks ->
+                    trackListHistoryLiveData.postValue(listHistoryTracks)
                 }
         }
     }
@@ -62,8 +62,12 @@ class SearchViewModel (
     private var latestSearchText: String? = null
     fun getStateLiveData(): LiveData<TracksState> = mediatorStateLiveData
 
-    fun setSearchHistoryLiveData() {
-        stateLiveData.postValue(TracksState.HistoryTracks)
+    fun clearSearchAndSetStateLiveData() {
+        if (trackListHistoryLiveData.value?.isEmpty() == true) {
+            stateLiveData.postValue(TracksState.Content(emptyList()))
+        } else {
+            stateLiveData.postValue(TracksState.HistoryTracks)
+        }
     }
 
     private val mediatorStateLiveData = MediatorLiveData<TracksState>().also { liveData ->
@@ -101,7 +105,7 @@ class SearchViewModel (
             viewModelScope.launch {
                 tracksInteractor
                     .searchTracks(searchNameTracks)
-                    .collect{ pair -> searchTracksResult(pair.first, pair.second)}
+                    .collect { pair -> searchTracksResult(pair.first, pair.second) }
             }
         }
     }
@@ -114,11 +118,13 @@ class SearchViewModel (
 
         when {
             errorMessage != null -> {
-                renderState(TracksState.Error(errorMessage = errorMessage,))
+                renderState(TracksState.Error(errorMessage = errorMessage))
             }
+
             tracks.isEmpty() -> {
                 renderState(TracksState.Empty)
             }
+
             else -> {
                 renderState(TracksState.Content(tracks = tracks))
             }

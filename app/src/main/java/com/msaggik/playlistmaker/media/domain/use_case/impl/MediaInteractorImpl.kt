@@ -20,4 +20,9 @@ class MediaInteractorImpl (
     override fun getFavoriteTracks(): Flow<List<Track>> {
         return repository.getFavoriteTracks()
     }
+
+    override fun getFavoriteTracksId(): Flow<List<Long>> {
+        return repository.getFavoriteTracksId()
+    }
+
 }

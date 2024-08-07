@@ -9,7 +9,7 @@ import com.msaggik.playlistmaker.search.data.dto.response.TrackDto
 import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.util.Utils
 
-private const val DELTA_TIME_TRACK = 190L
+private const val DELTA_TIME_TRACK = 250L
 private const val TRACK_LIST_HISTORY_KEY = "track_list_history_key"
 class TrackPlayerImpl(
     private val mediaPlayer: MediaPlayer,

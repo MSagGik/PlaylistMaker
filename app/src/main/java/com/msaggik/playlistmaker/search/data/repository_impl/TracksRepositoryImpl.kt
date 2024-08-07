@@ -76,7 +76,11 @@ class TracksRepositoryImpl(
         val listIds = tracksDatabase.favoriteTracksDao().getFavoriteTracksIds()
         for (idFavorite in listIds) {
             val id = track.trackId.toLong()
-            if (idFavorite == id) track.apply { isFavorite = true }
+            if (idFavorite == id) {
+                track.apply { isFavorite = true }
+            } else {
+                track.apply { isFavorite = false }
+            }
         }
         return track
     }
