@@ -6,75 +6,115 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.msaggik.playlistmaker.R
 import com.msaggik.playlistmaker.databinding.FragmentFavoriteTracksBinding
+import com.msaggik.playlistmaker.media.data.converters.TrackDbConverter
 import com.msaggik.playlistmaker.media.domain.models.Track
 import com.msaggik.playlistmaker.media.presentation.ui.adapters.FavoriteTracksAdapter
 import com.msaggik.playlistmaker.media.presentation.view_model.FavoriteTracksViewModel
 import com.msaggik.playlistmaker.media.presentation.view_model.state.FavoriteTracksState
+import com.msaggik.playlistmaker.player.presentation.ui.PlayerFragment
+import com.msaggik.playlistmaker.util.Utils
+import com.msaggik.playlistmaker.util.debounce
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoriteTracksFragment : Fragment() {
     companion object {
         fun newInstance() = FavoriteTracksFragment()
+        const val DELAY_CLICK_TRACK = 1000L
     }
 
-    private lateinit var binding: FragmentFavoriteTracksBinding
-
+    private val trackDbConverter: TrackDbConverter by inject()
     private val favoriteTracksViewModel: FavoriteTracksViewModel by viewModel()
+
+    private var viewArray: Array<View>? = null
+    private var _binding: FragmentFavoriteTracksBinding? = null
+    private val binding: FragmentFavoriteTracksBinding get() = _binding!!
 
     private var listMediaTracks: MutableList<Track> = ArrayList()
 
-    private val trackListAdapter: FavoriteTracksAdapter by lazy {
-        FavoriteTracksAdapter(listMediaTracks)
-    }
+    private lateinit var onTrackClickDebounce: (Track) -> Unit
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private val trackListAdapter: FavoriteTracksAdapter by lazy {
+        FavoriteTracksAdapter(listMediaTracks) {
+            onTrackClickDebounce(it)
+        }
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentFavoriteTracksBinding.inflate(inflater, container, false)
+        _binding = FragmentFavoriteTracksBinding.inflate(inflater, container, false)
+        viewArray = arrayOf(
+            binding.placeholderEmptyMediaLibrary,
+            binding.content
+        )
         return binding.root
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        onTrackClickDebounce = debounce<Track>(
+            DELAY_CLICK_TRACK,
+            viewLifecycleOwner.lifecycleScope,
+            false,
+            true
+        ) { track -> trackSelection(track) }
 
         binding.trackList.layoutManager =
             LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         binding.trackList.adapter = trackListAdapter
+        trackListAdapter.notifyDataSetChanged()
 
-        favoriteTracksViewModel.getTrackListMediaLiveData().observe(viewLifecycleOwner) {
-            listMediaTracks.clear()
+        favoriteTracksViewModel.getFavoriteTrackListLiveData().observe(viewLifecycleOwner) {
             render(it)
         }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun trackSelection(track: Track) {
+        track.apply {
+            isFavorite = true
+            dateAddTrack = System.currentTimeMillis()
+        }
+        favoriteTracksViewModel.addTrackListHistory(track)
+        findNavController().navigate(
+            R.id.action_mediaFragment_to_playerFragment,
+            PlayerFragment.createArgs(trackDbConverter.mapMediaToSearch(track))
+        )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        favoriteTracksViewModel.getFavoriteTrackList()
     }
 
     private fun render(state: FavoriteTracksState) {
         when (state) {
             is FavoriteTracksState.Content -> showFavoriteTracks(state.trackList)
-            is FavoriteTracksState.Empty -> showEmptyMessage()
+            is FavoriteTracksState.Empty -> Utils.visibilityView(viewArray, binding.placeholderEmptyMediaLibrary)
         }
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun showFavoriteTracks(favoriteTracks: List<Track>) {
-        binding.apply {
-            placeholderEmptyMediaLibrary.visibility = View.GONE
-            content.visibility = View.VISIBLE
-            listMediaTracks.addAll(favoriteTracks)
-            trackListAdapter.notifyDataSetChanged()
-        }
+        Utils.visibilityView(viewArray, binding.content)
+        listMediaTracks.clear()
+        listMediaTracks.addAll(favoriteTracks)
+        trackListAdapter.notifyDataSetChanged()
     }
 
-    private fun showEmptyMessage() {
-        binding.apply {
-            placeholderEmptyMediaLibrary.visibility = View.VISIBLE
-            content.visibility = View.GONE
-        }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+        viewArray = emptyArray()
+        viewArray = null
     }
 }

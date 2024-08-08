@@ -199,7 +199,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/button_play_pause"
         app:layout_constraintEnd_toStartOf="@+id/guideline_end_one"
         app:layout_constraintTop_toTopOf="@+id/button_play_pause"
-        app:srcCompat="@drawable/ic_like" />
+        app:srcCompat="@drawable/ic_like_false" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_vertical_10"

@@ -1,6 +1,5 @@
 package com.msaggik.playlistmaker.search.presentation.view_model
 
-import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,10 +9,11 @@ import com.msaggik.playlistmaker.search.domain.use_case.TracksInteractor
 import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.search.presentation.ui.state.TracksState
 import com.msaggik.playlistmaker.util.debounce
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class SearchViewModel (
-    private val tracksInteractor: TracksInteractor,
+class SearchViewModel(
+    private val tracksInteractor: TracksInteractor
 ) : ViewModel() {
 
     companion object {
@@ -27,28 +27,31 @@ class SearchViewModel (
         readTrackListHistory()
     }
 
-    private fun readTrackListHistory() {
-        tracksInteractor.readTrackListHistory(object : TracksInteractor.SpTracksHistoryConsumer {
-            @SuppressLint("NotifyDataSetChanged")
-            override fun consume(listHistoryTracks: List<Track>) {
-                trackListHistoryLiveData.postValue(listHistoryTracks)
-            }
-        })
+    fun readTrackListHistory() {
+        viewModelScope.launch(Dispatchers.IO) {
+            tracksInteractor
+                .readTrackListHistory()
+                .collect { listHistoryTracks ->
+                    trackListHistoryLiveData.postValue(listHistoryTracks)
+                }
+        }
     }
 
     fun addTrackListHistory(track: Track) {
-        tracksInteractor.addTrackListHistory(
-            track,
-            object : TracksInteractor.SpTracksHistoryConsumer {
-                @SuppressLint("NotifyDataSetChanged")
-                override fun consume(listHistoryTracks: List<Track>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            tracksInteractor
+                .addTrackListHistory(track)
+                .collect { listHistoryTracks ->
                     trackListHistoryLiveData.postValue(listHistoryTracks)
                 }
-            })
+        }
     }
 
     fun clearTrackListHistory() {
-        tracksInteractor.clearTrackListHistory()
+        viewModelScope.launch(Dispatchers.IO) {
+            tracksInteractor.clearTrackListHistory()
+        }
+        trackListHistoryLiveData.postValue(emptyList())
     }
 
     fun getTrackListHistoryLiveData(): LiveData<List<Track>> = trackListHistoryLiveData
@@ -59,6 +62,14 @@ class SearchViewModel (
     private var latestSearchText: String? = null
     fun getStateLiveData(): LiveData<TracksState> = mediatorStateLiveData
 
+    fun clearSearchAndSetStateLiveData() {
+        if (trackListHistoryLiveData.value?.isEmpty() == true) {
+            stateLiveData.postValue(TracksState.Content(emptyList()))
+        } else {
+            stateLiveData.postValue(TracksState.HistoryTracks)
+        }
+    }
+
     private val mediatorStateLiveData = MediatorLiveData<TracksState>().also { liveData ->
         liveData.addSource(stateLiveData) { state ->
             liveData.value = when (state) {
@@ -66,6 +77,7 @@ class SearchViewModel (
                 is TracksState.Empty -> state
                 is TracksState.Error -> state
                 is TracksState.Loading -> state
+                is TracksState.HistoryTracks -> state
             }
         }
     }
@@ -93,7 +105,7 @@ class SearchViewModel (
             viewModelScope.launch {
                 tracksInteractor
                     .searchTracks(searchNameTracks)
-                    .collect{ pair -> searchTracksResult(pair.first, pair.second)}
+                    .collect { pair -> searchTracksResult(pair.first, pair.second) }
             }
         }
     }
@@ -106,11 +118,13 @@ class SearchViewModel (
 
         when {
             errorMessage != null -> {
-                renderState(TracksState.Error(errorMessage = errorMessage,))
+                renderState(TracksState.Error(errorMessage = errorMessage))
             }
+
             tracks.isEmpty() -> {
                 renderState(TracksState.Empty)
             }
+
             else -> {
                 renderState(TracksState.Content(tracks = tracks))
             }

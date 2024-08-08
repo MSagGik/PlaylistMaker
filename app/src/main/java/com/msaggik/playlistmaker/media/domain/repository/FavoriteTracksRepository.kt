@@ -1,9 +1,10 @@
-package com.msaggik.playlistmaker.media.domain.use_case
+package com.msaggik.playlistmaker.media.domain.repository
 
 import com.msaggik.playlistmaker.media.domain.models.Track
 import kotlinx.coroutines.flow.Flow
 
-interface MediaInteractor {
+interface FavoriteTracksRepository {
+
     suspend fun addFavoriteTrack(track: Track) : Long
 
     suspend fun deleteFavoriteTrack(track: Track) : Int
@@ -11,4 +12,5 @@ interface MediaInteractor {
     fun getFavoriteTracks() : Flow<List<Track>>
 
     fun getFavoriteTracksId() : Flow<List<Long>>
+
 }

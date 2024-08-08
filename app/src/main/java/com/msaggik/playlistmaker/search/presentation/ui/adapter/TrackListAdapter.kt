@@ -10,7 +10,10 @@ import com.msaggik.playlistmaker.databinding.ItemTrackListBinding
 import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.util.Utils
 
-class TrackListAdapter (trackListAdd: List<Track>, private val trackClickListener: TrackClickListener) : RecyclerView.Adapter<TrackListAdapter.TrackViewHolder> () {
+class TrackListAdapter (
+    trackListAdd: List<Track>,
+    private val trackClickListener: TrackClickListener
+) : RecyclerView.Adapter<TrackListAdapter.TrackViewHolder> () {
 
     private var trackList = trackListAdd
 

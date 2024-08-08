@@ -56,6 +56,7 @@ class PlayerFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        track?.let { playerViewModel.updateFavoriteStatusTrack(it) }
         _binding = FragmentPlayerBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -94,9 +95,20 @@ class PlayerFragment : Fragment() {
             )
         }
 
+        track?.let { playerViewModel.onFavorite(it) }
+        playerViewModel.getLikeStateLiveData().observe(viewLifecycleOwner) { state ->
+            binding.buttonLike.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    state.stateViewButton
+                )
+            )
+        }
+
         binding.buttonBack.setOnClickListener(listener)
         binding.buttonPlayPause.setOnClickListener(listener)
         binding.timeTrack.setOnClickListener(listener)
+        binding.buttonLike.setOnClickListener(listener)
     }
 
     override fun onDestroyView() {
@@ -127,7 +139,7 @@ class PlayerFragment : Fragment() {
         override fun onClick(p0: View?) {
             when (p0?.id) {
                 R.id.button_back -> {
-                    findNavController().popBackStack(R.id.searchFragment, false)
+                    findNavController().popBackStack()
                 }
 
                 R.id.button_play_pause -> {
@@ -136,6 +148,11 @@ class PlayerFragment : Fragment() {
 
                 R.id.time_track -> {
                     playerViewModel.isReverse()
+                }
+                R.id.button_like -> {
+                    track?.let {
+                        playerViewModel.onFavoriteClicked(it)
+                    }
                 }
             }
         }

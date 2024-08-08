@@ -7,8 +7,7 @@ import android.util.TypedValue
 import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.gson.Gson
-import com.msaggik.playlistmaker.media.data.dto.TrackDto
-import com.msaggik.playlistmaker.search.domain.models.Track
+import com.msaggik.playlistmaker.search.data.dto.response.TrackDto
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -61,21 +60,6 @@ internal object Utils {
 
     fun searchTrackInList(trackId: Int, list: MutableList<TrackDto>) : TrackDto {
         return list.firstOrNull { track -> track.trackId == trackId } ?: TrackDto()
-    }
-
-    fun convertTrackDtoToTrack(track: TrackDto): Track {
-        return Track(
-            track.trackId, track.trackName, track.artistName,
-            track.trackTimeMillis, track.artworkUrl100, track.collectionName,
-            track.releaseDate, track.primaryGenreName, track.country, track.previewUrl
-        )
-    }
-    fun convertTrackToTrackDto(track: Track): TrackDto {
-        return TrackDto(
-            track.trackId, track.trackName, track.artistName,
-            track.trackTimeMillis, track.artworkUrl100, track.collectionName,
-            track.releaseDate, track.primaryGenreName, track.country, track.previewUrl
-        )
     }
 
     fun addTrackInList(track: TrackDto, trackList: MutableList<TrackDto>, limit: Int): MutableList<TrackDto> {

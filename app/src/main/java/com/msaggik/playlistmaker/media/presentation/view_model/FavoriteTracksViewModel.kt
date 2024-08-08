@@ -3,30 +3,47 @@ package com.msaggik.playlistmaker.media.presentation.view_model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.msaggik.playlistmaker.media.domain.use_case.MediaInteractor
 import com.msaggik.playlistmaker.media.domain.models.Track
 import com.msaggik.playlistmaker.media.presentation.view_model.state.FavoriteTracksState
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class FavoriteTracksViewModel(
     private val mediaInteractor: MediaInteractor
 ) : ViewModel() {
 
-    private val trackListMediaLiveData = MutableLiveData<FavoriteTracksState>()
-    fun getTrackListMediaLiveData(): LiveData<FavoriteTracksState> = trackListMediaLiveData
+    private val favoriteTrackListLiveData = MutableLiveData<FavoriteTracksState>()
+    fun getFavoriteTrackListLiveData(): LiveData<FavoriteTracksState> = favoriteTrackListLiveData
 
-    init {
-        readTrackListMedia()
+    fun getFavoriteTrackList() {
+        viewModelScope.launch {
+            mediaInteractor
+                .getFavoriteTracks()
+                .collect { tracks ->
+                    processResult(tracks)
+                }
+        }
     }
 
-    private fun readTrackListMedia() {
-        mediaInteractor.readTrackListMedia(object : MediaInteractor.MediaConsumer {
-            override fun consume(listTracks: List<Track>) {
-                if (listTracks.isNullOrEmpty()) {
-                    trackListMediaLiveData.postValue(FavoriteTracksState.Empty())
-                } else {
-                    trackListMediaLiveData.postValue(FavoriteTracksState.Content(listTracks))
-                }
-            }
-        })
+    fun addTrackListHistory(track: Track) {
+        viewModelScope.launch(Dispatchers.IO){
+            mediaInteractor
+                .addFavoriteTrack(track)
+        }
+        getFavoriteTrackList()
+    }
+
+    private fun processResult(tracks: List<Track>) {
+        if (tracks.isEmpty()) {
+            renderState(FavoriteTracksState.Empty)
+        } else {
+            renderState(FavoriteTracksState.Content(tracks))
+        }
+    }
+
+    private fun renderState(state: FavoriteTracksState) {
+        favoriteTrackListLiveData.postValue(state)
     }
 }
