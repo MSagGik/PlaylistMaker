@@ -1,12 +1,8 @@
 package com.msaggik.data.repository_impl
 
-import android.content.SharedPreferences
 import android.media.MediaPlayer
-import com.google.gson.Gson
 import com.msaggik.data.api.db.favorite_tracks.TracksDatabase
-import com.msaggik.data.api.network.dto.response.entities.TrackDto
 import com.msaggik.data.api.network.mappers.PlayerMapper
-import com.msaggik.data.local_util.Utils
 import com.msaggik.player.domain.model.Track
 import com.msaggik.player.domain.repository.TrackPlayer
 import com.msaggik.player.domain.state.PlayerState
@@ -14,20 +10,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 private const val DELTA_TIME_TRACK = 250L
-private const val TRACK_LIST_HISTORY_KEY = "track_list_history_key"
 class TrackPlayerImpl(
     private val mediaPlayer: MediaPlayer,
-    private val spSearchHistory: SharedPreferences,
     private val converters: PlayerMapper,
-    private val gson: Gson,
     private val tracksDataBase: TracksDatabase
 ) : TrackPlayer {
 
     // player
 
     override var playerState = PlayerState.PLAYER_STATE_DEFAULT
-
-    private var trackListHistory: MutableList<TrackDto> = ArrayList()
 
     override fun onPlay() {
         mediaPlayer.start()
@@ -44,26 +35,17 @@ class TrackPlayerImpl(
         playerState = PlayerState.PLAYER_STATE_STOP
     }
 
-    override fun loading(trackId: Int): Track {
-        trackListHistory =
-            Utils.readSharedPreferences(spSearchHistory, TRACK_LIST_HISTORY_KEY, gson)
-        val track = converters.convertTrackDtoToTrack(
-            track = Utils.searchTrackInList(
-                trackId = trackId,
-                list = trackListHistory
-            )
-        )
-        playerInflate(track.previewUrl, mediaPlayer)
-        return track
+    override fun loading(previewUrl: String) {
+        playerInflate(previewUrl, mediaPlayer)
     }
 
     override fun getCurrentPosition(isReverse: Boolean): Long {
-        return if(isReverse) {
+        return if (isReverse) {
             val reversTimeTrack = (mediaPlayer.duration - mediaPlayer.currentPosition).toLong()
-            if(reversTimeTrack <= DELTA_TIME_TRACK) mediaPlayer.duration.toLong() else reversTimeTrack
+            if (reversTimeTrack <= DELTA_TIME_TRACK) mediaPlayer.duration.toLong() else reversTimeTrack
         } else {
             val timeTrack = mediaPlayer.currentPosition.toLong()
-            if(timeTrack >= mediaPlayer.duration.toLong() - DELTA_TIME_TRACK) 0L else timeTrack
+            if (timeTrack >= mediaPlayer.duration.toLong() - DELTA_TIME_TRACK) 0L else timeTrack
         }
     }
 

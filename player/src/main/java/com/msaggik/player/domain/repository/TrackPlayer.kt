@@ -9,7 +9,7 @@ interface TrackPlayer {
     fun onPlay()
     fun onPause()
     fun onStop()
-    fun loading(trackId: Int) : Track
+    fun loading(previewUrl: String)
     fun getCurrentPosition(isReverse: Boolean): Long
     fun onReset()
     fun onRelease()

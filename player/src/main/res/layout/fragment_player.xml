@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".player.presentation.ui.PlayerFragment">
+    tools:context="com.msaggik.player.presentation.ui.PlayerFragment">
 
     <ProgressBar
         android:id="@+id/loading_time_player"

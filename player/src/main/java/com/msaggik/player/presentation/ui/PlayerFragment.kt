@@ -18,7 +18,6 @@ import com.msaggik.player.databinding.FragmentPlayerBinding
 import com.msaggik.player.domain.model.Track
 import com.msaggik.player.presentation.view_model.PlayerViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 
 class PlayerFragment : Fragment() {
 
@@ -47,9 +46,7 @@ class PlayerFragment : Fragment() {
     }
 
     // view-model
-    private val playerViewModel: PlayerViewModel by viewModel{
-        parametersOf(track?.trackId)
-    }
+    private val playerViewModel: PlayerViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,7 +61,7 @@ class PlayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        playerViewModel.loadingTrack()
+        track?.let { playerViewModel.loadingTrack(it) }
 
         playerViewModel.getTrackLiveData().observe(viewLifecycleOwner) { track ->
             showTrackCover(track.artworkUrl100)
@@ -124,14 +121,16 @@ class PlayerFragment : Fragment() {
             .into(binding.cover)
     }
 
+    override fun onResume() {
+        super.onResume()
+        if(playerViewModel.buttonStatePrePlay) {
+            playerViewModel.startPlayer()
+        }
+    }
+
     override fun onPause() {
         super.onPause()
         playerViewModel.pausePlayer()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        playerViewModel.releasePlayer()
     }
 
     private val listener: View.OnClickListener = object : View.OnClickListener {

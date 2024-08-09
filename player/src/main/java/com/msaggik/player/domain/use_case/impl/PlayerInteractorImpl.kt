@@ -27,8 +27,8 @@ class PlayerInteractorImpl(
         trackPlayer.onStop()
     }
 
-    override fun loading(trackId: Int) : Track {
-        return trackPlayer.loading(trackId)
+    override fun loading(previewUrl: String) {
+        trackPlayer.loading(previewUrl)
     }
 
     override fun getPlayerCurrentPosition(isReverse: Boolean): Long {

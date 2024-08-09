@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".search.presentation.ui.SearchFragment">
+    tools:context="com.msaggik.search.presentation.ui.SearchFragment">
 
     <!--    Используемые иллюстрации (иконки) и шрифты в образовательных целях предоставлены Яндекс-Практикумом (practicum.yandex.ru)-->
     <FrameLayout

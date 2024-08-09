@@ -16,7 +16,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PlayerViewModel(
-    private val trackId: Int,
     private val playerInteractor: PlayerInteractor,
 ) : ViewModel() {
     companion object {
@@ -24,6 +23,7 @@ class PlayerViewModel(
     }
 
     private var timerJob: Job? = null
+    var buttonStatePrePlay = false
 
     private var playerTrackLiveData = MutableLiveData<Track>()
     fun getTrackLiveData(): LiveData<Track> = playerTrackLiveData
@@ -99,12 +99,14 @@ class PlayerViewModel(
         timerJob?.cancel()
     }
 
-    fun loadingTrack() {
-        val track = playerInteractor.loading(trackId = trackId)
-        playerTrackLiveData.postValue(track)
+    fun loadingTrack(track: Track) {
+        if(playerTrackLiveData.value == null && !track.previewUrl.isNullOrEmpty()) {
+            playerInteractor.loading(track.previewUrl)
+            playerTrackLiveData.postValue(track)
+        }
     }
 
-    private fun startPlayer() {
+    fun startPlayer() {
         playerInteractor.play()
         buttonStateLiveData.postValue(PlayState.Pause)
 
@@ -138,16 +140,18 @@ class PlayerViewModel(
     }
 
     fun checkPlayPause() {
-        when (playerInteractor.getPlayerState()) {
-            PlayerState.PLAYER_STATE_PLAYING -> pausePlayer()
-            PlayerState.PLAYER_STATE_PREPARED, PlayerState.PLAYER_STATE_PAUSED -> startPlayer()
-            else -> {}
+        buttonStatePrePlay = when (playerInteractor.getPlayerState()) {
+            PlayerState.PLAYER_STATE_PLAYING -> {
+                pausePlayer()
+                false
+            }
+            PlayerState.PLAYER_STATE_PREPARED, PlayerState.PLAYER_STATE_PAUSED -> {
+                startPlayer()
+                true
+            }
+            else -> {
+                false
+            }
         }
-    }
-
-    fun releasePlayer() {
-        playerInteractor.release()
-        buttonStateLiveData.postValue(PlayState.Play)
-        timerJob?.cancel()
     }
 }

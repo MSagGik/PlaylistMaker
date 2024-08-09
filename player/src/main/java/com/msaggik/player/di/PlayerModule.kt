@@ -9,9 +9,8 @@ import org.koin.dsl.module
 val playerModule = module {
 
     // view-model
-    viewModel { (trackId: Int) ->
+    viewModel {
         PlayerViewModel(
-            trackId = trackId,
             playerInteractor = get(),
         )
     }
