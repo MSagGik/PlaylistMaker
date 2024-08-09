@@ -18,7 +18,6 @@ import com.msaggik.playlistmaker.player.presentation.view_model.PlayerViewModel
 import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.util.Utils
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
 
 class PlayerFragment : Fragment() {
 
@@ -47,9 +46,7 @@ class PlayerFragment : Fragment() {
     }
 
     // view-model
-    private val playerViewModel: PlayerViewModel by viewModel{
-        parametersOf(track?.trackId)
-    }
+    private val playerViewModel: PlayerViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,7 +61,7 @@ class PlayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        playerViewModel.loadingTrack()
+        track?.let { playerViewModel.loadingTrack(it) }
 
         playerViewModel.getTrackLiveData().observe(viewLifecycleOwner) { track ->
             showTrackCover(track.artworkUrl100)
@@ -114,6 +111,7 @@ class PlayerFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+//        playerViewModel.resetPlayer()
     }
 
     private fun showTrackCover(artworkUrl: String) {
@@ -124,14 +122,17 @@ class PlayerFragment : Fragment() {
             .into(binding.cover)
     }
 
-    override fun onPause() {
-        super.onPause()
-        playerViewModel.pausePlayer()
+    override fun onResume() {
+        super.onResume()
+        if(playerViewModel.buttonStatePrePlay) {
+            playerViewModel.startPlayer()
+        }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        playerViewModel.releasePlayer()
+    override fun onPause() {
+        super.onPause()
+
+        playerViewModel.pausePlayer()
     }
 
     private val listener: View.OnClickListener = object : View.OnClickListener {
@@ -143,7 +144,7 @@ class PlayerFragment : Fragment() {
                 }
 
                 R.id.button_play_pause -> {
-                    playerViewModel.checkPlayPause()
+                   playerViewModel.checkPlayPause()
                 }
 
                 R.id.time_track -> {

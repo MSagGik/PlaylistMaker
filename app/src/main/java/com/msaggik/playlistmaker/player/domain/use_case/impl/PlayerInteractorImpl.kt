@@ -3,7 +3,6 @@ package com.msaggik.playlistmaker.player.domain.use_case.impl
 import com.msaggik.playlistmaker.player.domain.repository.TrackPlayer
 import com.msaggik.playlistmaker.player.domain.use_case.PlayerInteractor
 import com.msaggik.playlistmaker.player.domain.state.PlayerState
-import com.msaggik.playlistmaker.search.domain.models.Track
 
 class PlayerInteractorImpl(
     private val trackPlayer: TrackPlayer
@@ -24,8 +23,8 @@ class PlayerInteractorImpl(
         trackPlayer.onStop()
     }
 
-    override fun loading(trackId: Int) : Track {
-        return trackPlayer.loading(trackId)
+    override fun loading(previewUrl: String) {
+        trackPlayer.loading(previewUrl)
     }
 
     override fun getPlayerCurrentPosition(isReverse: Boolean): Long {

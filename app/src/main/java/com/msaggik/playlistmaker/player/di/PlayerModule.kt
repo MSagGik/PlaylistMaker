@@ -2,7 +2,6 @@ package com.msaggik.playlistmaker.player.di
 
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
-import com.google.gson.Gson
 import com.msaggik.playlistmaker.player.data.TrackPlayerImpl
 import com.msaggik.playlistmaker.player.domain.use_case.PlayerInteractor
 import com.msaggik.playlistmaker.player.domain.use_case.impl.PlayerInteractorImpl
@@ -16,9 +15,8 @@ private const val TRACK_LIST_PREFERENCES = "track_list_preferences"
 val playerModule = module {
 
     // view-model
-    viewModel { (trackId: Int) ->
+    viewModel {
         PlayerViewModel(
-            trackId = trackId,
             playerInteractor = get(),
             mediaInteractor = get(),
             converter = get()
@@ -35,10 +33,7 @@ val playerModule = module {
     // data
     factory<TrackPlayer> {
         TrackPlayerImpl(
-            mediaPlayer = get(),
-            spSearchHistory = get(),
-            converters = get(),
-            gson = get()
+            mediaPlayer = get()
         )
     }
 
@@ -49,9 +44,5 @@ val playerModule = module {
     single {
         androidContext()
             .getSharedPreferences(TRACK_LIST_PREFERENCES, AppCompatActivity.MODE_PRIVATE)
-    }
-
-    single {
-        Gson()
     }
 }
