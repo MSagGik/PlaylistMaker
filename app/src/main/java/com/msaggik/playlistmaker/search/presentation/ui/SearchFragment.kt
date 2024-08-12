@@ -100,24 +100,22 @@ class SearchFragment : Fragment() {
         binding.searchHistoryTrackList.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
-        // output list tracks in RecyclerView trackListView
         binding.trackList.adapter = trackListAdapter
 
-        // subscription to TrackListHistoryLiveData
+        searchViewModel.readTrackListHistory()
+
         searchViewModel.getTrackListHistoryLiveData().observe(viewLifecycleOwner) { list ->
             trackListHistory.clear()
             trackListHistory.addAll(list)
             trackListHistoryAdapter.notifyDataSetChanged()
         }
 
-        // subscription to StateLiveData
         searchViewModel.getStateLiveData().observe(viewLifecycleOwner) {
             render(it)
         }
 
         binding.searchHistoryTrackList.adapter = trackListHistoryAdapter
 
-        // listeners
         binding.inputSearch.onFocusChangeListener = focusChangeListener
         binding.inputSearch.addTextChangedListener(inputSearchWatcher)
         binding.buttonClear.setOnClickListener(listener)
@@ -125,7 +123,6 @@ class SearchFragment : Fragment() {
         binding.buttonClearSearchHistory.setOnClickListener(listener)
     }
 
-    // methods visible state screen
     private fun render(state: TracksState) {
         when (state) {
             is TracksState.Loading -> Utils.visibilityView(viewArray, binding.loadingTime)
@@ -134,8 +131,8 @@ class SearchFragment : Fragment() {
                 Utils.visibilityView(viewArray, binding.layoutCommunicationProblems)
                 Toast.makeText(requireContext(), state.errorMessage, Toast.LENGTH_SHORT).show()
             }
-
             is TracksState.Empty -> Utils.visibilityView(viewArray, binding.layoutNothingFound)
+            is TracksState.HistoryTracks -> Utils.visibilityView(viewArray, binding.layoutSearchHistory)
         }
     }
 
@@ -150,7 +147,6 @@ class SearchFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     private fun trackSelection(track: Track) {
         searchViewModel.addTrackListHistory(track)
-        // navigate and send in PlayerFragment data track
         findNavController().navigate(
             R.id.action_searchFragment_to_playerFragment,
             PlayerFragment.createArgs(track)
@@ -163,7 +159,6 @@ class SearchFragment : Fragment() {
         }
     }
 
-    // show search history
     @SuppressLint("NotifyDataSetChanged")
     private fun visibleLayoutSearchHistory(flag: Boolean) {
         if (flag && binding.inputSearch.text.isEmpty() && binding.inputSearch.hasFocus() && trackListHistory.isNotEmpty()) {
@@ -186,8 +181,8 @@ class SearchFragment : Fragment() {
                     keyboardOnOff?.hideSoftInputFromWindow(binding.inputSearch.windowToken, 0)
                     trackList.clear()
                     trackListAdapter.notifyDataSetChanged()
+                    searchViewModel.clearSearchAndSetStateLiveData()
                     visibleLayoutSearchHistory(true)
-                    Utils.visibilityView(viewArray, binding.layoutSearchHistory)
                 }
 
                 R.id.button_update -> {
@@ -197,6 +192,7 @@ class SearchFragment : Fragment() {
                 R.id.button_clear_search_history -> {
                     searchViewModel.clearTrackListHistory()
                     trackListHistory.clear()
+                    trackListHistoryAdapter.notifyDataSetChanged()
                     visibleLayoutSearchHistory(true)
                 }
             }

@@ -6,6 +6,7 @@ import com.msaggik.playlistmaker.search.data.base.network.NetworkClient
 import com.msaggik.playlistmaker.search.data.base.network.retrofit.RetrofitNetworkClient
 import com.msaggik.playlistmaker.search.data.base.sp.SearchHistorySp
 import com.msaggik.playlistmaker.search.data.base.sp.impl.SearchHistorySpImpl
+import com.msaggik.playlistmaker.search.data.converters.ConvertersSearch
 import com.msaggik.playlistmaker.search.data.repository_impl.TracksRepositoryImpl
 import com.msaggik.playlistmaker.search.domain.use_case.TracksInteractor
 import com.msaggik.playlistmaker.search.domain.use_case.impl.TracksInteractorImpl
@@ -25,7 +26,7 @@ val searchModule = module {
     // view-model
     viewModel{
         SearchViewModel(
-            tracksInteractor = get(),
+            tracksInteractor = get()
         )
     }
 
@@ -41,7 +42,9 @@ val searchModule = module {
         TracksRepositoryImpl(
             androidContext(),
             networkClient = get(),
-            searchHistorySp = get()
+            searchHistorySp = get(),
+            tracksDatabase = get(),
+            converters = get()
         )
     }
     // network
@@ -76,4 +79,7 @@ val searchModule = module {
         Gson()
     }
 
+    single {
+        ConvertersSearch()
+    }
 }

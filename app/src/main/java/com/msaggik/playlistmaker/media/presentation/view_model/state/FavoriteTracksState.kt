@@ -8,5 +8,5 @@ interface FavoriteTracksState {
         val trackList: List<Track>
     ) : FavoriteTracksState
 
-    class Empty() : FavoriteTracksState
+    object  Empty : FavoriteTracksState
 }

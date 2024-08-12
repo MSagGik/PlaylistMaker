@@ -10,9 +10,16 @@ import com.msaggik.playlistmaker.databinding.ItemTrackListBinding
 import com.msaggik.playlistmaker.media.domain.models.Track
 import com.msaggik.playlistmaker.util.Utils
 
-class FavoriteTracksAdapter (trackListAdd: List<Track>, ) : RecyclerView.Adapter<FavoriteTracksAdapter.TrackViewHolder> () {
+class FavoriteTracksAdapter (
+    trackListAdd: List<Track>,
+    private val trackClickListener: TrackClickListener
+) : RecyclerView.Adapter<FavoriteTracksAdapter.TrackViewHolder> () {
 
     private var trackList = trackListAdd
+
+    fun setTrackList(trackListUpdate: List<Track>) {
+        trackList = trackListUpdate
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val layoutInspector = LayoutInflater.from(parent.context)
@@ -21,9 +28,16 @@ class FavoriteTracksAdapter (trackListAdd: List<Track>, ) : RecyclerView.Adapter
 
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         holder.bind(trackList[position])
+        holder.itemView.setOnClickListener{
+            trackClickListener.onTrackClick(trackList.get(position))
+        }
     }
     override fun getItemCount(): Int {
         return trackList.size
+    }
+
+    fun interface TrackClickListener {
+        fun onTrackClick(track: Track)
     }
 
     class TrackViewHolder(private val binding: ItemTrackListBinding): RecyclerView.ViewHolder(binding.root) {
