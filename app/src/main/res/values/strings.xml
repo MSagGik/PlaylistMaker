@@ -5,7 +5,6 @@
     <string name="question">Рейтинг этого фильма больше, чем 9?</string>
     <string name="no">Нет</string>
     <string name="yes">Да</string>
-    <string name="panel_header" translatable="false">Playlist maker</string>
     <string name="search">Поиск</string>
     <string name="media">Медиатека</string>
     <string name="setting">Настройки</string>
@@ -17,37 +16,39 @@
     <string name="uri_yandex_course" translatable="false">https://practicum.yandex.ru/catalog/programming/</string>
     <string name="default_user" translatable="false">DefaultUser</string>
     <string name="email" translatable="false">example@example.example</string>
-    <string name="email_title" translatable="false">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
-    <string name="email_text" translatable="false">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+    <string name="email_title">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="email_text">Спасибо разработчикам и разработчицам за крутое приложение!</string>
     <string name="uri_agreement" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
-    <string name="input_clear" translatable="false">Очистить</string>
-    <string name="name_track" translatable="false">Название трека</string>
-    <string name="name_group" translatable="false">Группа</string>
+    <string name="input_clear">Очистить</string>
+    <string name="name_track">Название трека</string>
+    <string name="name_group">Группа</string>
     <string name="inter_punctum" translatable="false">·</string>
-    <string name="length_track" translatable="false">длина трека</string>
-    <string name="track_selection" translatable="false">Выбор трека</string>
-    <string name="nothing_found" translatable="false">Ничего не нашлось</string>
-    <string name="communication_problems" translatable="false">Проблемы со связью\n\nЗагрузка не удалась. Проверьте\nподключение к интернету</string>
-    <string name="update" translatable="false">Обновить</string>
-    <string name="header_search" translatable="false">Вы искали</string>
-    <string name="clear_search_history" translatable="false">Очистить историю</string>
+    <string name="length_track">длина трека</string>
+    <string name="track_selection">Выбор трека</string>
+    <string name="nothing_found">Ничего не нашлось</string>
+    <string name="communication_problems">Проблемы со связью\n\nЗагрузка не удалась. Проверьте\nподключение к интернету</string>
+    <string name="update">Обновить</string>
+    <string name="header_search">Вы искали</string>
+    <string name="clear_search_history">Очистить историю</string>
     <string name="time_track" translatable="false">0:00</string>
-    <string name="header_length_track" translatable="false">Длительность</string>
-    <string name="header_album" translatable="false">Альбом</string>
-    <string name="name_album" translatable="false">Название альбома</string>
-    <string name="header_year_album" translatable="false">Год</string>
+    <string name="header_length_track">Длительность</string>
+    <string name="header_album">Альбом</string>
+    <string name="name_album">Название альбома</string>
+    <string name="header_year_album">Год</string>
     <string name="default_string" translatable="false">—</string>
-    <string name="header_genre" translatable="false">Жанр</string>
-    <string name="header_country" translatable="false">Страна</string>
+    <string name="header_genre">Жанр</string>
+    <string name="header_country">Страна</string>
     <string name="time_track_reverse" translatable="false">0:30</string>
-    <string name="no_connection" translatable="false">Проверьте подключение к интернету</string>
-    <string name="server_error" translatable="false">Ошибка сервера</string>
-    <string name="something_went_wrong" translatable="false">Что-то пошло не так</string>
-    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
-    <string name="media_library" translatable="false">Медиатека</string>
-    <string name="empty_media_library" translatable="false">Ваша медиатека пуста</string>
-    <string name="empty_playlists" translatable="false">Вы не создали\nни одного плейлиста</string>
-    <string name="new_playlist" translatable="false">Новый плейлист</string>
-    <string name="favorite_tracks" translatable="false">Избранные треки</string>
-    <string name="playlists" translatable="false">Плейлисты</string>
+    <string name="no_connection">Проверьте подключение к интернету</string>
+    <string name="server_error">Ошибка сервера</string>
+    <string name="something_went_wrong">Что-то пошло не так</string>
+    <string name="media_library">Медиатека</string>
+    <string name="empty_media_library">Ваша медиатека пуста</string>
+    <string name="empty_playlists">Вы не создали\\nни одного плейлиста</string>
+    <string name="new_playlist">Новый плейлист</string>
+    <string name="favorite_tracks">Избранные треки</string>
+    <string name="playlists">Плейлисты</string>
+    <string name="name">Название*</string>
+    <string name="description">Описание</string>
+    <string name="create">Создать</string>
 </resources>
