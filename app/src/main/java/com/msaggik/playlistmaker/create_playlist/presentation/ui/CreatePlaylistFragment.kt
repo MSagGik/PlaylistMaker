@@ -8,16 +8,17 @@ import android.os.Bundle
 import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.msaggik.playlistmaker.R
 import com.msaggik.playlistmaker.create_playlist.domain.models.Playlist
 import com.msaggik.playlistmaker.create_playlist.presentation.view_model.CreatePlaylistViewModel
@@ -36,6 +37,16 @@ class CreatePlaylistFragment : Fragment() {
     private lateinit var defaultUriImageToPrivateStorage: Uri
     private var uriImageToPrivateStorage: Uri? = null
     private lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
+
+    private val backAddPlaylistDialog: MaterialAlertDialogBuilder by lazy {
+        MaterialAlertDialogBuilder(requireActivity())
+            .setTitle(requireActivity().getString(R.string.finish_creating_the_playlist))
+            .setMessage(requireActivity().getString(R.string.all_unsaved_data_will_be_lost))
+            .setNeutralButton(requireActivity().getString(R.string.cancel)) { dialog, which ->
+            }.setPositiveButton("Завершить") { dialog, which ->
+                findNavController().popBackStack()
+            }
+    }
 
     private var _binding: FragmentCreatePlaylistBinding? = null
     private val binding: FragmentCreatePlaylistBinding get() = _binding!!
@@ -77,6 +88,12 @@ class CreatePlaylistFragment : Fragment() {
         binding.buttonBack.setOnClickListener(listener)
         binding.albumTrack.setOnClickListener(listener)
         binding.addPlaylist.setOnClickListener(listener)
+
+        requireActivity().onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                backAddPlaylistDialog.show()
+            }
+        })
     }
 
     private fun saveImageToPrivateStorage(uri: Uri) : Uri {
@@ -101,7 +118,11 @@ class CreatePlaylistFragment : Fragment() {
         override fun onClick(p0: View?) {
             when (p0?.id) {
                 R.id.button_back -> {
-                    findNavController().popBackStack()
+                    if(uriImageToPrivateStorage != null && (binding.nameTrackInput.text.isNullOrEmpty() || binding.descriptionTrackInput.text.isNullOrEmpty())) {
+                        backAddPlaylistDialog.show()
+                    } else {
+                        findNavController().popBackStack()
+                    }
                 }
 
                 R.id.album_track -> {

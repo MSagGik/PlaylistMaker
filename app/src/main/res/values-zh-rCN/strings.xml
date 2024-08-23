@@ -43,4 +43,8 @@
     <string name="description">描述</string>
     <string name="create">创造</string>
     <string name="has_duplicate_playlist">同名的播放列表已存在</string>
+    <string name="finish_creating_the_playlist">完成创建播放列表了吗？</string>
+    <string name="all_unsaved_data_will_be_lost">所有未保存的数据将丢失</string>
+    <string name="cancel">取消</string>
+    <string name="finish">完全的</string>
 </resources>

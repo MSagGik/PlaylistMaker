@@ -43,4 +43,8 @@
     <string name="description">Description</string>
     <string name="create">Create</string>
     <string name="has_duplicate_playlist">A playlist with this name already exists</string>
+    <string name="finish_creating_the_playlist">Finish creating the playlist?</string>
+    <string name="all_unsaved_data_will_be_lost">All unsaved data will be lost</string>
+    <string name="cancel">Cancel</string>
+    <string name="finish">Finish</string>
 </resources>
