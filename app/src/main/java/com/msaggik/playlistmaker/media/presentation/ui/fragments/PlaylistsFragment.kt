@@ -29,7 +29,6 @@ class PlaylistsFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.buttonNewPlaylist.setOnClickListener(listener)
     }
 

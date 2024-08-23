@@ -86,43 +86,43 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/description_track"
+        style="@style/TextInputLayoutNewPlaylist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:hint="@string/description"
-        app:hintAnimationEnabled="true"
         android:layout_marginHorizontal="@dimen/dimen_16"
         android:layout_marginTop="@dimen/dimen_16"
-        app:layout_constraintTop_toBottomOf="@+id/name_track"
-        app:hintTextColor="@color/selector_hint_text_input_color"
+        android:hint="@string/description"
         android:textColorHint="@color/selector_hint_text_input_color"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
         app:boxStrokeColor="@color/selector_box_text_input_color"
         app:cursorColor="@color/selector_text_input_color"
-        app:boxCornerRadiusTopStart="8dp"
-        app:boxCornerRadiusTopEnd="8dp"
-        app:boxCornerRadiusBottomStart="8dp"
-        app:boxCornerRadiusBottomEnd="8dp"
-        style="@style/TextInputLayoutNewPlaylist">
+        app:hintAnimationEnabled="true"
+        app:hintTextColor="@color/selector_hint_text_input_color"
+        app:layout_constraintBottom_toTopOf="@+id/guideline_vertical_2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/name_track"
+        app:layout_constraintVertical_bias="0.0">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColorHint="@color/blue_100"
             android:imeOptions="actionDone"
+            android:padding="@dimen/dimen_16"
             android:singleLine="true"
-            android:padding="@dimen/dimen_16"/>
+            android:textColorHint="@color/blue_100" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/add_playlist"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/description_track" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_vertical_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.90" />
 
     <TextView
         android:id="@+id/add_playlist"
@@ -142,6 +142,8 @@
         android:textSize="@dimen/dimen_16s"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline_vertical_2"
+        app:layout_constraintVertical_bias="1.0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

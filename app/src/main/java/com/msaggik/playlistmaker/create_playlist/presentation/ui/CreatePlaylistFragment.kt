@@ -1,18 +1,16 @@
 package com.msaggik.playlistmaker.create_playlist.presentation.ui
 
 import android.annotation.SuppressLint
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowInsets
-import android.view.WindowManager
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.msaggik.playlistmaker.R
 import com.msaggik.playlistmaker.databinding.FragmentCreatePlaylistBinding
-
 
 class CreatePlaylistFragment : Fragment() {
 
@@ -24,20 +22,6 @@ class CreatePlaylistFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentCreatePlaylistBinding.inflate(inflater, container, false)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            requireActivity().window.setDecorFitsSystemWindows(false)
-            binding.root.setOnApplyWindowInsetsListener { _, insets ->
-                val top = insets.getInsets(WindowInsets.Type.statusBars()).top
-                val heightIme = insets.getInsets(WindowInsets.Type.ime()).bottom
-                val bottom = if (heightIme != 0) heightIme else insets.getInsets(WindowInsets.Type.navigationBars()).bottom
-                binding.root.setPadding(0, top, 0, bottom)
-                insets
-            }
-        } else {
-            requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
-        }
-
         return binding.root
     }
 
@@ -46,6 +30,23 @@ class CreatePlaylistFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.nameTrackInput.addTextChangedListener(inputSearchWatcher)
+        binding.buttonBack.setOnClickListener(listener)
+        binding.albumTrack.setOnClickListener(listener)
+    }
+
+    private val listener: View.OnClickListener = object : View.OnClickListener {
+        @SuppressLint("NotifyDataSetChanged")
+        override fun onClick(p0: View?) {
+            when (p0?.id) {
+                R.id.button_back -> {
+                    findNavController().popBackStack()
+                }
+
+                R.id.album_track -> {
+//                    playerViewModel.checkPlayPause()
+                }
+            }
+        }
     }
 
     private val inputSearchWatcher = object : TextWatcher {

@@ -9,6 +9,7 @@
     tools:context=".search.presentation.ui.SearchFragment">
 
     <!--    Используемые иллюстрации (иконки) и шрифты в образовательных целях предоставлены Яндекс-Практикумом (practicum.yandex.ru)-->
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_56"
