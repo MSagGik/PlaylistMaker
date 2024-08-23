@@ -13,16 +13,8 @@ class MediaInteractorImpl (
         return repository.addFavoriteTrack(track)
     }
 
-    override suspend fun deleteFavoriteTrack(track: Track): Int {
-        return repository.deleteFavoriteTrack(track)
-    }
-
     override fun getFavoriteTracks(): Flow<List<Track>> {
         return repository.getFavoriteTracks()
-    }
-
-    override fun getFavoriteTracksId(): Flow<List<Long>> {
-        return repository.getFavoriteTracksId()
     }
 
 }

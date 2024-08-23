@@ -1,4 +1,4 @@
-package com.msaggik.playlistmaker.create_playlist.data.playlist_db.dao
+package com.msaggik.playlistmaker.player.data.playlist_db.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -6,11 +6,11 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.msaggik.playlistmaker.create_playlist.data.playlist_db.entity.additional_entities.PlaylistWithTracks
-import com.msaggik.playlistmaker.create_playlist.data.playlist_db.entity.additional_entities.TrackWithPlaylists
-import com.msaggik.playlistmaker.create_playlist.data.playlist_db.entity.config_db.DatabaseConfig
-import com.msaggik.playlistmaker.create_playlist.data.playlist_db.entity.many_to_many.PlaylistAndTrackEntity
-import com.msaggik.playlistmaker.create_playlist.data.playlist_db.entity.many_to_many.TrackEntity
+import com.msaggik.playlistmaker.player.data.playlist_db.entity.additional_entities.PlaylistWithTracks
+import com.msaggik.playlistmaker.player.data.playlist_db.entity.additional_entities.TrackWithPlaylists
+import com.msaggik.playlistmaker.player.data.playlist_db.entity.config_db.DatabaseConfig
+import com.msaggik.playlistmaker.player.data.playlist_db.entity.many_to_many.PlaylistAndTrackEntity
+import com.msaggik.playlistmaker.player.data.playlist_db.entity.many_to_many.TrackEntity
 
 @Dao
 interface PlaylistTracksDao {

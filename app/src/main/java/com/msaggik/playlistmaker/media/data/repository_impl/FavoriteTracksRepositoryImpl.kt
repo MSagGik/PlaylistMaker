@@ -1,39 +1,26 @@
 package com.msaggik.playlistmaker.media.data.repository_impl
 
-import com.msaggik.playlistmaker.media.data.converters.TrackDbConverter
-import com.msaggik.playlistmaker.media.data.favorite_tracks_db.TracksDatabase
+import com.msaggik.playlistmaker.media.data.mappers.FavoriteTrackMapper
 import com.msaggik.playlistmaker.media.domain.models.Track
 import com.msaggik.playlistmaker.media.domain.repository.FavoriteTracksRepository
+import com.msaggik.playlistmaker.player.data.playlist_db.PlaylistTracksDatabase
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class FavoriteTracksRepositoryImpl(
-    private val tracksDataBase: TracksDatabase,
-    private val trackDbConverter: TrackDbConverter
+    private val dataBase: PlaylistTracksDatabase,
+    private val favoriteTrackMapper: FavoriteTrackMapper
 ) : FavoriteTracksRepository {
 
     override suspend fun addFavoriteTrack(track: Track): Long {
-        return tracksDataBase.favoriteTracksDao().insertTrack(trackDbConverter.map(track))
-    }
-
-    override suspend fun deleteFavoriteTrack(track: Track): Int {
-        return tracksDataBase.favoriteTracksDao().deleteTrack(trackDbConverter.map(track))
+        return dataBase.playlistTracksDao().insertOrUpdateTrack(favoriteTrackMapper.map(track))
     }
 
     override fun getFavoriteTracks(): Flow<List<Track>> = flow {
         emit(
-            tracksDataBase
-                .favoriteTracksDao()
+            dataBase.playlistTracksDao()
                 .getFavoriteTracks()
-                .map { trackEntity -> trackDbConverter.map(trackEntity)}
-        )
-    }
-
-    override fun getFavoriteTracksId(): Flow<List<Long>> = flow {
-        emit(
-            tracksDataBase
-                .favoriteTracksDao()
-                .getFavoriteTracksIds()
+                .map { trackEntity -> favoriteTrackMapper.map(trackEntity)}
         )
     }
 

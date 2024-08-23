@@ -43,7 +43,7 @@ val searchModule = module {
             androidContext(),
             networkClient = get(),
             searchHistorySp = get(),
-            tracksDatabase = get(),
+            database = get(),
             converters = get()
         )
     }

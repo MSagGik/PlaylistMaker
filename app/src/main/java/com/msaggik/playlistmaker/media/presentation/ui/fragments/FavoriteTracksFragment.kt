@@ -11,7 +11,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.msaggik.playlistmaker.R
 import com.msaggik.playlistmaker.databinding.FragmentFavoriteTracksBinding
-import com.msaggik.playlistmaker.media.data.converters.TrackDbConverter
 import com.msaggik.playlistmaker.media.domain.models.Track
 import com.msaggik.playlistmaker.media.presentation.ui.adapters.FavoriteTracksAdapter
 import com.msaggik.playlistmaker.media.presentation.view_model.FavoriteTracksViewModel
@@ -19,7 +18,6 @@ import com.msaggik.playlistmaker.media.presentation.view_model.state.FavoriteTra
 import com.msaggik.playlistmaker.player.presentation.ui.PlayerFragment
 import com.msaggik.playlistmaker.util.Utils
 import com.msaggik.playlistmaker.util.debounce
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoriteTracksFragment : Fragment() {
@@ -28,7 +26,6 @@ class FavoriteTracksFragment : Fragment() {
         const val DELAY_CLICK_TRACK = 1000L
     }
 
-    private val trackDbConverter: TrackDbConverter by inject()
     private val favoriteTracksViewModel: FavoriteTracksViewModel by viewModel()
 
     private var viewArray: Array<View>? = null
@@ -87,7 +84,7 @@ class FavoriteTracksFragment : Fragment() {
         favoriteTracksViewModel.addTrackListHistory(track)
         findNavController().navigate(
             R.id.action_mediaFragment_to_playerFragment,
-            PlayerFragment.createArgs(trackDbConverter.mapMediaToSearch(track))
+            PlayerFragment.createArgs(mapMediaToPlayer(track))
         )
     }
 
@@ -116,5 +113,24 @@ class FavoriteTracksFragment : Fragment() {
         _binding = null
         viewArray = emptyArray()
         viewArray = null
+    }
+
+    private fun mapMediaToPlayer(track: Track): com.msaggik.playlistmaker.player.domain.models.Track {
+        return with(track) {
+            com.msaggik.playlistmaker.player.domain.models.Track(
+                trackId = trackId,
+                trackName = trackName,
+                artistName = artistName,
+                trackTimeMillis = trackTimeMillis,
+                artworkUrl100 = artworkUrl100,
+                collectionName = collectionName,
+                releaseDate = releaseDate,
+                primaryGenreName = primaryGenreName,
+                country = country,
+                previewUrl = previewUrl,
+                isFavorite = isFavorite,
+                dateAddTrack = dateAddTrack
+            )
+        }
     }
 }

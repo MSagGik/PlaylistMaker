@@ -1,4 +1,4 @@
-package com.msaggik.playlistmaker.create_playlist.data.playlist_db.entity.config_db
+package com.msaggik.playlistmaker.player.data.playlist_db.entity.config_db
 
 object DatabaseConfig {
 

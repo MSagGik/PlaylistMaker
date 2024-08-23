@@ -151,7 +151,7 @@ class SearchFragment : Fragment() {
         searchViewModel.addTrackListHistory(track)
         findNavController().navigate(
             R.id.action_searchFragment_to_playerFragment,
-            PlayerFragment.createArgs(track)
+            PlayerFragment.createArgs(mapSearchToPlayer(track))
         )
     }
 
@@ -237,6 +237,25 @@ class SearchFragment : Fragment() {
         super.onViewStateRestored(savedInstanceState)
         if (savedInstanceState != null) {
             searchTrack = savedInstanceState.getString(KEY_TEXT_SEARCH, TEXT_SEARCH_DEFAULT)
+        }
+    }
+
+    private fun mapSearchToPlayer(track: Track): com.msaggik.playlistmaker.player.domain.models.Track {
+        return with(track) {
+            com.msaggik.playlistmaker.player.domain.models.Track(
+                trackId = trackId,
+                trackName = trackName,
+                artistName = artistName,
+                trackTimeMillis = trackTimeMillis,
+                artworkUrl100 = artworkUrl100,
+                collectionName = collectionName,
+                releaseDate = releaseDate,
+                primaryGenreName = primaryGenreName,
+                country = country,
+                previewUrl = previewUrl,
+                isFavorite = isFavorite,
+                dateAddTrack = dateAddTrack
+            )
         }
     }
 }

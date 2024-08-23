@@ -14,8 +14,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.msaggik.playlistmaker.R
 import com.msaggik.playlistmaker.databinding.FragmentPlayerBinding
+import com.msaggik.playlistmaker.player.domain.models.Track
 import com.msaggik.playlistmaker.player.presentation.view_model.PlayerViewModel
-import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.util.Utils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -111,7 +111,6 @@ class PlayerFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-//        playerViewModel.resetPlayer()
     }
 
     private fun showTrackCover(artworkUrl: String) {
@@ -131,7 +130,6 @@ class PlayerFragment : Fragment() {
 
     override fun onPause() {
         super.onPause()
-
         playerViewModel.pausePlayer()
     }
 

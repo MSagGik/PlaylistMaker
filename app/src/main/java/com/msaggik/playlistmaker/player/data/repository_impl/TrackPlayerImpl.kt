@@ -1,13 +1,19 @@
-package com.msaggik.playlistmaker.player.data
+package com.msaggik.playlistmaker.player.data.repository_impl
 
 import android.media.MediaPlayer
+import com.msaggik.playlistmaker.player.data.mappers.PlayerMapper
+import com.msaggik.playlistmaker.player.data.playlist_db.PlaylistTracksDatabase
+import com.msaggik.playlistmaker.player.domain.models.Track
 import com.msaggik.playlistmaker.player.domain.repository.TrackPlayer
 import com.msaggik.playlistmaker.player.domain.state.PlayerState
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 private const val DELTA_TIME_TRACK = 250L
-
 class TrackPlayerImpl(
     private val mediaPlayer: MediaPlayer,
+    private val converters: PlayerMapper,
+    private val dataBase: PlaylistTracksDatabase
 ) : TrackPlayer {
 
     override var playerState = PlayerState.PLAYER_STATE_DEFAULT
@@ -64,5 +70,27 @@ class TrackPlayerImpl(
                 playerState = PlayerState.PLAYER_STATE_PREPARED
             }
         }
+    }
+
+    // favorite tracks
+
+    override suspend fun setFavoriteTrack(track: Track): Long {
+        return dataBase.playlistTracksDao().setFavoriteTrack(converters.map(track))
+    }
+
+//    override suspend fun addFavoriteTrack(track: Track): Long {
+//        return dataBase.playlistTracksDao().setFavoriteTrack(converters.map(track))
+//    }
+//
+//    override suspend fun deleteFavoriteTrack(track: Track): Int {
+//        return dataBase.playlistTracksDao().setFavoriteTrack(converters.map(track)).toInt()
+//    }
+
+    override fun getFavoriteTracksId(): Flow<List<Long>> = flow {
+        emit(
+            dataBase
+                .playlistTracksDao()
+                .getFavoriteTracksIds()
+        )
     }
 }

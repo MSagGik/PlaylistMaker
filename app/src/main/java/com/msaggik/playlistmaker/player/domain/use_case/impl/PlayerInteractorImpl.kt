@@ -1,8 +1,10 @@
 package com.msaggik.playlistmaker.player.domain.use_case.impl
 
+import com.msaggik.playlistmaker.player.domain.models.Track
 import com.msaggik.playlistmaker.player.domain.repository.TrackPlayer
 import com.msaggik.playlistmaker.player.domain.use_case.PlayerInteractor
 import com.msaggik.playlistmaker.player.domain.state.PlayerState
+import kotlinx.coroutines.flow.Flow
 
 class PlayerInteractorImpl(
     private val trackPlayer: TrackPlayer
@@ -37,5 +39,22 @@ class PlayerInteractorImpl(
 
     override fun release() {
         trackPlayer.onRelease()
+    }
+
+    // favorite tracks
+    override suspend fun setFavoriteTrack(track: Track): Long {
+        return trackPlayer.setFavoriteTrack(track)
+    }
+
+//    override suspend fun addFavoriteTrack(track: Track): Long {
+//        return trackPlayer.addFavoriteTrack(track)
+//    }
+//
+//    override suspend fun deleteFavoriteTrack(track: Track): Int {
+//        return trackPlayer.deleteFavoriteTrack(track)
+//    }
+
+    override fun getFavoriteTracksId(): Flow<List<Long>> {
+        return trackPlayer.getFavoriteTracksId()
     }
 }

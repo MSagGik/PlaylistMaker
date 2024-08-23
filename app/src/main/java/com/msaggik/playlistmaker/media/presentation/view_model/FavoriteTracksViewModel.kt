@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.msaggik.playlistmaker.media.domain.use_case.MediaInteractor
 import com.msaggik.playlistmaker.media.domain.models.Track
+import com.msaggik.playlistmaker.media.domain.use_case.MediaInteractor
 import com.msaggik.playlistmaker.media.presentation.view_model.state.FavoriteTracksState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
