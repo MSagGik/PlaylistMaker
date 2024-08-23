@@ -78,14 +78,6 @@ class TrackPlayerImpl(
         return dataBase.playlistTracksDao().setFavoriteTrack(converters.map(track))
     }
 
-//    override suspend fun addFavoriteTrack(track: Track): Long {
-//        return dataBase.playlistTracksDao().setFavoriteTrack(converters.map(track))
-//    }
-//
-//    override suspend fun deleteFavoriteTrack(track: Track): Int {
-//        return dataBase.playlistTracksDao().setFavoriteTrack(converters.map(track)).toInt()
-//    }
-
     override fun getFavoriteTracksId(): Flow<List<Long>> = flow {
         emit(
             dataBase

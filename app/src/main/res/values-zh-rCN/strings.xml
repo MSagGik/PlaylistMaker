@@ -42,4 +42,5 @@
     <string name="name">姓名*</string>
     <string name="description">描述</string>
     <string name="create">创造</string>
+    <string name="has_duplicate_playlist">同名的播放列表已存在</string>
 </resources>

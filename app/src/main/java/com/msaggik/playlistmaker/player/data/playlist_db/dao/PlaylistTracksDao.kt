@@ -10,10 +10,24 @@ import com.msaggik.playlistmaker.player.data.playlist_db.entity.additional_entit
 import com.msaggik.playlistmaker.player.data.playlist_db.entity.additional_entities.TrackWithPlaylists
 import com.msaggik.playlistmaker.player.data.playlist_db.entity.config_db.DatabaseConfig
 import com.msaggik.playlistmaker.player.data.playlist_db.entity.many_to_many.PlaylistAndTrackEntity
+import com.msaggik.playlistmaker.player.data.playlist_db.entity.many_to_many.PlaylistEntity
 import com.msaggik.playlistmaker.player.data.playlist_db.entity.many_to_many.TrackEntity
 
 @Dao
 interface PlaylistTracksDao {
+
+    // PLAYLISTS
+    // create playlist
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertPlaylist(playlistEntity: PlaylistEntity): Long
+
+    // names playlist
+    @Query("SELECT ${DatabaseConfig.PLAYLIST_NAME} FROM ${DatabaseConfig.PLAYLIST_TABLE}")
+    suspend fun namesPlaylist(): List<String>
+
+    // check playlist
+    @Query("SELECT COUNT(*) > 0 FROM ${DatabaseConfig.PLAYLIST_TABLE} WHERE ${DatabaseConfig.PLAYLIST_NAME} = :namePlaylist")
+    suspend fun namesPlaylist(namePlaylist: String): Boolean
 
     // PLAYLISTS AND TRACKS
     // delete playlist

@@ -98,6 +98,7 @@
         app:layout_constraintTop_toBottomOf="@+id/name_track">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/description_track_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/dimen_16"

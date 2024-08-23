@@ -31,6 +31,11 @@ internal object Utils {
             ?.let { SimpleDateFormat("yyyy", Locale.getDefault()).format(it) }
     }
 
+    fun dateFormatNameAlbumPlaylist(dateFormatMillis: Long) : String {
+        val dateFormat = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(roundingToThousandths(dateFormatMillis))
+        return "Album_$dateFormat"
+    }
+
     fun dateFormatMillisToMinSecShort(dateFormatMillis: Long) : String? {
         return SimpleDateFormat("m:ss", Locale.getDefault()).format(roundingToThousandths(dateFormatMillis))
     }

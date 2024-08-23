@@ -16,7 +16,5 @@ interface TrackPlayer {
 
     suspend fun setFavoriteTrack(track: Track) : Long
 
-//    suspend fun addFavoriteTrack(track: Track) : Long
-//    suspend fun deleteFavoriteTrack(track: Track) : Int
     fun getFavoriteTracksId() : Flow<List<Long>>
 }

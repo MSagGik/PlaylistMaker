@@ -46,14 +46,6 @@ class PlayerInteractorImpl(
         return trackPlayer.setFavoriteTrack(track)
     }
 
-//    override suspend fun addFavoriteTrack(track: Track): Long {
-//        return trackPlayer.addFavoriteTrack(track)
-//    }
-//
-//    override suspend fun deleteFavoriteTrack(track: Track): Int {
-//        return trackPlayer.deleteFavoriteTrack(track)
-//    }
-
     override fun getFavoriteTracksId(): Flow<List<Long>> {
         return trackPlayer.getFavoriteTracksId()
     }
