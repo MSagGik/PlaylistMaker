@@ -11,6 +11,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
@@ -62,7 +63,7 @@ class CreatePlaylistFragment : Fragment() {
                 uriImageToPrivateStorage = saveImageToPrivateStorage(uri)
             } else {
                 binding.albumTrack.setImageURI(defaultUriImageToPrivateStorage)
-                uriImageToPrivateStorage = saveImageToPrivateStorage(defaultUriImageToPrivateStorage)
+//                uriImageToPrivateStorage = saveImageToPrivateStorage(defaultUriImageToPrivateStorage)
             }
         }
     }
@@ -129,7 +130,7 @@ class CreatePlaylistFragment : Fragment() {
                     pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                 }
                 R.id.add_playlist -> {
-                    if(uriImageToPrivateStorage == null) uriImageToPrivateStorage = defaultUriImageToPrivateStorage
+//                    if(uriImageToPrivateStorage == null) uriImageToPrivateStorage = defaultUriImageToPrivateStorage
                     createPlaylistViewModel.addPlaylist(
                         Playlist(
                             playlistName = binding.nameTrackInput.text.toString(),
@@ -138,9 +139,15 @@ class CreatePlaylistFragment : Fragment() {
                         )
                     )
                     findNavController().popBackStack()
+                    messageSuccessAddPlaylist(binding.nameTrackInput.text.toString())
                 }
             }
         }
+    }
+
+    private fun messageSuccessAddPlaylist(namePlaylist: String) {
+        Toast.makeText(requireActivity(), requireActivity().getString(R.string.message_success_add_playlist, namePlaylist), Toast.LENGTH_LONG).show()
+
     }
 
     private val inputSearchWatcher = object : TextWatcher {

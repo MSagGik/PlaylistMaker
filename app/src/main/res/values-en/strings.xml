@@ -35,7 +35,7 @@
     <string name="something_went_wrong">Something went wrong</string>
     <string name="media_library">Media library</string>
     <string name="empty_media_library">Your media library is empty</string>
-    <string name="empty_playlists">You haven\'t created\\nany playlists yet.</string>
+    <string name="empty_playlists">You haven\'t created any playlists yet</string>
     <string name="new_playlist">New playlist</string>
     <string name="favorite_tracks">Featured Tracks</string>
     <string name="playlists">Playlists</string>
@@ -47,4 +47,8 @@
     <string name="all_unsaved_data_will_be_lost">All unsaved data will be lost</string>
     <string name="cancel">Cancel</string>
     <string name="finish">Finish</string>
+    <string name="message_success_add_playlist">Playlist %1$s created</string>
+    <string name="name_playlist">Playlist name</string>
+    <string name="number_playlist">Number of tracks</string>
+    <string name="number_tracks">%1$d tracks</string>
 </resources>

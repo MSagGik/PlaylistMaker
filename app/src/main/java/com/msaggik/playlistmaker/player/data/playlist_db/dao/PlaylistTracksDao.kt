@@ -107,11 +107,11 @@ interface PlaylistTracksDao {
     // read playlists and tracks
     @Transaction
     @Query("SELECT * FROM ${DatabaseConfig.PLAYLIST_TABLE}")
-    suspend fun playlistWithTracks(): List<PlaylistWithTracks>
+    suspend fun playlistsWithTracks(): List<PlaylistWithTracks>
 
     @Transaction
     @Query("SELECT * FROM ${DatabaseConfig.TRACK_TABLE}")
-    suspend fun trackWithPlaylists(): List<TrackWithPlaylists>
+    suspend fun tracksWithPlaylists(): List<TrackWithPlaylists>
 
     // FAVORITE TRACKS
     // Query to get a list of track IDs of all posts with `favoriteTrack` equal to true

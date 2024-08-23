@@ -33,7 +33,7 @@ internal object Utils {
 
     fun dateFormatNameAlbumPlaylist(dateFormatMillis: Long) : String {
         val dateFormat = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(roundingToThousandths(dateFormatMillis))
-        return "Album_$dateFormat"
+        return "Album_$dateFormat.jpg"
     }
 
     fun dateFormatMillisToMinSecShort(dateFormatMillis: Long) : String? {

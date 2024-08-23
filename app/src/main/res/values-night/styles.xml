@@ -101,4 +101,12 @@
         <item name="android:background">@color/grey_100</item>
     </style>
 
+    <style name="TextCardView" parent="BaseTextCardView">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="CardView">
+        <item name="android:backgroundTint">@color/grey_100</item>
+    </style>
+
 </resources>

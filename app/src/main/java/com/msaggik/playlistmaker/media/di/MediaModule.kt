@@ -1,8 +1,8 @@
 package com.msaggik.playlistmaker.media.di
 
-import com.msaggik.playlistmaker.media.data.mappers.FavoriteTrackMapper
-import com.msaggik.playlistmaker.media.data.repository_impl.FavoriteTracksRepositoryImpl
-import com.msaggik.playlistmaker.media.domain.repository.FavoriteTracksRepository
+import com.msaggik.playlistmaker.media.data.mappers.MediaMapper
+import com.msaggik.playlistmaker.media.data.repository_impl.MediaRepositoryImpl
+import com.msaggik.playlistmaker.media.domain.repository.MediaRepository
 import com.msaggik.playlistmaker.media.domain.use_case.MediaInteractor
 import com.msaggik.playlistmaker.media.domain.use_case.impl.MediaInteractorImpl
 import com.msaggik.playlistmaker.media.presentation.view_model.FavoriteTracksViewModel
@@ -20,7 +20,9 @@ val mediaModule = module {
     }
 
     viewModel{
-        PlaylistsViewModel()
+        PlaylistsViewModel(
+            mediaInteractor = get()
+        )
     }
 
     // domain
@@ -31,15 +33,15 @@ val mediaModule = module {
     }
 
     // data
-    single<FavoriteTracksRepository> {
-        FavoriteTracksRepositoryImpl(
+    single<MediaRepository> {
+        MediaRepositoryImpl(
             dataBase = get(),
-            favoriteTrackMapper = get()
+            mediaMapper = get()
         )
     }
 
     single {
-        FavoriteTrackMapper()
+        MediaMapper()
     }
 
 }

@@ -24,11 +24,20 @@
         android:textSize="@dimen/dimen_14s"
         app:cornerRadius="@dimen/dimen_54" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/playlists"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="@dimen/dimen_8"
+        android:paddingBottom="@dimen/dimen_8"
+        android:paddingTop="@dimen/dimen_70"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager" />
+
     <FrameLayout
         android:id="@+id/placeholder_empty_playlists"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="@dimen/dimen_120"
@@ -45,6 +54,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/dimen_242"
             android:text="@string/empty_playlists" />
+
     </FrameLayout>
 
 </FrameLayout>

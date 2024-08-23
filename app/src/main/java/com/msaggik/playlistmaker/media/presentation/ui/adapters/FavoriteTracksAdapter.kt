@@ -1,5 +1,6 @@
 package com.msaggik.playlistmaker.media.presentation.ui.adapters
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -43,7 +44,7 @@ class FavoriteTracksAdapter (
     class TrackViewHolder(private val binding: ItemTrackListBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(model: Track) {
             Glide.with(itemView)
-                .load(model.artworkUrl100)
+                .load(Uri.parse(model.artworkUrl100))
                 .placeholder(R.drawable.ic_placeholder)
                 .centerCrop()
                 .transform(RoundedCorners(Utils.doToPx(2f, itemView.context.applicationContext)))
