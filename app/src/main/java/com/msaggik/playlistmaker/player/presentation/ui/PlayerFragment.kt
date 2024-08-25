@@ -30,13 +30,12 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class PlayerFragment : Fragment() {
 
     companion object {
-
         private const val TRACK_INSTANCE = "track_instance"
-
-        fun createArgs(track: Track): Bundle =
-            bundleOf(
+        fun createArgs(track: Track): Bundle {
+            return bundleOf(
                 TRACK_INSTANCE to track
             )
+        }
     }
 
     // view-model
@@ -47,11 +46,11 @@ class PlayerFragment : Fragment() {
     private val binding: FragmentPlayerBinding get() = _binding!!
     private var viewArray: Array<View>? = null
 
+    // bottomSheetBehavior
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
 
     // track
     private val track by lazy {
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             requireArguments().getParcelable(TRACK_INSTANCE, Track::class.java)
         } else {
@@ -59,6 +58,7 @@ class PlayerFragment : Fragment() {
         }
     }
 
+    // adapter playlists and listener select playlist to add track
     private var listPlaylistWithTracks: MutableList<PlaylistWithTracks> = mutableListOf()
 
     private val playlistWithTracksAdapter: PlaylistWithTracksAdapter by lazy {
@@ -80,6 +80,7 @@ class PlayerFragment : Fragment() {
         }
     }
 
+    // fragment lifecycle methods
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -87,6 +88,10 @@ class PlayerFragment : Fragment() {
     ): View? {
         track?.let { playerViewModel.updateFavoriteStatusTrack(it) }
         _binding = FragmentPlayerBinding.inflate(inflater, container, false)
+        viewArray = arrayOf(
+            binding.placeholderEmptyPlaylists,
+            binding.playlists
+        )
         return binding.root
     }
 
@@ -94,8 +99,16 @@ class PlayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // loading instance entity Track
         track?.let { playerViewModel.loadingTrack(it) }
+        // launch check for track in playlists
+        track?.let { playerViewModel.hasInPlaylist(it) }
+        // creating an object of the BottomSheetBehavior class
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.layoutBottomSheet!!).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
 
+        // subscribe to display track metadata
         playerViewModel.getTrackLiveData().observe(viewLifecycleOwner) { track ->
             showTrackCover(track.artworkUrl100)
             binding.trackName.text = track.trackName
@@ -111,16 +124,7 @@ class PlayerFragment : Fragment() {
             binding.trackGenre.text = track.primaryGenreName
             binding.trackCountry.text = track.country
         }
-
-        binding.playlists.layoutManager =
-            LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        binding.playlists.adapter = playlistWithTracksAdapter
-        playlistWithTracksAdapter.notifyDataSetChanged()
-
-        playerViewModel.getCurrentTimePlayingLiveData().observe(viewLifecycleOwner) { currentTime ->
-            binding.timeTrack.text = currentTime
-        }
-
+        // subscribe to state button Play/Pause
         playerViewModel.getButtonStateLiveData().observe(viewLifecycleOwner) { state ->
             binding.buttonPlayPause.setImageDrawable(
                 ContextCompat.getDrawable(
@@ -129,7 +133,11 @@ class PlayerFragment : Fragment() {
                 )
             )
         }
-
+        // subscribe to state track time progress
+        playerViewModel.getCurrentTimePlayingLiveData().observe(viewLifecycleOwner) { currentTime ->
+            binding.timeTrack.text = currentTime
+        }
+        // subscribe to status of track in favorites
         track?.let { playerViewModel.onFavorite(it) }
         playerViewModel.getLikeStateLiveData().observe(viewLifecycleOwner) { state ->
             binding.buttonLike.setImageDrawable(
@@ -139,8 +147,7 @@ class PlayerFragment : Fragment() {
                 )
             )
         }
-
-        track?.let { playerViewModel.hasInPlaylist(it) }
+        // subscribe to status of track in playlists
         playerViewModel.getPlaylistStateLiveData().observe(viewLifecycleOwner) { state ->
             binding.buttonAdd.setImageDrawable(
                 ContextCompat.getDrawable(
@@ -149,15 +156,11 @@ class PlayerFragment : Fragment() {
                 )
             )
         }
-
-        bottomSheetBehavior = BottomSheetBehavior.from(binding.layoutBottomSheet!!).apply {
-            state = BottomSheetBehavior.STATE_HIDDEN
-        }
-
+        // subscribe to state instance entity PlaylistWithTracksState
         playerViewModel.getPlaylistsWithTracksLiveData().observe(viewLifecycleOwner) {
             render(it)
         }
-
+        // subscribe to status of successful adding of a track to a playlist
         playerViewModel.getSuccessAddTrackInPlaylistLiveData().observe(viewLifecycleOwner) {
             val message = requireContext()
                 .getString(
@@ -167,6 +170,13 @@ class PlayerFragment : Fragment() {
             Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
         }
 
+        // connecting an adapter to display playlists
+        binding.playlists.layoutManager =
+            LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        binding.playlists.adapter = playlistWithTracksAdapter
+        playlistWithTracksAdapter.notifyDataSetChanged()
+
+        // listener installation
         bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
         binding.buttonBack.setOnClickListener(listener)
         binding.buttonPlayPause.setOnClickListener(listener)

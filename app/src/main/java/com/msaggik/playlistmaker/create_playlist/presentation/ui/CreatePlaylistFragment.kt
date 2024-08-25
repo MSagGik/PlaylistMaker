@@ -35,18 +35,22 @@ import java.io.FileOutputStream
 class CreatePlaylistFragment : Fragment() {
 
     companion object {
-
         private const val TRACK_INSTANCE = "track_instance"
         private var hasCreateArgs = false
-
         fun createArgs(track: Track): Bundle {
             hasCreateArgs = true
             return bundleOf(
                 TRACK_INSTANCE to track
             )
         }
-
     }
+
+    // view-model
+    private val createPlaylistViewModel: CreatePlaylistViewModel by viewModel()
+
+    // view
+    private var _binding: FragmentCreatePlaylistBinding? = null
+    private val binding: FragmentCreatePlaylistBinding get() = _binding!!
 
     // track
     private val track by lazy {
@@ -58,27 +62,24 @@ class CreatePlaylistFragment : Fragment() {
         }
     }
 
-    private val createPlaylistViewModel: CreatePlaylistViewModel by viewModel()
-
+    // date playlist
     private val namesPlaylist: MutableList<String> = mutableListOf()
-
     private lateinit var defaultUriImageToPrivateStorage: Uri
     private var uriImageToPrivateStorage: Uri? = null
+    // parameter for selecting a picture
     private lateinit var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>
-
+    // parameter for dialog window
     private val backAddPlaylistDialog: MaterialAlertDialogBuilder by lazy {
         MaterialAlertDialogBuilder(requireActivity())
             .setTitle(requireActivity().getString(R.string.finish_creating_the_playlist))
             .setMessage(requireActivity().getString(R.string.all_unsaved_data_will_be_lost))
-            .setNeutralButton(requireActivity().getString(R.string.cancel)) { dialog, which ->
-            }.setPositiveButton("Завершить") { dialog, which ->
+            .setNeutralButton(requireActivity().getString(R.string.cancel)) { dialog, which -> }
+            .setPositiveButton(requireActivity().getString(R.string.finish)) { dialog, which ->
                 findNavController().popBackStack()
             }
     }
 
-    private var _binding: FragmentCreatePlaylistBinding? = null
-    private val binding: FragmentCreatePlaylistBinding get() = _binding!!
-
+    // fragment lifecycle methods
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -118,11 +119,22 @@ class CreatePlaylistFragment : Fragment() {
         binding.albumTrack.setOnClickListener(listener)
         binding.addPlaylist.setOnClickListener(listener)
 
-        requireActivity().onBackPressedDispatcher.addCallback(object: OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                backAddPlaylistDialog.show()
-            }
-        })
+        requireActivity().onBackPressedDispatcher.addCallback(onBackPressedCallback)
+    }
+
+    private val onBackPressedCallback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
+        override fun handleOnBackPressed() {
+            backAddPlaylistDialog.show()
+        }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        onBackPressedCallback.isEnabled = false
+        onBackPressedCallback.remove()
+        pickMedia.unregister()
+        inputSearchWatcher.let { binding.nameTrackInput.removeTextChangedListener(it) }
+        _binding = null
     }
 
     private fun saveImageToPrivateStorage(uri: Uri) : Uri {
@@ -209,12 +221,5 @@ class CreatePlaylistFragment : Fragment() {
                 false
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        pickMedia.unregister()
-        inputSearchWatcher.let { binding.nameTrackInput.removeTextChangedListener(it) }
-        _binding = null
     }
 }

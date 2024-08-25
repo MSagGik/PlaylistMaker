@@ -53,7 +53,12 @@ class PlaylistWithTracksAdapter (
                 .transform()
                 .into(binding.imageAlbumPlaylist)
             binding.playlistName.text = model.playlist.playlistName
-            binding.numberTracks.text = binding.root.context.getString(R.string.number_tracks, model.tracks.size)
+            val numberTracks = when(model.tracks.size) {
+                1 -> binding.root.context.getString(R.string.number_tracks_a, model.tracks.size)
+                2,3,4 -> binding.root.context.getString(R.string.number_tracks_b, model.tracks.size)
+                else -> binding.root.context.getString(R.string.number_tracks_c, model.tracks.size)
+            }
+            binding.numberTracks.text = numberTracks
             model.tracks.map { track ->
                 if(track.trackId == trackId) {
                     binding.hasInPlaylist.setImageResource(R.drawable.ic_add_true)

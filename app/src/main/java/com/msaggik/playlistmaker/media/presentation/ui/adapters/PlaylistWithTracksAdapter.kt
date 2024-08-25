@@ -58,7 +58,12 @@ class PlaylistWithTracksAdapter (
                 .transform()
                 .into(binding.coverPlaylist)
             binding.namePlaylist.text = model.playlist.playlistName
-            binding.numberPlaylist.text = binding.root.context.getString(R.string.number_tracks, model.tracks.size)
+            val numberTracks = when(model.tracks.size) {
+                1 -> binding.root.context.getString(R.string.number_tracks_a, model.tracks.size)
+                2,3,4 -> binding.root.context.getString(R.string.number_tracks_b, model.tracks.size)
+                else -> binding.root.context.getString(R.string.number_tracks_c, model.tracks.size)
+            }
+            binding.numberPlaylist.text = numberTracks
         }
     }
 }

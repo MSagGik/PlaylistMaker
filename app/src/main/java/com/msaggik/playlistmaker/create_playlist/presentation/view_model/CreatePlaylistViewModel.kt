@@ -36,8 +36,4 @@ class CreatePlaylistViewModel(
             playlistInteractor.insertPlaylistAndAddTrackInPlaylist(playlist, track)
         }
     }
-
-    override fun onCleared() {
-        super.onCleared()
-    }
 }

@@ -21,13 +21,22 @@ import kotlinx.coroutines.launch
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
 ) : ViewModel() {
+
     companion object {
         private const val PLAYER_DELAY_UPDATE_TRACK_LIST = 250L
     }
 
+    /**
+     * Player ViewModel
+     * @param playerTrackLiveData - LiveData state instance entity Track
+     * @param buttonStateLiveData - LiveData state button Play/Pause
+     * @param currentTimePlayingLiveData - LiveData state track time progress
+     * @param isReverse - state reverse track time countdown
+     */
     private var timerJob: Job? = null
     var buttonStatePrePlay = false
 
+    // Player state
     private var playerTrackLiveData = MutableLiveData<Track>()
     fun getTrackLiveData(): LiveData<Track> = playerTrackLiveData
 
@@ -40,60 +49,88 @@ class PlayerViewModel(
         return currentTimePlayingLiveData
     }
 
-    private var likeStateLiveData = MutableLiveData<FavoriteState>()
-    fun getLikeStateLiveData(): LiveData<FavoriteState> = likeStateLiveData
-
-    private var playlistStateLiveData = MutableLiveData<PlaylistState>()
-    fun getPlaylistStateLiveData(): LiveData<PlaylistState> = playlistStateLiveData
-
-    private val playlistWithTracksLiveData = MutableLiveData<PlaylistWithTracksState>()
-    fun getPlaylistsWithTracksLiveData(): LiveData<PlaylistWithTracksState> = playlistWithTracksLiveData
-
-    private val successAddTrackInPlaylistLiveData = MutableLiveData<Boolean>()
-    fun getSuccessAddTrackInPlaylistLiveData(): LiveData<Boolean> = successAddTrackInPlaylistLiveData
-
-    fun getPlaylistWithTracks() {
-        viewModelScope.launch {
-            playerInteractor
-                .playlistsWithTracks()
-                .collect { playlists ->
-                    processResult(playlists)
-                }
+    // Manage player and state modification
+    fun loadingTrack(track: Track) {
+        if(playerTrackLiveData.value == null && !track.previewUrl.isNullOrEmpty()) {
+            playerInteractor.loading(track.previewUrl)
+            playerTrackLiveData.postValue(track)
         }
     }
 
-    fun addTrackInPlaylist(idPlaylist: Long, track: Track) {
-        viewModelScope.launch {
-            val successAddTrackInPlaylist = playerInteractor
-                .addTrackInPlaylist(idPlaylist, track)
-            successAddTrackInPlaylistLiveData.postValue(successAddTrackInPlaylist != -1L)
-            hasInPlaylist(track)
-        }
+    override fun onCleared() {
+        super.onCleared()
+        playerInteractor.release()
+        timerJob?.cancel()
     }
 
-    private fun processResult(playlist: List<PlaylistWithTracks>) {
-        if (playlist.isEmpty()) {
-            renderState(PlaylistWithTracksState.Empty)
-        } else {
-            renderState(PlaylistWithTracksState.Content(playlist))
-        }
-    }
+    fun startPlayer() {
+        playerInteractor.play()
+        buttonStateLiveData.postValue(PlayState.Pause)
 
-    private fun renderState(state: PlaylistWithTracksState) {
-        playlistWithTracksLiveData.postValue(state)
-    }
-
-    fun hasInPlaylist(track: Track) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val hasTrackInPlaylist = playerInteractor.isTrackInPlaylistAndTrack(track.trackId.toLong())
-            if (hasTrackInPlaylist) {
-                playlistStateLiveData.postValue(PlaylistState.InPlaylist)
-            } else {
-                playlistStateLiveData.postValue(PlaylistState.NoInPlaylist)
+        timerJob = viewModelScope.launch (Dispatchers.Default) {
+            while (playerInteractor.getPlayerState() == PlayerState.PLAYER_STATE_PLAYING) {
+                updateTimePlayingLiveData(isReverse)
+                delay(PLAYER_DELAY_UPDATE_TRACK_LIST)
+            }
+            if (playerInteractor.getPlayerState() == PlayerState.PLAYER_STATE_PREPARED) {
+                updateTimePlayingLiveData(isReverse)
+                buttonStateLiveData.postValue(PlayState.Play)
+                timerJob?.cancel()
             }
         }
     }
 
+    private fun updateTimePlayingLiveData(isReverse: Boolean) {
+        currentTimePlayingLiveData.postValue(
+            Utils.dateFormatMillisToMinSecShort(
+                playerInteractor.getPlayerCurrentPosition(isReverse)
+            )
+        )
+    }
+
+    fun pausePlayer() {
+        if (playerInteractor.getPlayerState() == PlayerState.PLAYER_STATE_PLAYING) {
+            playerInteractor.pause()
+            buttonStateLiveData.postValue(PlayState.Play)
+            timerJob?.cancel()
+        }
+    }
+
+    fun isReverse() {
+        isReverse = !isReverse
+        currentTimePlayingLiveData.postValue(
+            Utils.dateFormatMillisToMinSecShort(
+                playerInteractor.getPlayerCurrentPosition(isReverse)
+            )
+        )
+    }
+
+    fun checkPlayPause() {
+        buttonStatePrePlay = when (playerInteractor.getPlayerState()) {
+            PlayerState.PLAYER_STATE_PLAYING -> {
+                pausePlayer()
+                false
+            }
+            PlayerState.PLAYER_STATE_PREPARED, PlayerState.PLAYER_STATE_PAUSED -> {
+                startPlayer()
+                true
+            }
+            else -> {
+                false
+            }
+        }
+    }
+
+    /**
+     * Favorite ViewModel
+     * @param likeStateLiveData - LiveData status of track in favorites
+     */
+
+    // Favorite state
+    private var likeStateLiveData = MutableLiveData<FavoriteState>()
+    fun getLikeStateLiveData(): LiveData<FavoriteState> = likeStateLiveData
+
+    // State modification
     fun onFavorite(track: Track) {
         if (track.isFavorite) {
             likeStateLiveData.postValue(FavoriteState.Favorite)
@@ -115,7 +152,7 @@ class PlayerViewModel(
         }
     }
 
-    fun updateFavoriteStatus(listId: List<Long>, track: Track) {
+    private fun updateFavoriteStatus(listId: List<Long>, track: Track) {
         track.isFavorite = (listId.isNotEmpty() && listId.contains(track.trackId.toLong()))
     }
 
@@ -134,74 +171,63 @@ class PlayerViewModel(
         }
     }
 
-    fun isReverse() {
-        isReverse = !isReverse
-        currentTimePlayingLiveData.postValue(
-            Utils.dateFormatMillisToMinSecShort(
-                playerInteractor.getPlayerCurrentPosition(isReverse)
-            )
-        )
-    }
+    /**
+     * Add track in playlist ViewModel
+     * @param playlistStateLiveData - LiveData status of track in playlists
+     * @param playlistWithTracksLiveData - LiveData state instance entity PlaylistWithTracksState
+     * @param successAddTrackInPlaylistLiveData - LiveData status of successful adding of a track to a playlist
+     */
 
-    override fun onCleared() {
-        super.onCleared()
-        playerInteractor.release()
-        timerJob?.cancel()
-    }
+    // Playlist state
+    private var playlistStateLiveData = MutableLiveData<PlaylistState>()
+    fun getPlaylistStateLiveData(): LiveData<PlaylistState> = playlistStateLiveData
 
-    fun loadingTrack(track: Track) {
-        if(playerTrackLiveData.value == null && !track.previewUrl.isNullOrEmpty()) {
-            playerInteractor.loading(track.previewUrl)
-            playerTrackLiveData.postValue(track)
-        }
-    }
+    private val playlistWithTracksLiveData = MutableLiveData<PlaylistWithTracksState>()
+    fun getPlaylistsWithTracksLiveData(): LiveData<PlaylistWithTracksState> = playlistWithTracksLiveData
 
-    fun startPlayer() {
-        playerInteractor.play()
-        buttonStateLiveData.postValue(PlayState.Pause)
+    private val successAddTrackInPlaylistLiveData = MutableLiveData<Boolean>()
+    fun getSuccessAddTrackInPlaylistLiveData(): LiveData<Boolean> = successAddTrackInPlaylistLiveData
 
-        timerJob = viewModelScope.launch (Dispatchers.Default) {
-            while (playerInteractor.getPlayerState() == PlayerState.PLAYER_STATE_PLAYING) {
-                updateTimePlayingLiveData(isReverse)
-                delay(PLAYER_DELAY_UPDATE_TRACK_LIST)
-            }
-            if (playerInteractor.getPlayerState() == PlayerState.PLAYER_STATE_PREPARED) {
-                updateTimePlayingLiveData(isReverse)
-                buttonStateLiveData.postValue(PlayState.Play)
-                timerJob?.cancel()
+    // State modification
+    fun hasInPlaylist(track: Track) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val hasTrackInPlaylist = playerInteractor.isTrackInPlaylistAndTrack(track.trackId.toLong())
+            if (hasTrackInPlaylist) {
+                playlistStateLiveData.postValue(PlaylistState.InPlaylist)
+            } else {
+                playlistStateLiveData.postValue(PlaylistState.NoInPlaylist)
             }
         }
     }
 
-    fun updateTimePlayingLiveData(isReverse: Boolean) {
-        currentTimePlayingLiveData.postValue(
-            Utils.dateFormatMillisToMinSecShort(
-                playerInteractor.getPlayerCurrentPosition(isReverse)
-            )
-        )
-    }
-
-    fun pausePlayer() {
-        if (playerInteractor.getPlayerState() == PlayerState.PLAYER_STATE_PLAYING) {
-            playerInteractor.pause()
-            buttonStateLiveData.postValue(PlayState.Play)
-            timerJob?.cancel()
+    fun getPlaylistWithTracks() {
+        viewModelScope.launch(Dispatchers.IO) {
+            playerInteractor
+                .playlistsWithTracks()
+                .collect { playlists ->
+                    processResult(playlists)
+                }
         }
     }
 
-    fun checkPlayPause() {
-        buttonStatePrePlay = when (playerInteractor.getPlayerState()) {
-            PlayerState.PLAYER_STATE_PLAYING -> {
-                pausePlayer()
-               false
-            }
-            PlayerState.PLAYER_STATE_PREPARED, PlayerState.PLAYER_STATE_PAUSED -> {
-                startPlayer()
-                true
-            }
-            else -> {
-                false
-            }
+    private fun processResult(playlist: List<PlaylistWithTracks>) {
+        if (playlist.isEmpty()) {
+            renderState(PlaylistWithTracksState.Empty)
+        } else {
+            renderState(PlaylistWithTracksState.Content(playlist))
+        }
+    }
+
+    private fun renderState(state: PlaylistWithTracksState) {
+        playlistWithTracksLiveData.postValue(state)
+    }
+
+    fun addTrackInPlaylist(idPlaylist: Long, track: Track) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val successAddTrackInPlaylist = playerInteractor
+                .addTrackInPlaylist(idPlaylist, track)
+            successAddTrackInPlaylistLiveData.postValue(successAddTrackInPlaylist != -1L)
+            hasInPlaylist(track)
         }
     }
 }
