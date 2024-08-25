@@ -104,7 +104,7 @@ class PlayerFragment : Fragment() {
         // launch check for track in playlists
         track?.let { playerViewModel.hasInPlaylist(it) }
         // creating an object of the BottomSheetBehavior class
-        bottomSheetBehavior = BottomSheetBehavior.from(binding.layoutBottomSheet!!).apply {
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.layoutBottomSheet).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
         }
 
@@ -242,8 +242,8 @@ class PlayerFragment : Fragment() {
         }
 
         override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            binding.main.alpha = 1 - slideOffset
         }
-
     }
 
     private val listener: View.OnClickListener = object : View.OnClickListener {
