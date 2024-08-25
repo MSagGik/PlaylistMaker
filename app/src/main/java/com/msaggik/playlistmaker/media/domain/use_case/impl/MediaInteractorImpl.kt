@@ -21,5 +21,4 @@ class MediaInteractorImpl (
     override fun playlistsWithTracks(): Flow<List<PlaylistWithTracks>> {
         return repository.playlistsWithTracks()
     }
-
 }

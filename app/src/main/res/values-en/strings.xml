@@ -49,6 +49,9 @@
     <string name="finish">Finish</string>
     <string name="message_success_add_playlist">Playlist %1$s created</string>
     <string name="name_playlist">Playlist name</string>
-    <string name="number_playlist">Number of tracks</string>
+    <string name="number_tracks_default">Number of tracks</string>
     <string name="number_tracks">%1$d tracks</string>
+    <string name="add_in_playlist">Add to playlist</string>
+    <string name="add_track_in_playlist">Added to playlist %1$s</string>
+    <string name="no_add_track_in_playlist">The track has already been added to the playlist %1$s</string>
 </resources>

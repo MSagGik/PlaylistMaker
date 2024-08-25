@@ -16,7 +16,7 @@ class PlaylistsViewModel(
     private val playlistWithTracksLiveData = MutableLiveData<PlaylistWithTracksState>()
     fun getPlaylistsWithTracksLiveData(): LiveData<PlaylistWithTracksState> = playlistWithTracksLiveData
 
-    fun getFavoriteTrackList() {
+    fun getPlaylistWithTracks() {
         viewModelScope.launch {
             mediaInteractor
                 .playlistsWithTracks()

@@ -17,6 +17,19 @@ import com.msaggik.playlistmaker.player.data.playlist_db.entity.many_to_many.Tra
 interface PlaylistTracksDao {
 
     // PLAYLISTS
+
+    // create playlist and add track in playlist
+    @Transaction
+    suspend fun insertPlaylistAndAddTrackInPlaylist(playlistEntity: PlaylistEntity, track: TrackEntity): Long {
+        val idPlaylist = insertPlaylist(playlistEntity)
+        val existingEntry = checkIfExistsPlaylistAndTrack(idPlaylist, track.trackId)
+        return if (existingEntry) {
+            -1L
+        } else {
+            if(!checkIfExistsTracks(track.trackId)) insertOrUpdateTrack(track = track)
+            insertPlaylistAndTrack(listOf(PlaylistAndTrackEntity(idPlaylist, track.trackId))).first() // return idTrack
+        }
+    }
     // create playlist
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPlaylist(playlistEntity: PlaylistEntity): Long
@@ -88,7 +101,7 @@ interface PlaylistTracksDao {
     suspend fun addTrackInPlaylist(idPlaylist: Long, track: TrackEntity): Long {
         val existingEntry = checkIfExistsPlaylistAndTrack(idPlaylist, track.trackId)
         return if (existingEntry) {
-            -1
+            -1L
         } else {
             if(!checkIfExistsTracks(track.trackId)) insertOrUpdateTrack(track = track)
             insertPlaylistAndTrack(listOf(PlaylistAndTrackEntity(idPlaylist, track.trackId))).first() // return idTrack

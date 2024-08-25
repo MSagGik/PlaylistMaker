@@ -39,7 +39,8 @@ class MediaMapper {
                 primaryGenreName = primaryGenreName,
                 country = country,
                 previewUrl = previewUrl,
-                dateAddTrack = dateAddTrack
+                dateAddTrack = dateAddTrack,
+                favoriteTrack = isFavorite
             )
         }
     }

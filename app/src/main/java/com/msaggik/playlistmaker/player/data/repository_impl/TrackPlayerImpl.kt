@@ -3,6 +3,7 @@ package com.msaggik.playlistmaker.player.data.repository_impl
 import android.media.MediaPlayer
 import com.msaggik.playlistmaker.player.data.mappers.PlayerMapper
 import com.msaggik.playlistmaker.player.data.playlist_db.PlaylistTracksDatabase
+import com.msaggik.playlistmaker.player.domain.models.PlaylistWithTracks
 import com.msaggik.playlistmaker.player.domain.models.Track
 import com.msaggik.playlistmaker.player.domain.repository.TrackPlayer
 import com.msaggik.playlistmaker.player.domain.state.PlayerState
@@ -84,5 +85,23 @@ class TrackPlayerImpl(
                 .playlistTracksDao()
                 .getFavoriteTracksIds()
         )
+    }
+
+    // playlists
+
+    override suspend fun isTrackInPlaylistAndTrack(idTrack: Long): Boolean {
+        return  dataBase.playlistTracksDao().isTrackInPlaylistAndTrack(idTrack)
+    }
+
+    override suspend fun playlistsWithTracks(): Flow<List<PlaylistWithTracks>> = flow {
+        emit(
+            dataBase.playlistTracksDao().playlistsWithTracks().map { playlist ->
+                converters.mapPlaylistDbToPlaylist(playlist)
+            }
+        )
+    }
+
+    override suspend fun addTrackInPlaylist(idPlaylist: Long, track: Track): Long {
+        return dataBase.playlistTracksDao().addTrackInPlaylist(idPlaylist, converters.map(track))
     }
 }

@@ -31,13 +31,14 @@
         android:paddingHorizontal="@dimen/dimen_8"
         android:paddingBottom="@dimen/dimen_8"
         android:paddingTop="@dimen/dimen_70"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager" />
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        android:visibility="gone" />
 
     <FrameLayout
         android:id="@+id/placeholder_empty_playlists"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <ImageView
             android:layout_width="@dimen/dimen_120"

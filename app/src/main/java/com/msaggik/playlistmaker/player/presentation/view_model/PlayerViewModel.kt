@@ -4,11 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.msaggik.playlistmaker.player.domain.models.PlaylistWithTracks
 import com.msaggik.playlistmaker.player.domain.models.Track
 import com.msaggik.playlistmaker.player.domain.use_case.PlayerInteractor
 import com.msaggik.playlistmaker.player.domain.state.PlayerState
 import com.msaggik.playlistmaker.player.presentation.view_model.state.FavoriteState
 import com.msaggik.playlistmaker.player.presentation.view_model.state.PlayState
+import com.msaggik.playlistmaker.player.presentation.view_model.state.PlaylistState
+import com.msaggik.playlistmaker.player.presentation.view_model.state.PlaylistWithTracksState
 import com.msaggik.playlistmaker.util.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -39,6 +42,57 @@ class PlayerViewModel(
 
     private var likeStateLiveData = MutableLiveData<FavoriteState>()
     fun getLikeStateLiveData(): LiveData<FavoriteState> = likeStateLiveData
+
+    private var playlistStateLiveData = MutableLiveData<PlaylistState>()
+    fun getPlaylistStateLiveData(): LiveData<PlaylistState> = playlistStateLiveData
+
+    private val playlistWithTracksLiveData = MutableLiveData<PlaylistWithTracksState>()
+    fun getPlaylistsWithTracksLiveData(): LiveData<PlaylistWithTracksState> = playlistWithTracksLiveData
+
+    private val successAddTrackInPlaylistLiveData = MutableLiveData<Boolean>()
+    fun getSuccessAddTrackInPlaylistLiveData(): LiveData<Boolean> = successAddTrackInPlaylistLiveData
+
+    fun getPlaylistWithTracks() {
+        viewModelScope.launch {
+            playerInteractor
+                .playlistsWithTracks()
+                .collect { playlists ->
+                    processResult(playlists)
+                }
+        }
+    }
+
+    fun addTrackInPlaylist(idPlaylist: Long, track: Track) {
+        viewModelScope.launch {
+            val successAddTrackInPlaylist = playerInteractor
+                .addTrackInPlaylist(idPlaylist, track)
+            successAddTrackInPlaylistLiveData.postValue(successAddTrackInPlaylist != -1L)
+            hasInPlaylist(track)
+        }
+    }
+
+    private fun processResult(playlist: List<PlaylistWithTracks>) {
+        if (playlist.isEmpty()) {
+            renderState(PlaylistWithTracksState.Empty)
+        } else {
+            renderState(PlaylistWithTracksState.Content(playlist))
+        }
+    }
+
+    private fun renderState(state: PlaylistWithTracksState) {
+        playlistWithTracksLiveData.postValue(state)
+    }
+
+    fun hasInPlaylist(track: Track) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val hasTrackInPlaylist = playerInteractor.isTrackInPlaylistAndTrack(track.trackId.toLong())
+            if (hasTrackInPlaylist) {
+                playlistStateLiveData.postValue(PlaylistState.InPlaylist)
+            } else {
+                playlistStateLiveData.postValue(PlaylistState.NoInPlaylist)
+            }
+        }
+    }
 
     fun onFavorite(track: Track) {
         if (track.isFavorite) {

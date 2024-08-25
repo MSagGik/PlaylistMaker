@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.text.Editable
@@ -17,11 +18,13 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.msaggik.playlistmaker.R
 import com.msaggik.playlistmaker.create_playlist.domain.models.Playlist
+import com.msaggik.playlistmaker.create_playlist.domain.models.Track
 import com.msaggik.playlistmaker.create_playlist.presentation.view_model.CreatePlaylistViewModel
 import com.msaggik.playlistmaker.databinding.FragmentCreatePlaylistBinding
 import com.msaggik.playlistmaker.util.Utils
@@ -30,6 +33,30 @@ import java.io.File
 import java.io.FileOutputStream
 
 class CreatePlaylistFragment : Fragment() {
+
+    companion object {
+
+        private const val TRACK_INSTANCE = "track_instance"
+        private var hasCreateArgs = false
+
+        fun createArgs(track: Track): Bundle {
+            hasCreateArgs = true
+            return bundleOf(
+                TRACK_INSTANCE to track
+            )
+        }
+
+    }
+
+    // track
+    private val track by lazy {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requireArguments().getParcelable(TRACK_INSTANCE, Track::class.java)
+        } else {
+            requireArguments().getParcelable(TRACK_INSTANCE)
+        }
+    }
 
     private val createPlaylistViewModel: CreatePlaylistViewModel by viewModel()
 
@@ -63,7 +90,6 @@ class CreatePlaylistFragment : Fragment() {
                 uriImageToPrivateStorage = saveImageToPrivateStorage(uri)
             } else {
                 binding.albumTrack.setImageURI(defaultUriImageToPrivateStorage)
-//                uriImageToPrivateStorage = saveImageToPrivateStorage(defaultUriImageToPrivateStorage)
             }
         }
     }
@@ -79,6 +105,8 @@ class CreatePlaylistFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        createPlaylistViewModel.getNamesPlaylist()
 
         createPlaylistViewModel.getNamesPlaylistLiveData().observe(viewLifecycleOwner) {
             namesPlaylist.clear()
@@ -130,14 +158,16 @@ class CreatePlaylistFragment : Fragment() {
                     pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                 }
                 R.id.add_playlist -> {
-//                    if(uriImageToPrivateStorage == null) uriImageToPrivateStorage = defaultUriImageToPrivateStorage
-                    createPlaylistViewModel.addPlaylist(
-                        Playlist(
-                            playlistName = binding.nameTrackInput.text.toString(),
-                            playlistDescription = binding.descriptionTrackInput.text.toString(),
-                            playlistUriAlbum = uriImageToPrivateStorage.toString()
-                        )
+                    val playlist = Playlist(
+                        playlistName = binding.nameTrackInput.text.toString(),
+                        playlistDescription = binding.descriptionTrackInput.text.toString(),
+                        playlistUriAlbum = uriImageToPrivateStorage.toString()
                     )
+                    if(hasCreateArgs) {
+                        createPlaylistViewModel.addTrackInPlaylist(playlist, track!!)
+                    } else {
+                        createPlaylistViewModel.addPlaylist(playlist)
+                    }
                     findNavController().popBackStack()
                     messageSuccessAddPlaylist(binding.nameTrackInput.text.toString())
                 }

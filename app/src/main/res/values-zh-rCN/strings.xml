@@ -49,6 +49,9 @@
     <string name="finish">完全的</string>
     <string name="message_success_add_playlist">播放列表 %1$s 已创建</string>
     <string name="name_playlist">播放列表名称</string>
-    <string name="number_playlist">曲目数量</string>
+    <string name="number_tracks_default">曲目数量</string>
     <string name="number_tracks">%1$d 首曲目</string>
+    <string name="add_in_playlist">添加到播放列表</string>
+    <string name="add_track_in_playlist">已添加到播放列表 %1$s</string>
+    <string name="no_add_track_in_playlist">该曲目已添加到播放列表 %1$s</string>
 </resources>

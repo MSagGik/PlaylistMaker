@@ -61,7 +61,7 @@ class PlaylistsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        playlistsViewModel.getFavoriteTrackList()
+        playlistsViewModel.getPlaylistWithTracks()
 
         binding.playlists.layoutManager =
             GridLayoutManager(activity, NUMBER_COLUMN_RECYCLERVIEW, LinearLayoutManager.VERTICAL, false)

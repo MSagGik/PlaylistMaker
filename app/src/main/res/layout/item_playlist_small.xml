@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dimen_61"
+    android:padding="@dimen/dimen_8"
+    android:id="@+id/layout_track">
+
+    <!--    Используемые иллюстрации (иконки) и шрифты в образовательных целях предоставлены Яндекс-Практикумом (practicum.yandex.ru)-->
+
+    <ImageView
+        android:id="@+id/image_album_playlist"
+        android:layout_width="@dimen/dimen_45"
+        android:layout_height="@dimen/dimen_45"
+        android:background="@drawable/shape_image_album"
+        android:layout_marginStart="@dimen/dimen_5"
+        app:srcCompat="@drawable/ic_placeholder" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_32"
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/dimen_6"
+        android:layout_marginStart="@dimen/dimen_58"
+        android:layout_marginEnd="@dimen/dimen_44">
+
+        <TextView
+            android:id="@+id/playlist_name"
+            android:layout_width="match_parent"
+            android:textSize="@dimen/dimen_16s"
+            style="@style/TextViewH1Color"
+            android:text="@string/name_playlist" />
+
+        <TextView
+            android:id="@+id/number_tracks"
+            android:layout_width="wrap_content"
+            android:textSize="@dimen/dimen_11s"
+            android:maxWidth="210dp"
+            style="@style/TextViewH2Color"
+            android:text="@string/number_tracks_default" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/has_in_playlist"
+        android:layout_width="@dimen/dimen_24"
+        android:layout_height="@dimen/dimen_24"
+        android:layout_marginTop="@dimen/dimen_10"
+        android:layout_marginEnd="@dimen/dimen_12"
+        android:layout_gravity="end"
+        app:srcCompat="@drawable/ic_add_false" />
+
+</FrameLayout>

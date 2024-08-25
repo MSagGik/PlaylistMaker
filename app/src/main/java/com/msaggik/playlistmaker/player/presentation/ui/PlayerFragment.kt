@@ -7,15 +7,23 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.msaggik.playlistmaker.R
+import com.msaggik.playlistmaker.create_playlist.presentation.ui.CreatePlaylistFragment
 import com.msaggik.playlistmaker.databinding.FragmentPlayerBinding
+import com.msaggik.playlistmaker.player.domain.models.PlaylistWithTracks
 import com.msaggik.playlistmaker.player.domain.models.Track
+import com.msaggik.playlistmaker.player.presentation.ui.adapters.PlaylistWithTracksAdapter
 import com.msaggik.playlistmaker.player.presentation.view_model.PlayerViewModel
+import com.msaggik.playlistmaker.player.presentation.view_model.state.PlaylistWithTracksState
 import com.msaggik.playlistmaker.util.Utils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -31,9 +39,15 @@ class PlayerFragment : Fragment() {
             )
     }
 
+    // view-model
+    private val playerViewModel: PlayerViewModel by viewModel()
+
     // view
     private var _binding: FragmentPlayerBinding? = null
     private val binding: FragmentPlayerBinding get() = _binding!!
+    private var viewArray: Array<View>? = null
+
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
 
     // track
     private val track by lazy {
@@ -45,8 +59,26 @@ class PlayerFragment : Fragment() {
         }
     }
 
-    // view-model
-    private val playerViewModel: PlayerViewModel by viewModel()
+    private var listPlaylistWithTracks: MutableList<PlaylistWithTracks> = mutableListOf()
+
+    private val playlistWithTracksAdapter: PlaylistWithTracksAdapter by lazy {
+        val trackId = track?.trackId?:0
+        PlaylistWithTracksAdapter(trackId = trackId, listPlaylistWithTracks) {
+            playlistWithTracksSelection(it)
+        }
+    }
+
+    private var checkNamePlaylist = ""
+
+    private fun playlistWithTracksSelection(playlist: PlaylistWithTracks) {
+        track?.let {
+            playerViewModel.addTrackInPlaylist(playlist.playlist.playlistId, it)
+        }
+        checkNamePlaylist = playlist.playlist.playlistName
+        bottomSheetBehavior.apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,6 +90,7 @@ class PlayerFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -78,6 +111,11 @@ class PlayerFragment : Fragment() {
             binding.trackGenre.text = track.primaryGenreName
             binding.trackCountry.text = track.country
         }
+
+        binding.playlists.layoutManager =
+            LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        binding.playlists.adapter = playlistWithTracksAdapter
+        playlistWithTracksAdapter.notifyDataSetChanged()
 
         playerViewModel.getCurrentTimePlayingLiveData().observe(viewLifecycleOwner) { currentTime ->
             binding.timeTrack.text = currentTime
@@ -102,23 +140,40 @@ class PlayerFragment : Fragment() {
             )
         }
 
+        track?.let { playerViewModel.hasInPlaylist(it) }
+        playerViewModel.getPlaylistStateLiveData().observe(viewLifecycleOwner) { state ->
+            binding.buttonAdd.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireContext(),
+                    state.stateViewButton
+                )
+            )
+        }
+
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.layoutBottomSheet!!).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        playerViewModel.getPlaylistsWithTracksLiveData().observe(viewLifecycleOwner) {
+            render(it)
+        }
+
+        playerViewModel.getSuccessAddTrackInPlaylistLiveData().observe(viewLifecycleOwner) {
+            val message = requireContext()
+                .getString(
+                    if(it) R.string.add_track_in_playlist else R.string.no_add_track_in_playlist,
+                    checkNamePlaylist
+                )
+            Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+        }
+
+        bottomSheetBehavior.addBottomSheetCallback(bottomSheetCallback)
         binding.buttonBack.setOnClickListener(listener)
         binding.buttonPlayPause.setOnClickListener(listener)
         binding.timeTrack.setOnClickListener(listener)
         binding.buttonLike.setOnClickListener(listener)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    private fun showTrackCover(artworkUrl: String) {
-        Glide.with(binding.cover)
-            .load(artworkUrl.replaceAfterLast('/', "512x512bb.jpg"))
-            .placeholder(R.drawable.ic_placeholder)
-            .transform(RoundedCorners(Utils.doToPx(8f, requireContext())))
-            .into(binding.cover)
+        binding.buttonAdd.setOnClickListener(listener)
+        binding.buttonNewPlaylist.setOnClickListener(listener)
     }
 
     override fun onResume() {
@@ -133,6 +188,54 @@ class PlayerFragment : Fragment() {
         playerViewModel.pausePlayer()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+        viewArray = emptyArray()
+        viewArray = null
+    }
+
+    private fun render(state: PlaylistWithTracksState) {
+        when (state) {
+            is PlaylistWithTracksState.Content -> showPlaylistsWithTracks(state.playlists)
+            is PlaylistWithTracksState.Empty -> Utils.visibilityView(viewArray, binding.placeholderEmptyPlaylists)
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun showPlaylistsWithTracks(playlists: List<PlaylistWithTracks>) {
+        Utils.visibilityView(viewArray, binding.playlists)
+        listPlaylistWithTracks.clear()
+        listPlaylistWithTracks.addAll(playlists)
+        playlistWithTracksAdapter.notifyDataSetChanged()
+    }
+
+    private fun showTrackCover(artworkUrl: String) {
+        Glide.with(binding.cover)
+            .load(artworkUrl.replaceAfterLast('/', "512x512bb.jpg"))
+            .placeholder(R.drawable.ic_placeholder)
+            .transform(RoundedCorners(Utils.doToPx(8f, requireContext())))
+            .into(binding.cover)
+    }
+
+    private val bottomSheetCallback: BottomSheetBehavior.BottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
+        override fun onStateChanged(bottomSheet: View, newState: Int) {
+            when (newState) {
+                BottomSheetBehavior.STATE_COLLAPSED -> {
+                    playerViewModel.pausePlayer()
+                    playerViewModel.getPlaylistWithTracks()
+                }
+                BottomSheetBehavior.STATE_HIDDEN -> {
+                }
+                else -> {}
+            }
+        }
+
+        override fun onSlide(bottomSheet: View, slideOffset: Float) {
+        }
+
+    }
+
     private val listener: View.OnClickListener = object : View.OnClickListener {
         @SuppressLint("NotifyDataSetChanged")
         override fun onClick(p0: View?) {
@@ -140,11 +243,9 @@ class PlayerFragment : Fragment() {
                 R.id.button_back -> {
                     findNavController().popBackStack()
                 }
-
                 R.id.button_play_pause -> {
                    playerViewModel.checkPlayPause()
                 }
-
                 R.id.time_track -> {
                     playerViewModel.isReverse()
                 }
@@ -153,7 +254,35 @@ class PlayerFragment : Fragment() {
                         playerViewModel.onFavoriteClicked(it)
                     }
                 }
+                R.id.button_add -> {
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                }
+                R.id.button_new_playlist -> {
+                    findNavController().navigate(
+                        R.id.action_playerFragment_to_createPlaylistFragment,
+                        CreatePlaylistFragment.createArgs(mapPlayerToCreatePlaylist(track!!))
+                        )
+                }
             }
+        }
+    }
+
+    private fun mapPlayerToCreatePlaylist(track: Track): com.msaggik.playlistmaker.create_playlist.domain.models.Track {
+        return with(track) {
+            com.msaggik.playlistmaker.create_playlist.domain.models.Track(
+                trackId = trackId,
+                trackName = trackName,
+                artistName = artistName,
+                trackTimeMillis = trackTimeMillis,
+                artworkUrl100 = artworkUrl100,
+                collectionName = collectionName,
+                releaseDate = releaseDate,
+                primaryGenreName = primaryGenreName,
+                country = country,
+                previewUrl = previewUrl,
+                isFavorite = isFavorite,
+                dateAddTrack = dateAddTrack
+            )
         }
     }
 }

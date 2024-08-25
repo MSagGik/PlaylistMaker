@@ -1,5 +1,6 @@
 package com.msaggik.playlistmaker.player.domain.use_case.impl
 
+import com.msaggik.playlistmaker.player.domain.models.PlaylistWithTracks
 import com.msaggik.playlistmaker.player.domain.models.Track
 import com.msaggik.playlistmaker.player.domain.repository.TrackPlayer
 import com.msaggik.playlistmaker.player.domain.use_case.PlayerInteractor
@@ -48,5 +49,17 @@ class PlayerInteractorImpl(
 
     override fun getFavoriteTracksId(): Flow<List<Long>> {
         return trackPlayer.getFavoriteTracksId()
+    }
+
+    override suspend fun isTrackInPlaylistAndTrack(idTrack: Long): Boolean {
+        return trackPlayer.isTrackInPlaylistAndTrack(idTrack)
+    }
+
+    override suspend fun playlistsWithTracks(): Flow<List<PlaylistWithTracks>> {
+        return trackPlayer.playlistsWithTracks()
+    }
+
+    override suspend fun addTrackInPlaylist(idPlaylist: Long, track: Track): Long {
+        return trackPlayer.addTrackInPlaylist(idPlaylist, track)
     }
 }
