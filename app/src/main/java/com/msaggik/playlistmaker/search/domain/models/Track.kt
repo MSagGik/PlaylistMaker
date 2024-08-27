@@ -2,7 +2,6 @@ package com.msaggik.playlistmaker.search.domain.models
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import java.io.Serializable
 
 @Parcelize
 data class Track (
@@ -18,4 +17,4 @@ data class Track (
     val previewUrl: String,
     var isFavorite: Boolean = false,
     var dateAddTrack: Long = -1L
-) : Parcelable, Serializable
+) : Parcelable

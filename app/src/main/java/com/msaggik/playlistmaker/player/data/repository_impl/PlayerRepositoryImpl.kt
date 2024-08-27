@@ -5,17 +5,17 @@ import com.msaggik.playlistmaker.player.data.mappers.PlayerMapper
 import com.msaggik.playlistmaker.player.data.playlist_db.PlaylistTracksDatabase
 import com.msaggik.playlistmaker.player.domain.models.PlaylistWithTracks
 import com.msaggik.playlistmaker.player.domain.models.Track
-import com.msaggik.playlistmaker.player.domain.repository.TrackPlayer
+import com.msaggik.playlistmaker.player.domain.repository.PlayerRepository
 import com.msaggik.playlistmaker.player.domain.state.PlayerState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 private const val DELTA_TIME_TRACK = 250L
-class TrackPlayerImpl(
+class PlayerRepositoryImpl(
     private val mediaPlayer: MediaPlayer,
     private val converters: PlayerMapper,
     private val dataBase: PlaylistTracksDatabase
-) : TrackPlayer {
+) : PlayerRepository {
 
     override var playerState = PlayerState.PLAYER_STATE_DEFAULT
 

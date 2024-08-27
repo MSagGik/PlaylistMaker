@@ -41,13 +41,4 @@
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/has_in_playlist"
-        android:layout_width="@dimen/dimen_24"
-        android:layout_height="@dimen/dimen_24"
-        android:layout_marginTop="@dimen/dimen_10"
-        android:layout_marginEnd="@dimen/dimen_12"
-        android:layout_gravity="end"
-        app:srcCompat="@drawable/ic_add_false" />
-
 </FrameLayout>

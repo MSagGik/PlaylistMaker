@@ -11,6 +11,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -25,11 +26,13 @@ import com.msaggik.playlistmaker.player.presentation.ui.adapters.PlaylistWithTra
 import com.msaggik.playlistmaker.player.presentation.view_model.PlayerViewModel
 import com.msaggik.playlistmaker.player.presentation.view_model.state.PlaylistWithTracksState
 import com.msaggik.playlistmaker.util.Utils
+import com.msaggik.playlistmaker.util.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlayerFragment : Fragment() {
 
     companion object {
+        private const val DELAY_CLICK_TRACK = 250L
         private const val TRACK_INSTANCE = "track_instance"
         fun createArgs(track: Track): Bundle {
             return bundleOf(
@@ -58,25 +61,27 @@ class PlayerFragment : Fragment() {
         }
     }
 
+    // debounces
+    private lateinit var setFavoriteClickDebounce: (Track) -> Unit
+    private lateinit var createNewPlaylistClickDebounce: (Track) -> Unit
+
+    // toast on/off
+    private var hasToast = false
+
     // adapter playlists and listener select playlist to add track
     private var listPlaylistWithTracks: MutableList<PlaylistWithTracks> = mutableListOf()
 
     private val playlistWithTracksAdapter: PlaylistWithTracksAdapter by lazy {
-        val trackId = track?.trackId?:0
+        val trackId = track?.trackId ?: 0
         PlaylistWithTracksAdapter(trackId = trackId, listPlaylistWithTracks) {
             playlistWithTracksSelection(it)
         }
     }
 
-    private var checkNamePlaylist = ""
-
     private fun playlistWithTracksSelection(playlist: PlaylistWithTracks) {
+        hasToast = true
         track?.let {
-            playerViewModel.addTrackInPlaylist(playlist.playlist.playlistId, it)
-        }
-        checkNamePlaylist = playlist.playlist.playlistName
-        bottomSheetBehavior.apply {
-            state = BottomSheetBehavior.STATE_HIDDEN
+            playerViewModel.addTrackInPlaylist(playlist.playlist, it)
         }
     }
 
@@ -99,10 +104,11 @@ class PlayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // init debounces
+        initDebounces()
+
         // loading instance entity Track
         track?.let { playerViewModel.loadingTrack(it) }
-        // launch check for track in playlists
-        track?.let { playerViewModel.hasInPlaylist(it) }
         // creating an object of the BottomSheetBehavior class
         bottomSheetBehavior = BottomSheetBehavior.from(binding.layoutBottomSheet).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
@@ -147,28 +153,30 @@ class PlayerFragment : Fragment() {
                 )
             )
         }
-        // subscribe to status of track in playlists
-        playerViewModel.getPlaylistStateLiveData().observe(viewLifecycleOwner) { state ->
-            binding.buttonAdd.setImageDrawable(
-                ContextCompat.getDrawable(
-                    requireContext(),
-                    state.stateViewButton
-                )
-            )
-        }
         // subscribe to state instance entity PlaylistWithTracksState
         playerViewModel.getPlaylistsWithTracksLiveData().observe(viewLifecycleOwner) {
             render(it)
         }
         // subscribe to status of successful adding of a track to a playlist
-        playerViewModel.getSuccessAddTrackInPlaylistLiveData().observe(viewLifecycleOwner) {
-            val message = requireContext()
-                .getString(
-                    if(it) R.string.add_track_in_playlist else R.string.no_add_track_in_playlist,
-                    checkNamePlaylist
-                )
-            Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
-        }
+        playerViewModel.getSuccessAddTrackInPlaylistLiveData()
+            .observe(viewLifecycleOwner) { values ->
+                val (idPlaylist, namePlaylist) = values
+                val hasSuccessAddTrack = idPlaylist != -1L
+                if (hasToast) {
+                    val message = requireContext()
+                        .getString(
+                            if (hasSuccessAddTrack) R.string.add_track_in_playlist else R.string.no_add_track_in_playlist,
+                            namePlaylist
+                        )
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                    hasToast = false
+                }
+                if (hasSuccessAddTrack) {
+                    bottomSheetBehavior.apply {
+                        state = BottomSheetBehavior.STATE_HIDDEN
+                    }
+                }
+            }
 
         // connecting an adapter to display playlists
         binding.playlists.layoutManager =
@@ -188,7 +196,7 @@ class PlayerFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        if(playerViewModel.buttonStatePrePlay) {
+        if (playerViewModel.buttonStatePrePlay) {
             playerViewModel.startPlayer()
         }
     }
@@ -200,6 +208,7 @@ class PlayerFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        hasToast = false
         _binding = null
         viewArray = emptyArray()
         viewArray = null
@@ -208,7 +217,10 @@ class PlayerFragment : Fragment() {
     private fun render(state: PlaylistWithTracksState) {
         when (state) {
             is PlaylistWithTracksState.Content -> showPlaylistsWithTracks(state.playlists)
-            is PlaylistWithTracksState.Empty -> Utils.visibilityView(viewArray, binding.placeholderEmptyPlaylists)
+            is PlaylistWithTracksState.Empty -> Utils.visibilityView(
+                viewArray,
+                binding.placeholderEmptyPlaylists
+            )
         }
     }
 
@@ -228,23 +240,26 @@ class PlayerFragment : Fragment() {
             .into(binding.cover)
     }
 
-    private val bottomSheetCallback: BottomSheetBehavior.BottomSheetCallback = object : BottomSheetBehavior.BottomSheetCallback() {
-        override fun onStateChanged(bottomSheet: View, newState: Int) {
-            when (newState) {
-                BottomSheetBehavior.STATE_COLLAPSED -> {
-                    playerViewModel.pausePlayer()
-                    playerViewModel.getPlaylistWithTracks()
+    private val bottomSheetCallback: BottomSheetBehavior.BottomSheetCallback =
+        object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                        playerViewModel.pausePlayer()
+                        playerViewModel.getPlaylistWithTracks()
+                    }
+
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                    }
+
+                    else -> {}
                 }
-                BottomSheetBehavior.STATE_HIDDEN -> {
-                }
-                else -> {}
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                binding.main.alpha = 1 - slideOffset
             }
         }
-
-        override fun onSlide(bottomSheet: View, slideOffset: Float) {
-            binding.main.alpha = 1 - slideOffset
-        }
-    }
 
     private val listener: View.OnClickListener = object : View.OnClickListener {
         @SuppressLint("NotifyDataSetChanged")
@@ -253,28 +268,48 @@ class PlayerFragment : Fragment() {
                 R.id.button_back -> {
                     findNavController().popBackStack()
                 }
+
                 R.id.button_play_pause -> {
-                   playerViewModel.checkPlayPause()
+                    playerViewModel.checkPlayPause()
                 }
+
                 R.id.time_track -> {
                     playerViewModel.isReverse()
                 }
+
                 R.id.button_like -> {
-                    track?.let {
-                        playerViewModel.onFavoriteClicked(it)
-                    }
+                    track?.let { setFavoriteClickDebounce(it) }
                 }
+
                 R.id.button_add -> {
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 }
+
                 R.id.button_new_playlist -> {
-                    findNavController().navigate(
-                        R.id.action_playerFragment_to_createPlaylistFragment,
-                        CreatePlaylistFragment.createArgs(mapPlayerToCreatePlaylist(track!!))
-                        )
+                    track?.let { createNewPlaylistClickDebounce(it) }
                 }
             }
         }
+    }
+
+    private fun initDebounces() {
+        setFavoriteClickDebounce = onTrackClickDebounceAll { playerViewModel.onFavoriteClicked(it) }
+        createNewPlaylistClickDebounce = onTrackClickDebounceAll {
+            findNavController().navigate(
+                R.id.action_playerFragment_to_createPlaylistFragment,
+                CreatePlaylistFragment.createArgs(mapPlayerToCreatePlaylist(track!!))
+            )
+        }
+    }
+
+    private fun onTrackClickDebounceAll(action: (Track) -> Unit): (Track) -> Unit {
+        return debounce<Track>(
+            DELAY_CLICK_TRACK,
+            viewLifecycleOwner.lifecycleScope,
+            false,
+            true,
+            action
+        )
     }
 
     private fun mapPlayerToCreatePlaylist(track: Track): com.msaggik.playlistmaker.create_playlist.domain.models.Track {

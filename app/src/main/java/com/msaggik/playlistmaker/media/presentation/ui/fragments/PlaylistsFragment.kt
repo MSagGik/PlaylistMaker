@@ -35,10 +35,6 @@ class PlaylistsFragment : Fragment() {
     }
 
     private fun playlistWithTracksSelection(playlist: PlaylistWithTracks) {
-//        findNavController().navigate(
-//            R.id.action_,
-//            ...
-//        )
     }
 
     private var _binding: FragmentPlaylistsBinding? = null

@@ -1,5 +1,6 @@
 package com.msaggik.playlistmaker.create_playlist.domain.use_case.impl
 
+import android.net.Uri
 import com.msaggik.playlistmaker.create_playlist.domain.models.Playlist
 import com.msaggik.playlistmaker.create_playlist.domain.models.Track
 import com.msaggik.playlistmaker.create_playlist.domain.repository.PlaylistRepository
@@ -23,5 +24,9 @@ class PlaylistInteractorImpl(
         track: Track
     ): Long {
        return repository.insertPlaylistAndAddTrackInPlaylist(playlist, track)
+    }
+
+    override suspend fun saveImageToPrivateStorage(uri: Uri): Uri {
+        return repository.saveImageToPrivateStorage(uri)
     }
 }

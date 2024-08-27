@@ -4,13 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.msaggik.playlistmaker.player.domain.models.Playlist
 import com.msaggik.playlistmaker.player.domain.models.PlaylistWithTracks
 import com.msaggik.playlistmaker.player.domain.models.Track
 import com.msaggik.playlistmaker.player.domain.use_case.PlayerInteractor
 import com.msaggik.playlistmaker.player.domain.state.PlayerState
 import com.msaggik.playlistmaker.player.presentation.view_model.state.FavoriteState
 import com.msaggik.playlistmaker.player.presentation.view_model.state.PlayState
-import com.msaggik.playlistmaker.player.presentation.view_model.state.PlaylistState
 import com.msaggik.playlistmaker.player.presentation.view_model.state.PlaylistWithTracksState
 import com.msaggik.playlistmaker.util.Utils
 import kotlinx.coroutines.Dispatchers
@@ -111,7 +111,11 @@ class PlayerViewModel(
                 pausePlayer()
                 false
             }
-            PlayerState.PLAYER_STATE_PREPARED, PlayerState.PLAYER_STATE_PAUSED -> {
+            PlayerState.PLAYER_STATE_PREPARED -> {
+                startPlayer()
+                false
+            }
+            PlayerState.PLAYER_STATE_PAUSED -> {
                 startPlayer()
                 true
             }
@@ -173,32 +177,15 @@ class PlayerViewModel(
 
     /**
      * Add track in playlist ViewModel
-     * @param playlistStateLiveData - LiveData status of track in playlists
      * @param playlistWithTracksLiveData - LiveData state instance entity PlaylistWithTracksState
      * @param successAddTrackInPlaylistLiveData - LiveData status of successful adding of a track to a playlist
      */
 
-    // Playlist state
-    private var playlistStateLiveData = MutableLiveData<PlaylistState>()
-    fun getPlaylistStateLiveData(): LiveData<PlaylistState> = playlistStateLiveData
-
     private val playlistWithTracksLiveData = MutableLiveData<PlaylistWithTracksState>()
     fun getPlaylistsWithTracksLiveData(): LiveData<PlaylistWithTracksState> = playlistWithTracksLiveData
 
-    private val successAddTrackInPlaylistLiveData = MutableLiveData<Boolean>()
-    fun getSuccessAddTrackInPlaylistLiveData(): LiveData<Boolean> = successAddTrackInPlaylistLiveData
-
-    // State modification
-    fun hasInPlaylist(track: Track) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val hasTrackInPlaylist = playerInteractor.isTrackInPlaylistAndTrack(track.trackId.toLong())
-            if (hasTrackInPlaylist) {
-                playlistStateLiveData.postValue(PlaylistState.InPlaylist)
-            } else {
-                playlistStateLiveData.postValue(PlaylistState.NoInPlaylist)
-            }
-        }
-    }
+    private val successAddTrackInPlaylistLiveData = MutableLiveData<Pair<Long, String>>()
+    fun getSuccessAddTrackInPlaylistLiveData(): LiveData<Pair<Long, String>> = successAddTrackInPlaylistLiveData
 
     fun getPlaylistWithTracks() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -222,12 +209,10 @@ class PlayerViewModel(
         playlistWithTracksLiveData.postValue(state)
     }
 
-    fun addTrackInPlaylist(idPlaylist: Long, track: Track) {
+    fun addTrackInPlaylist(playlist: Playlist, track: Track) {
         viewModelScope.launch(Dispatchers.IO) {
-            val successAddTrackInPlaylist = playerInteractor
-                .addTrackInPlaylist(idPlaylist, track)
-            successAddTrackInPlaylistLiveData.postValue(successAddTrackInPlaylist != -1L)
-            hasInPlaylist(track)
+            val idPlaylist = playerInteractor.addTrackInPlaylist(playlist.playlistId, track)
+            successAddTrackInPlaylistLiveData.postValue(Pair(idPlaylist, playlist.playlistName))
         }
     }
 }

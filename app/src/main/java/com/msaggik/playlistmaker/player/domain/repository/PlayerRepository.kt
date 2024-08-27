@@ -5,7 +5,7 @@ import com.msaggik.playlistmaker.player.domain.models.Track
 import com.msaggik.playlistmaker.player.domain.state.PlayerState
 import kotlinx.coroutines.flow.Flow
 
-interface TrackPlayer {
+interface PlayerRepository {
     var playerState: PlayerState
     fun onPlay()
     fun onPause()
