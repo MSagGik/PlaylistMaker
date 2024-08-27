@@ -134,30 +134,20 @@ class PlayerViewModel(
     private var likeStateLiveData = MutableLiveData<FavoriteState>()
     fun getLikeStateLiveData(): LiveData<FavoriteState> = likeStateLiveData
 
-    // State modification
-    fun onFavorite(track: Track) {
-        if (track.isFavorite) {
-            likeStateLiveData.postValue(FavoriteState.Favorite)
-        } else {
-            likeStateLiveData.postValue(FavoriteState.NotFavorite)
-        }
-    }
-
     fun updateFavoriteStatusTrack(track: Track) {
         viewModelScope.launch(Dispatchers.IO) {
             playerInteractor
                 .getFavoriteTracksId()
                 .collect { listFavoriteIdTracks ->
-                    updateFavoriteStatus(
-                        listFavoriteIdTracks,
-                        track
-                    )
+                    val isFavorite = (listFavoriteIdTracks.isNotEmpty()
+                            && listFavoriteIdTracks.contains(track.trackId.toLong()))
+                    if (isFavorite) {
+                        likeStateLiveData.postValue(FavoriteState.Favorite)
+                    } else {
+                        likeStateLiveData.postValue(FavoriteState.NotFavorite)
+                    }
                 }
         }
-    }
-
-    private fun updateFavoriteStatus(listId: List<Long>, track: Track) {
-        track.isFavorite = (listId.isNotEmpty() && listId.contains(track.trackId.toLong()))
     }
 
     fun onFavoriteClicked(track: Track) {

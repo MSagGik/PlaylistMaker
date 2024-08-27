@@ -91,7 +91,6 @@ class PlayerFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        track?.let { playerViewModel.updateFavoriteStatusTrack(it) }
         _binding = FragmentPlayerBinding.inflate(inflater, container, false)
         viewArray = arrayOf(
             binding.placeholderEmptyPlaylists,
@@ -104,7 +103,8 @@ class PlayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // init debounces
+        track?.let { playerViewModel.updateFavoriteStatusTrack(it) }
+
         initDebounces()
 
         // loading instance entity Track

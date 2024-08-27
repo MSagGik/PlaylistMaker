@@ -128,7 +128,7 @@ interface PlaylistTracksDao {
 
     // FAVORITE TRACKS
     // Query to get a list of track IDs of all posts with `favoriteTrack` equal to true
-    @Query("SELECT ${DatabaseConfig.TRACK_ID} FROM ${DatabaseConfig.TRACK_TABLE}")
+    @Query("SELECT ${DatabaseConfig.TRACK_ID} FROM ${DatabaseConfig.TRACK_TABLE} WHERE ${DatabaseConfig.FAVORITE_TRACK} = 1")
     suspend fun getFavoriteTracksIds(): List<Long>
 
     // Query to get all posts with `favoriteTrack` equal to true
