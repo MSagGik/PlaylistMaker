@@ -33,12 +33,18 @@ class CreatePlaylistFragment : Fragment() {
 
     companion object {
         private const val TRACK_INSTANCE = "track_instance"
-        private var isInputTrack = false
-        fun createArgs(track: Track): Bundle {
-            isInputTrack = true
-            return bundleOf(
-                TRACK_INSTANCE to track
-            )
+        private const val TRACK_IS_INPUT = "track_is_input"
+        fun createArgs(isInputTrack: Boolean, track: Track? = null): Bundle {
+            return if(isInputTrack) {
+                bundleOf(
+                    TRACK_IS_INPUT to isInputTrack,
+                    TRACK_INSTANCE to track
+                )
+            } else {
+                return bundleOf(
+                    TRACK_IS_INPUT to isInputTrack
+                )
+            }
         }
     }
 
@@ -80,7 +86,7 @@ class CreatePlaylistFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        createPlaylistViewModel.isInputTrack = isInputTrack
+        createPlaylistViewModel.isInputTrack = requireArguments().getBoolean(TRACK_IS_INPUT)
 
         pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {

@@ -144,7 +144,6 @@ class PlayerFragment : Fragment() {
             binding.timeTrack.text = currentTime
         }
         // subscribe to status of track in favorites
-        track?.let { playerViewModel.onFavorite(it) }
         playerViewModel.getLikeStateLiveData().observe(viewLifecycleOwner) { state ->
             binding.buttonLike.setImageDrawable(
                 ContextCompat.getDrawable(
@@ -297,7 +296,7 @@ class PlayerFragment : Fragment() {
         createNewPlaylistClickDebounce = onTrackClickDebounceAll {
             findNavController().navigate(
                 R.id.action_playerFragment_to_createPlaylistFragment,
-                CreatePlaylistFragment.createArgs(mapPlayerToCreatePlaylist(track!!))
+                CreatePlaylistFragment.createArgs(true, mapPlayerToCreatePlaylist(track!!))
             )
         }
     }

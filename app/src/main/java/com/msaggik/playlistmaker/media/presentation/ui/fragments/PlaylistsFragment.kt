@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.msaggik.playlistmaker.R
+import com.msaggik.playlistmaker.create_playlist.presentation.ui.CreatePlaylistFragment
 import com.msaggik.playlistmaker.databinding.FragmentPlaylistsBinding
 import com.msaggik.playlistmaker.media.domain.models.PlaylistWithTracks
 import com.msaggik.playlistmaker.media.presentation.ui.adapters.PlaylistWithTracksAdapter
@@ -98,7 +99,8 @@ class PlaylistsFragment : Fragment() {
         override fun onClick(p0: View?) {
             when (p0?.id) {
                 R.id.button_new_playlist -> {
-                    findNavController().navigate(R.id.action_mediaFragment_to_createPlaylistFragment)
+                    findNavController().navigate(R.id.action_mediaFragment_to_createPlaylistFragment,
+                        CreatePlaylistFragment.createArgs(false))
                 }
             }
         }
