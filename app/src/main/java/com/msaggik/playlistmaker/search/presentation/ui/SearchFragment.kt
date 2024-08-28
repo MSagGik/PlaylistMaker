@@ -105,6 +105,7 @@ class SearchFragment : Fragment() {
         searchViewModel.readTrackListHistory()
 
         searchViewModel.getTrackListHistoryLiveData().observe(viewLifecycleOwner) { list ->
+            visibleLayoutSearchHistory(list.isNotEmpty())
             trackListHistory.clear()
             trackListHistory.addAll(list)
             trackListHistoryAdapter.notifyDataSetChanged()
@@ -193,7 +194,7 @@ class SearchFragment : Fragment() {
                     searchViewModel.clearTrackListHistory()
                     trackListHistory.clear()
                     trackListHistoryAdapter.notifyDataSetChanged()
-                    visibleLayoutSearchHistory(true)
+                    visibleLayoutSearchHistory(false)
                 }
             }
         }

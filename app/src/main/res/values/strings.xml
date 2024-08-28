@@ -44,7 +44,7 @@
     <string name="something_went_wrong">Что-то пошло не так</string>
     <string name="media_library">Медиатека</string>
     <string name="empty_media_library">Ваша медиатека пуста</string>
-    <string name="empty_playlists">Вы не создалини одного плейлиста</string>
+    <string name="empty_playlists">Вы не создали ни одного плейлиста</string>
     <string name="new_playlist">Новый плейлист</string>
     <string name="favorite_tracks">Избранные треки</string>
     <string name="playlists">Плейлисты</string>

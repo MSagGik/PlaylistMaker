@@ -148,7 +148,7 @@ class CreatePlaylistFragment : Fragment() {
     private val onBackPressedCallback: OnBackPressedCallback =
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (uriImageToPrivateStorage != null && (binding.nameTrackInput.text.isNullOrEmpty() || binding.descriptionTrackInput.text.isNullOrEmpty())) {
+                if (uriImageToPrivateStorage != null || !binding.nameTrackInput.text.isNullOrEmpty() || !binding.descriptionTrackInput.text.isNullOrEmpty()) {
                     backAddPlaylistDialog.show()
                 } else {
                     findNavController().popBackStack()
@@ -170,7 +170,7 @@ class CreatePlaylistFragment : Fragment() {
         override fun onClick(p0: View?) {
             when (p0?.id) {
                 R.id.button_back -> {
-                    if (uriImageToPrivateStorage != null && (binding.nameTrackInput.text.isNullOrEmpty() || binding.descriptionTrackInput.text.isNullOrEmpty())) {
+                    if (uriImageToPrivateStorage != null || !binding.nameTrackInput.text.isNullOrEmpty() || !binding.descriptionTrackInput.text.isNullOrEmpty()) {
                         backAddPlaylistDialog.show()
                     } else {
                         findNavController().popBackStack()
