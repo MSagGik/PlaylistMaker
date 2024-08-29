@@ -4,13 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.msaggik.playlistmaker.media.data.converters.TrackDbConverter
-import com.msaggik.playlistmaker.media.domain.use_case.MediaInteractor
+import com.msaggik.playlistmaker.player.domain.models.Playlist
+import com.msaggik.playlistmaker.player.domain.models.PlaylistWithTracks
+import com.msaggik.playlistmaker.player.domain.models.Track
 import com.msaggik.playlistmaker.player.domain.use_case.PlayerInteractor
 import com.msaggik.playlistmaker.player.domain.state.PlayerState
 import com.msaggik.playlistmaker.player.presentation.view_model.state.FavoriteState
 import com.msaggik.playlistmaker.player.presentation.view_model.state.PlayState
-import com.msaggik.playlistmaker.search.domain.models.Track
+import com.msaggik.playlistmaker.player.presentation.view_model.state.PlaylistWithTracksState
 import com.msaggik.playlistmaker.util.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -19,16 +20,23 @@ import kotlinx.coroutines.launch
 
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
-    private val mediaInteractor: MediaInteractor,
-    private val converter: TrackDbConverter
 ) : ViewModel() {
+
     companion object {
         private const val PLAYER_DELAY_UPDATE_TRACK_LIST = 250L
     }
 
+    /**
+     * Player ViewModel
+     * @param playerTrackLiveData - LiveData state instance entity Track
+     * @param buttonStateLiveData - LiveData state button Play/Pause
+     * @param currentTimePlayingLiveData - LiveData state track time progress
+     * @param isReverse - state reverse track time countdown
+     */
     private var timerJob: Job? = null
     var buttonStatePrePlay = false
 
+    // Player state
     private var playerTrackLiveData = MutableLiveData<Track>()
     fun getTrackLiveData(): LiveData<Track> = playerTrackLiveData
 
@@ -41,76 +49,18 @@ class PlayerViewModel(
         return currentTimePlayingLiveData
     }
 
-    private var likeStateLiveData = MutableLiveData<FavoriteState>()
-    fun getLikeStateLiveData(): LiveData<FavoriteState> = likeStateLiveData
-
-    fun onFavorite(track: Track) {
-        if (track.isFavorite) {
-            likeStateLiveData.postValue(FavoriteState.Favorite)
-        } else {
-            likeStateLiveData.postValue(FavoriteState.NotFavorite)
+    // Manage player and state modification
+    fun loadingTrack(track: Track) {
+        if(playerTrackLiveData.value == null && !track.previewUrl.isNullOrEmpty()) {
+            playerInteractor.loading(track.previewUrl)
+            playerTrackLiveData.postValue(track)
         }
-    }
-
-    fun updateFavoriteStatusTrack(track: Track) {
-        viewModelScope.launch(Dispatchers.IO) {
-            mediaInteractor
-                .getFavoriteTracksId()
-                .collect { listFavoriteIdTracks ->
-                    updateFavoriteStatus(
-                        listFavoriteIdTracks,
-                        track
-                    )
-                }
-        }
-    }
-
-    fun updateFavoriteStatus(listId: List<Long>, track: Track) {
-        track.isFavorite = (listId.isNotEmpty() && listId.contains(track.trackId.toLong()))
-    }
-
-    fun onFavoriteClicked(track: Track) {
-        viewModelScope.launch(Dispatchers.IO) {
-            if (track.isFavorite) {
-                val isDeleted = mediaInteractor.deleteFavoriteTrack(converter.mapSearchToMedia(track))
-                if (isDeleted != -1) {
-                    track.isFavorite = false
-                    likeStateLiveData.postValue(FavoriteState.NotFavorite)
-                }
-            } else {
-                val idFavoriteTrack = mediaInteractor
-                    .addFavoriteTrack(
-                        converter.mapSearchToMedia(track)
-                            .apply { dateAddTrack = System.currentTimeMillis() }
-                    )
-                if (idFavoriteTrack != -1L) {
-                    track.isFavorite = true
-                    likeStateLiveData.postValue(FavoriteState.Favorite)
-                }
-            }
-        }
-    }
-
-    fun isReverse() {
-        isReverse = !isReverse
-        currentTimePlayingLiveData.postValue(
-            Utils.dateFormatMillisToMinSecShort(
-                playerInteractor.getPlayerCurrentPosition(isReverse)
-            )
-        )
     }
 
     override fun onCleared() {
         super.onCleared()
         playerInteractor.release()
         timerJob?.cancel()
-    }
-
-    fun loadingTrack(track: Track) {
-        if(playerTrackLiveData.value == null && !track.previewUrl.isNullOrEmpty()) {
-            playerInteractor.loading(track.previewUrl)
-            playerTrackLiveData.postValue(track)
-        }
     }
 
     fun startPlayer() {
@@ -130,7 +80,7 @@ class PlayerViewModel(
         }
     }
 
-    fun updateTimePlayingLiveData(isReverse: Boolean) {
+    private fun updateTimePlayingLiveData(isReverse: Boolean) {
         currentTimePlayingLiveData.postValue(
             Utils.dateFormatMillisToMinSecShort(
                 playerInteractor.getPlayerCurrentPosition(isReverse)
@@ -146,19 +96,113 @@ class PlayerViewModel(
         }
     }
 
+    fun isReverse() {
+        isReverse = !isReverse
+        currentTimePlayingLiveData.postValue(
+            Utils.dateFormatMillisToMinSecShort(
+                playerInteractor.getPlayerCurrentPosition(isReverse)
+            )
+        )
+    }
+
     fun checkPlayPause() {
         buttonStatePrePlay = when (playerInteractor.getPlayerState()) {
             PlayerState.PLAYER_STATE_PLAYING -> {
                 pausePlayer()
-               false
+                false
             }
-            PlayerState.PLAYER_STATE_PREPARED, PlayerState.PLAYER_STATE_PAUSED -> {
+            PlayerState.PLAYER_STATE_PREPARED -> {
+                startPlayer()
+                false
+            }
+            PlayerState.PLAYER_STATE_PAUSED -> {
                 startPlayer()
                 true
             }
             else -> {
                 false
             }
+        }
+    }
+
+    /**
+     * Favorite ViewModel
+     * @param likeStateLiveData - LiveData status of track in favorites
+     */
+
+    // Favorite state
+    private var likeStateLiveData = MutableLiveData<FavoriteState>()
+    fun getLikeStateLiveData(): LiveData<FavoriteState> = likeStateLiveData
+
+    fun updateFavoriteStatusTrack(track: Track) {
+        viewModelScope.launch(Dispatchers.IO) {
+            playerInteractor
+                .getFavoriteTracksId()
+                .collect { listFavoriteIdTracks ->
+                    val isFavorite = (listFavoriteIdTracks.isNotEmpty()
+                            && listFavoriteIdTracks.contains(track.trackId.toLong()))
+                    if (isFavorite) {
+                        likeStateLiveData.postValue(FavoriteState.Favorite)
+                    } else {
+                        likeStateLiveData.postValue(FavoriteState.NotFavorite)
+                    }
+                }
+        }
+    }
+
+    fun onFavoriteClicked(track: Track) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val responseDatabase = playerInteractor.setFavoriteTrack(
+                track.apply {
+                    isFavorite = !track.isFavorite
+                    dateAddTrack = System.currentTimeMillis()
+                }
+            )
+            if (responseDatabase != -1L) {
+                val state = if(track.isFavorite) FavoriteState.Favorite else FavoriteState.NotFavorite
+                likeStateLiveData.postValue(state)
+            }
+        }
+    }
+
+    /**
+     * Add track in playlist ViewModel
+     * @param playlistWithTracksLiveData - LiveData state instance entity PlaylistWithTracksState
+     * @param successAddTrackInPlaylistLiveData - LiveData status of successful adding of a track to a playlist
+     */
+
+    private val playlistWithTracksLiveData = MutableLiveData<PlaylistWithTracksState>()
+    fun getPlaylistsWithTracksLiveData(): LiveData<PlaylistWithTracksState> = playlistWithTracksLiveData
+
+    private val successAddTrackInPlaylistLiveData = MutableLiveData<Pair<Long, String>>()
+    fun getSuccessAddTrackInPlaylistLiveData(): LiveData<Pair<Long, String>> = successAddTrackInPlaylistLiveData
+
+    fun getPlaylistWithTracks() {
+        viewModelScope.launch(Dispatchers.IO) {
+            playerInteractor
+                .playlistsWithTracks()
+                .collect { playlists ->
+                    processResult(playlists)
+                }
+        }
+    }
+
+    private fun processResult(playlist: List<PlaylistWithTracks>) {
+        if (playlist.isEmpty()) {
+            renderState(PlaylistWithTracksState.Empty)
+        } else {
+            renderState(PlaylistWithTracksState.Content(playlist))
+        }
+    }
+
+    private fun renderState(state: PlaylistWithTracksState) {
+        playlistWithTracksLiveData.postValue(state)
+    }
+
+    fun addTrackInPlaylist(playlist: Playlist, track: Track) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val idPlaylist = playerInteractor.addTrackInPlaylist(playlist.playlistId, track)
+            successAddTrackInPlaylistLiveData.postValue(Pair(idPlaylist, playlist.playlistName))
         }
     }
 }

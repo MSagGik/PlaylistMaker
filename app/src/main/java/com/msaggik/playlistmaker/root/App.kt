@@ -1,6 +1,7 @@
 package com.msaggik.playlistmaker.root
 
 import android.app.Application
+import com.msaggik.playlistmaker.create_playlist.di.playlistModule
 import com.msaggik.playlistmaker.media.di.mediaModule
 import com.msaggik.playlistmaker.player.di.playerModule
 import com.msaggik.playlistmaker.search.di.searchModule
@@ -27,6 +28,7 @@ class App : Application(), KoinComponent {
                 settingModule,
                 sharingModule,
                 mediaModule,
+                playlistModule
             )
         }
 

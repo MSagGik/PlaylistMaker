@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="header_one">Question:</string>
     <string name="question">Is this movie rated more than 9?</string>
     <string name="no">No</string>
@@ -12,4 +12,53 @@
     <string name="header_share">Share app</string>
     <string name="header_support">Write to support</string>
     <string name="header_agreement">Terms of use</string>
+    <string name="email_title">Message to the developers of the Playlist Maker app</string>
+    <string name="email_text">Thanks to the developers for a cool app!</string>
+    <string name="input_clear">Clear</string>
+    <string name="name_track">Track name</string>
+    <string name="name_group">Group</string>
+    <string name="length_track">track length</string>
+    <string name="track_selection">Select track</string>
+    <string name="nothing_found">Nothing found</string>
+    <string name="communication_problems">Connection problems\\n\\n Download failed\\n Check your internet connection</string>
+    <string name="update">Refresh</string>
+    <string name="header_search">You searched</string>
+    <string name="clear_search_history">Clear history</string>
+    <string name="header_length_track">Duration</string>
+    <string name="header_album">Album</string>
+    <string name="name_album">Album Title</string>
+    <string name="header_year_album">Year</string>
+    <string name="header_genre">Genre</string>
+    <string name="header_country">Country</string>
+    <string name="no_connection">Check your internet connection</string>
+    <string name="server_error">Server error</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="media_library">Media library</string>
+    <string name="empty_media_library">Your media library is empty</string>
+    <string name="empty_playlists">You haven\'t created any playlists yet</string>
+    <string name="new_playlist">New playlist</string>
+    <string name="favorite_tracks">Featured Tracks</string>
+    <string name="playlists">Playlists</string>
+    <string name="name">Name*</string>
+    <string name="description">Description</string>
+    <string name="create">Create</string>
+    <string name="has_duplicate_playlist">A playlist with this name already exists</string>
+    <string name="finish_creating_the_playlist">Finish creating the playlist?</string>
+    <string name="all_unsaved_data_will_be_lost">All unsaved data will be lost</string>
+    <string name="cancel">Cancel</string>
+    <string name="finish">Finish</string>
+    <string name="message_success_add_playlist">Playlist %1$s created</string>
+    <string name="name_playlist">Playlist name</string>
+    <string name="number_tracks_default">Number of tracks</string>
+    <plurals name="number_tracks" tools:ignore="UnusedQuantity">
+        <item quantity="zero">%1$d track</item>
+        <item quantity="one">%1$d track</item>
+        <item quantity="two">%1$d tracks</item>
+        <item quantity="few">%1$d tracks</item>
+        <item quantity="many">%1$d tracks</item>
+        <item quantity="other">%1$d tracks</item>
+    </plurals>
+    <string name="add_in_playlist">Add to playlist</string>
+    <string name="add_track_in_playlist">Added to playlist %1$s</string>
+    <string name="no_add_track_in_playlist">The track has already been added to the playlist %1$s</string>
 </resources>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="header_one">问题：</string>
     <string name="question">这部电影评分超过9分吗？</string>
     <string name="no">不</string>
@@ -12,4 +12,53 @@
     <string name="header_share">分享应用程序</string>
     <string name="header_support">写信支持</string>
     <string name="header_agreement">使用条款</string>
+    <string name="email_title">给 Playlist Maker 应用程序的开发人员和开发人员的消息</string>
+    <string name="email_text">感谢开发者和开发者提供的这么酷的应用程序！</string>
+    <string name="input_clear">清除</string>
+    <string name="name_track">曲目名称</string>
+    <string name="name_group">团体</string>
+    <string name="length_track">轨道长度</string>
+    <string name="track_selection">曲目选择</string>
+    <string name="nothing_found">没有找到任何内容</string>
+    <string name="communication_problems">沟通问题\\n\\n上传失败\\n查看互联网连接</string>
+    <string name="update">更新</string>
+    <string name="header_search">你正在寻找</string>
+    <string name="clear_search_history">清除历史记录</string>
+    <string name="header_length_track">期间</string>
+    <string name="header_album">专辑</string>
+    <string name="name_album">专辑名称</string>
+    <string name="header_year_album">年</string>
+    <string name="header_genre">类型</string>
+    <string name="header_country">国家</string>
+    <string name="no_connection">检查您的互联网连接</string>
+    <string name="server_error">服务器错误</string>
+    <string name="something_went_wrong">出了点问题</string>
+    <string name="media_library">媒体库</string>
+    <string name="empty_media_library">您的媒体库为空</string>
+    <string name="empty_playlists">您还没有创建任何播放列表</string>
+    <string name="new_playlist">新播放列表</string>
+    <string name="favorite_tracks">精选曲目</string>
+    <string name="playlists">播放列表</string>
+    <string name="name">姓名*</string>
+    <string name="description">描述</string>
+    <string name="create">创造</string>
+    <string name="has_duplicate_playlist">同名的播放列表已存在</string>
+    <string name="finish_creating_the_playlist">完成创建播放列表了吗？</string>
+    <string name="all_unsaved_data_will_be_lost">所有未保存的数据将丢失</string>
+    <string name="cancel">取消</string>
+    <string name="finish">完全的</string>
+    <string name="message_success_add_playlist">播放列表 %1$s 已创建</string>
+    <string name="name_playlist">播放列表名称</string>
+    <string name="number_tracks_default">曲目数量</string>
+    <plurals name="number_tracks" tools:ignore="UnusedQuantity">
+        <item quantity="zero">%1$d 首曲目</item>
+        <item quantity="one">%1$d 首曲目</item>
+        <item quantity="two">%1$d 首曲目</item>
+        <item quantity="few">%1$d 首曲目</item>
+        <item quantity="many">%1$d 首曲目</item>
+        <item quantity="other">%1$d 首曲目</item>
+    </plurals>
+    <string name="add_in_playlist">添加到播放列表</string>
+    <string name="add_track_in_playlist">已添加到播放列表 %1$s</string>
+    <string name="no_add_track_in_playlist">该曲目已添加到播放列表 %1$s</string>
 </resources>

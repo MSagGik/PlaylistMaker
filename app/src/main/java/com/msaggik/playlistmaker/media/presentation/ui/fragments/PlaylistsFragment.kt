@@ -1,26 +1,108 @@
 package com.msaggik.playlistmaker.media.presentation.ui.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.msaggik.playlistmaker.R
+import com.msaggik.playlistmaker.create_playlist.presentation.ui.CreatePlaylistFragment
+import com.msaggik.playlistmaker.databinding.FragmentPlaylistsBinding
+import com.msaggik.playlistmaker.media.domain.models.PlaylistWithTracks
+import com.msaggik.playlistmaker.media.presentation.ui.adapters.PlaylistWithTracksAdapter
+import com.msaggik.playlistmaker.media.presentation.view_model.PlaylistsViewModel
+import com.msaggik.playlistmaker.media.presentation.view_model.state.PlaylistWithTracksState
+import com.msaggik.playlistmaker.util.Utils
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
+private val NUMBER_COLUMN_RECYCLERVIEW = 2
 class PlaylistsFragment : Fragment() {
     companion object {
         fun newInstance() = PlaylistsFragment()
     }
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
+    private val playlistsViewModel: PlaylistsViewModel by viewModel()
+
+    private var listPlaylistWithTracks: MutableList<PlaylistWithTracks> = mutableListOf()
+
+    private val playlistWithTracksAdapter: PlaylistWithTracksAdapter by lazy {
+        PlaylistWithTracksAdapter(listPlaylistWithTracks) {
+            playlistWithTracksSelection(it)
+        }
     }
+
+    private fun playlistWithTracksSelection(playlist: PlaylistWithTracks) {
+    }
+
+    private var _binding: FragmentPlaylistsBinding? = null
+    private val binding: FragmentPlaylistsBinding get() = _binding!!
+    private var viewArray: Array<View>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_playlists, container, false)
+        _binding = FragmentPlaylistsBinding.inflate(inflater, container, false)
+        viewArray = arrayOf(
+            binding.playlists,
+            binding.placeholderEmptyPlaylists
+        )
+        return binding.root
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        playlistsViewModel.getPlaylistWithTracks()
+
+        binding.playlists.layoutManager =
+            GridLayoutManager(activity, NUMBER_COLUMN_RECYCLERVIEW, LinearLayoutManager.VERTICAL, false)
+        binding.playlists.adapter = playlistWithTracksAdapter
+        playlistWithTracksAdapter.notifyDataSetChanged()
+
+        binding.buttonNewPlaylist.setOnClickListener(listener)
+
+        playlistsViewModel.getPlaylistsWithTracksLiveData().observe(viewLifecycleOwner) {
+            render(it)
+        }
+    }
+
+    private fun render(state: PlaylistWithTracksState) {
+        when (state) {
+            is PlaylistWithTracksState.Content -> showPlaylistsWithTracks(state.playlists)
+            is PlaylistWithTracksState.Empty -> Utils.visibilityView(viewArray, binding.placeholderEmptyPlaylists)
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun showPlaylistsWithTracks(playlists: List<PlaylistWithTracks>) {
+        Utils.visibilityView(viewArray, binding.playlists)
+        listPlaylistWithTracks.clear()
+        listPlaylistWithTracks.addAll(playlists)
+        playlistWithTracksAdapter.notifyDataSetChanged()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+        viewArray = emptyArray()
+        viewArray = null
+    }
+
+    private val listener: View.OnClickListener = object : View.OnClickListener {
+        @SuppressLint("NotifyDataSetChanged")
+        override fun onClick(p0: View?) {
+            when (p0?.id) {
+                R.id.button_new_playlist -> {
+                    findNavController().navigate(R.id.action_mediaFragment_to_createPlaylistFragment,
+                        CreatePlaylistFragment.createArgs(false))
+                }
+            }
+        }
+    }
 }

@@ -8,8 +8,10 @@
     <color name="grey_300">#FF454751</color>
     <color name="grey_500">#FFAEAFB4</color>
     <color name="grey_700">#FFE6E8EB</color>
-    <color name="blue_100">#FF3772E7</color>
     <color name="blue_500">#FF9FBBF3</color>
+    <color name="blue_100">#FF3772E7</color>
+    <color name="blue_120">#FF3063CA</color>
+    <color name="blue_250">#552B54A6</color>
     <color name="violet_100">#FF603BE9</color>
     <color name="violet_170">#FF6200EE</color>
     <color name="violet_500">#FF2F1397</color>

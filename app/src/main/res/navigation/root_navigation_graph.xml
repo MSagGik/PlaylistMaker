@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/root_navigate"
-    app:startDestination="@id/searchFragment">
+    app:startDestination="@id/mediaFragment">
 
     <fragment
         android:id="@+id/searchFragment"
@@ -22,7 +22,11 @@
         android:id="@+id/playerFragment"
         android:name="com.msaggik.playlistmaker.player.presentation.ui.PlayerFragment"
         android:label="PlayerFragment"
-        tools:layout="@layout/fragment_player"/>
+        tools:layout="@layout/fragment_player">
+        <action
+            android:id="@+id/action_playerFragment_to_createPlaylistFragment"
+            app:destination="@id/createPlaylistFragment" />
+    </fragment>
     <fragment
         android:id="@+id/settingFragment"
         android:name="com.msaggik.playlistmaker.setting.presentation.ui.SettingFragment"
@@ -36,5 +40,13 @@
         <action
             android:id="@+id/action_mediaFragment_to_playerFragment"
             app:destination="@id/playerFragment" />
+        <action
+            android:id="@+id/action_mediaFragment_to_createPlaylistFragment"
+            app:destination="@id/createPlaylistFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/createPlaylistFragment"
+        android:name="com.msaggik.playlistmaker.create_playlist.presentation.ui.CreatePlaylistFragment"
+        android:label="fragment_create_playlist"
+        tools:layout="@layout/fragment_create_playlist" />
 </navigation>

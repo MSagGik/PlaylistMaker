@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".create_playlist.presentation.ui.CreatePlaylistFragment">
+
+    <ImageView
+        android:id="@+id/button_back"
+        style="@style/ImageButtonSettingHeader"
+        android:layout_width="@dimen/dimen_48"
+        android:layout_height="@dimen/dimen_48"
+        android:layout_marginStart="@dimen/dimen_4"
+        android:foreground="?attr/selectableItemBackground"
+        android:layout_marginTop="@dimen/dimen_4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_back" />
+
+    <TextView
+        android:id="@+id/panel_header"
+        style="@style/TextViewSettingHeader"
+        android:layout_marginTop="@dimen/dimen_4"
+        android:layout_marginStart="@dimen/dimen_12"
+        android:text="@string/new_playlist"
+        app:layout_constraintStart_toEndOf="@+id/button_back"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/album_track"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/dimen_32"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:src="@drawable/album_track_place_holder"
+        app:layout_constrainedHeight="true"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/name_track"
+        style="@style/TextInputLayoutNewPlaylist"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_16"
+        android:layout_marginEnd="@dimen/dimen_32"
+        android:layout_marginTop="@dimen/dimen_32"
+        android:hint="@string/name"
+        android:textColorHint="@color/selector_hint_text_input_color"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:boxStrokeColor="@color/selector_box_text_input_color"
+        app:cursorColor="@color/selector_text_input_color"
+        app:hintAnimationEnabled="true"
+        app:hintTextColor="@color/selector_hint_text_input_color"
+        app:layout_constraintEnd_toStartOf="@+id/album_track"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/panel_header">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/name_track_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dimen_16"
+            android:textColorHint="@color/blue_100"
+            android:imeOptions="actionDone"
+            android:singleLine="true" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/description_track"
+        style="@style/TextInputLayoutNewPlaylist"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_16"
+        android:layout_marginEnd="@dimen/dimen_32"
+        android:layout_marginTop="@dimen/dimen_16"
+        android:hint="@string/description"
+        android:textColorHint="@color/selector_hint_text_input_color"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:boxStrokeColor="@color/selector_box_text_input_color"
+        app:cursorColor="@color/selector_text_input_color"
+        app:hintAnimationEnabled="true"
+        app:hintTextColor="@color/selector_hint_text_input_color"
+        app:layout_constraintEnd_toStartOf="@+id/album_track"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/name_track">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/description_track_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dimen_16"
+            android:textColorHint="@color/blue_100"
+            android:imeOptions="actionDone"
+            android:singleLine="true" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/dimen_16"
+        android:layout_marginEnd="@dimen/dimen_32"
+        app:layout_constraintBottom_toTopOf="@+id/add_playlist"
+        app:layout_constraintEnd_toStartOf="@+id/album_track"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/description_track" />
+
+    <TextView
+        android:id="@+id/add_playlist"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_16"
+        android:layout_marginEnd="@dimen/dimen_32"
+        android:layout_marginBottom="@dimen/dimen_32"
+        android:background="@drawable/selector_button_new_playlist"
+        android:clickable="true"
+        android:enabled="false"
+        android:fontFamily="@font/ys_display_medium"
+        android:gravity="center"
+        android:padding="@dimen/dimen_16"
+        android:text="@string/create"
+        android:textColor="@color/white"
+        android:textFontWeight="500"
+        android:textSize="@dimen/dimen_16s"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/album_track"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

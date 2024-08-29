@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".player.presentation.ui.PlayerFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <ProgressBar
         android:id="@+id/loading_time_player"
         android:layout_width="@dimen/dimen_44"
         android:layout_height="@dimen/dimen_44"
         android:layout_gravity="center_horizontal"
-        android:indeterminateTint="@color/violet_170"
+        android:indeterminateTint="@color/blue_100"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -50,6 +55,8 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/dimen_24"
         android:layout_marginTop="@dimen/dimen_24"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:text="@string/name_track"
         app:layout_constraintEnd_toStartOf="@+id/button_play_pause"
         app:layout_constraintStart_toStartOf="parent"
@@ -62,6 +69,8 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/dimen_24"
         android:layout_marginTop="@dimen/dimen_14"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:text="@string/name_group"
         app:layout_constraintEnd_toStartOf="@+id/button_play_pause"
         app:layout_constraintStart_toStartOf="parent"
@@ -79,7 +88,7 @@
         app:layout_constraintBottom_toTopOf="@+id/button_play_pause"
         app:layout_constraintEnd_toStartOf="@+id/cover"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_add" />
+        app:srcCompat="@drawable/ic_add_false" />
 
     <ImageButton
         android:id="@+id/button_play_pause"
@@ -241,4 +250,88 @@
         app:layout_constraintEnd_toEndOf="@+id/track_genre"
         app:layout_constraintTop_toBottomOf="@+id/track_genre" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="210dp"
+        android:background="@drawable/shape_bottom_sheet"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/header_bottom_sheet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/add_in_playlist"
+                android:layout_marginHorizontal="@dimen/dimen_50"
+                android:layout_marginTop="@dimen/dimen_42"
+                style="@style/TextViewBottomSheetHeader" />
+
+            <Button
+                android:id="@+id/button_new_playlist"
+                style="@style/ButtonNewPlaylist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimen_92"
+                android:fontFamily="@font/ys_display_medium"
+                android:foreground="?attr/selectableItemBackground"
+                android:paddingHorizontal="@dimen/dimen_14"
+                android:paddingVertical="@dimen/dimen_5"
+                android:text="@string/new_playlist"
+                android:textAllCaps="false"
+                android:textFontWeight="500"
+                android:textSize="@dimen/dimen_14s"
+                app:cornerRadius="@dimen/dimen_54" />
+
+        </FrameLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/playlists"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/dimen_12"
+            android:paddingHorizontal="@dimen/dimen_12"
+            android:paddingTop="@dimen/dimen_12"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:visibility="gone"/>
+
+        <FrameLayout
+            android:id="@+id/placeholder_empty_playlists"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/dimen_24"
+            android:visibility="visible">
+
+            <ImageView
+                android:layout_width="@dimen/dimen_61"
+                android:layout_height="@dimen/dimen_61"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimen_24"
+                android:src="@drawable/ic_nothing_found" />
+
+            <TextView
+                android:id="@+id/textView"
+                style="@style/TextPlaceHolderMedia"
+                android:textSize="@dimen/dimen_12s"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimen_100"
+                android:text="@string/empty_playlists" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

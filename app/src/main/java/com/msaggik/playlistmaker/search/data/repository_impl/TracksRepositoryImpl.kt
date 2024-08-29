@@ -2,7 +2,7 @@ package com.msaggik.playlistmaker.search.data.repository_impl
 
 import android.content.Context
 import com.msaggik.playlistmaker.R
-import com.msaggik.playlistmaker.media.data.favorite_tracks_db.TracksDatabase
+import com.msaggik.playlistmaker.player.data.playlist_db.PlaylistTracksDatabase
 import com.msaggik.playlistmaker.search.data.base.network.NetworkClient
 import com.msaggik.playlistmaker.search.data.base.sp.SearchHistorySp
 import com.msaggik.playlistmaker.search.data.converters.ConvertersSearch
@@ -18,7 +18,7 @@ class TracksRepositoryImpl(
     private val context: Context,
     private val networkClient: NetworkClient,
     private val searchHistorySp: SearchHistorySp,
-    private val tracksDatabase: TracksDatabase,
+    private val database: PlaylistTracksDatabase,
     private val converters: ConvertersSearch
 ) : TracksRepository {
 
@@ -70,7 +70,7 @@ class TracksRepositoryImpl(
     }
 
     private suspend fun actualizingTrack(track: Track): Track {
-        val listIds = tracksDatabase.favoriteTracksDao().getFavoriteTracksIds()
+        val listIds = database.playlistTracksDao().getFavoriteTracksIds()
         for (idFavorite in listIds) {
             val id = track.trackId.toLong()
             if (idFavorite == id) {
