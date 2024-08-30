@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,15 +16,21 @@ import com.msaggik.playlistmaker.databinding.FragmentPlaylistsBinding
 import com.msaggik.playlistmaker.media.domain.models.PlaylistWithTracks
 import com.msaggik.playlistmaker.media.presentation.ui.adapters.PlaylistWithTracksAdapter
 import com.msaggik.playlistmaker.media.presentation.view_model.PlaylistsViewModel
-import com.msaggik.playlistmaker.media.presentation.view_model.state.PlaylistWithTracksState
+import com.msaggik.playlistmaker.media.presentation.view_model.state.CreatePlaylistWithTracksState
+import com.msaggik.playlistmaker.playlist.presentation.ui.PlaylistFragment
 import com.msaggik.playlistmaker.util.Utils
+import com.msaggik.playlistmaker.util.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-private val NUMBER_COLUMN_RECYCLERVIEW = 2
 class PlaylistsFragment : Fragment() {
+
     companion object {
+        private const val DELAY_CLICK_PLAYLIST = 250L
+        private val NUMBER_COLUMN_RECYCLERVIEW = 2
         fun newInstance() = PlaylistsFragment()
     }
+
+    private lateinit var playlistClickDebounce: (PlaylistWithTracks) -> Unit
 
     private val playlistsViewModel: PlaylistsViewModel by viewModel()
 
@@ -36,6 +43,8 @@ class PlaylistsFragment : Fragment() {
     }
 
     private fun playlistWithTracksSelection(playlist: PlaylistWithTracks) {
+        findNavController().navigate(R.id.action_mediaFragment_to_playlistFragment,
+           PlaylistFragment.createArgs(playlist.playlist.playlistId))
     }
 
     private var _binding: FragmentPlaylistsBinding? = null
@@ -58,6 +67,13 @@ class PlaylistsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        playlistClickDebounce = debounce<PlaylistWithTracks>(
+            DELAY_CLICK_PLAYLIST,
+            viewLifecycleOwner.lifecycleScope,
+            false,
+            true
+        ) { playlist -> playlistSelection(playlist) }
+
         playlistsViewModel.getPlaylistWithTracks()
 
         binding.playlists.layoutManager =
@@ -72,10 +88,16 @@ class PlaylistsFragment : Fragment() {
         }
     }
 
-    private fun render(state: PlaylistWithTracksState) {
+    @SuppressLint("NotifyDataSetChanged")
+    private fun playlistSelection(playlist: PlaylistWithTracks) {
+        findNavController().navigate(R.id.action_mediaFragment_to_playlistFragment,
+            PlaylistFragment.createArgs(playlist.playlist.playlistId))
+    }
+
+    private fun render(state: CreatePlaylistWithTracksState) {
         when (state) {
-            is PlaylistWithTracksState.Content -> showPlaylistsWithTracks(state.playlists)
-            is PlaylistWithTracksState.Empty -> Utils.visibilityView(viewArray, binding.placeholderEmptyPlaylists)
+            is CreatePlaylistWithTracksState.Content -> showPlaylistsWithTracks(state.playlists)
+            is CreatePlaylistWithTracksState.Empty -> Utils.visibilityView(viewArray, binding.placeholderEmptyPlaylists)
         }
     }
 

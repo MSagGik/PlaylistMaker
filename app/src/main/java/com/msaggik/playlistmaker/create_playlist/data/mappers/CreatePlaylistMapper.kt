@@ -5,7 +5,7 @@ import com.msaggik.playlistmaker.create_playlist.domain.models.Track
 import com.msaggik.playlistmaker.player.data.playlist_db.entity.many_to_many.PlaylistEntity
 import com.msaggik.playlistmaker.player.data.playlist_db.entity.many_to_many.TrackEntity
 
-class PlaylistMapper {
+class CreatePlaylistMapper {
     fun map(playlist: Playlist): PlaylistEntity {
         return with(playlist) {
             PlaylistEntity(

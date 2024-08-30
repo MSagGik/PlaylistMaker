@@ -28,7 +28,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/album_track"
+        android:id="@+id/album_playlist"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginHorizontal="@dimen/dimen_24"
@@ -62,7 +62,7 @@
         app:hintAnimationEnabled="true"
         android:layout_marginHorizontal="@dimen/dimen_16"
         android:layout_marginTop="@dimen/dimen_32"
-        app:layout_constraintTop_toBottomOf="@+id/album_track"
+        app:layout_constraintTop_toBottomOf="@+id/album_playlist"
         app:hintTextColor="@color/selector_hint_text_input_color"
         android:textColorHint="@color/selector_hint_text_input_color"
         app:boxStrokeColor="@color/selector_box_text_input_color"

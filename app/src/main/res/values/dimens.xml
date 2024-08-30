@@ -54,8 +54,10 @@
     <dimen name="dimen_13s">13sp</dimen>
     <dimen name="dimen_14s">14sp</dimen>
     <dimen name="dimen_16s">16sp</dimen>
+    <dimen name="dimen_18s">18sp</dimen>
     <dimen name="dimen_19s">19sp</dimen>
     <dimen name="dimen_22s">22sp</dimen>
+    <dimen name="dimen_24s">24sp</dimen>
     <dimen name="dimen_50s">50sp</dimen>
     <dimen name="dimen_10p">10%</dimen>
     <dimen name="dimen_20p">20%</dimen>

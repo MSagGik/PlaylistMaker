@@ -7,12 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.msaggik.playlistmaker.create_playlist.domain.models.Playlist
 import com.msaggik.playlistmaker.create_playlist.domain.models.Track
-import com.msaggik.playlistmaker.create_playlist.domain.use_case.PlaylistInteractor
+import com.msaggik.playlistmaker.create_playlist.domain.use_case.CreatePlaylistInteractor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class CreatePlaylistViewModel(
-    private val playlistInteractor: PlaylistInteractor
+    private val playlistInteractor: CreatePlaylistInteractor
 ) : ViewModel() {
 
     var isInputTrack = false

@@ -6,10 +6,10 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Environment
 import androidx.core.net.toUri
-import com.msaggik.playlistmaker.create_playlist.data.mappers.PlaylistMapper
+import com.msaggik.playlistmaker.create_playlist.data.mappers.CreatePlaylistMapper
 import com.msaggik.playlistmaker.create_playlist.domain.models.Playlist
 import com.msaggik.playlistmaker.create_playlist.domain.models.Track
-import com.msaggik.playlistmaker.create_playlist.domain.repository.PlaylistRepository
+import com.msaggik.playlistmaker.create_playlist.domain.repository.CreatePlaylistRepository
 import com.msaggik.playlistmaker.player.data.playlist_db.PlaylistTracksDatabase
 import com.msaggik.playlistmaker.util.Utils
 import kotlinx.coroutines.Dispatchers
@@ -19,11 +19,11 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 
-class PlaylistRepositoryImpl(
+class CreatePlaylistRepositoryImpl(
     private val context: Context,
     private val dataBase: PlaylistTracksDatabase,
-    private val playlistMapper: PlaylistMapper
-) : PlaylistRepository {
+    private val playlistMapper: CreatePlaylistMapper
+) : CreatePlaylistRepository {
 
     override suspend fun addPlaylist(playlist: Playlist): Long {
         return dataBase.playlistTracksDao().insertPlaylist(playlistMapper.map(playlist))

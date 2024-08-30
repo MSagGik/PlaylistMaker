@@ -24,7 +24,7 @@ import com.msaggik.playlistmaker.player.domain.models.PlaylistWithTracks
 import com.msaggik.playlistmaker.player.domain.models.Track
 import com.msaggik.playlistmaker.player.presentation.ui.adapters.PlaylistWithTracksAdapter
 import com.msaggik.playlistmaker.player.presentation.view_model.PlayerViewModel
-import com.msaggik.playlistmaker.player.presentation.view_model.state.PlaylistWithTracksState
+import com.msaggik.playlistmaker.player.presentation.view_model.state.PlaylistsWithTracksState
 import com.msaggik.playlistmaker.util.Utils
 import com.msaggik.playlistmaker.util.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -213,10 +213,10 @@ class PlayerFragment : Fragment() {
         viewArray = null
     }
 
-    private fun render(state: PlaylistWithTracksState) {
+    private fun render(state: PlaylistsWithTracksState) {
         when (state) {
-            is PlaylistWithTracksState.Content -> showPlaylistsWithTracks(state.playlists)
-            is PlaylistWithTracksState.Empty -> Utils.visibilityView(
+            is PlaylistsWithTracksState.Content -> showPlaylistsWithTracks(state.playlists)
+            is PlaylistsWithTracksState.Empty -> Utils.visibilityView(
                 viewArray,
                 binding.placeholderEmptyPlaylists
             )
@@ -245,7 +245,7 @@ class PlayerFragment : Fragment() {
                 when (newState) {
                     BottomSheetBehavior.STATE_COLLAPSED -> {
                         playerViewModel.pausePlayer()
-                        playerViewModel.getPlaylistWithTracks()
+                        playerViewModel.getPlaylistsWithTracks()
                     }
 
                     BottomSheetBehavior.STATE_HIDDEN -> {

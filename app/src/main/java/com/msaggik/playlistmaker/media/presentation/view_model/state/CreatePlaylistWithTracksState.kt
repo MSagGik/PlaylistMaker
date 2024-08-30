@@ -2,10 +2,10 @@ package com.msaggik.playlistmaker.media.presentation.view_model.state
 
 import com.msaggik.playlistmaker.media.domain.models.PlaylistWithTracks
 
-interface PlaylistWithTracksState {
+interface CreatePlaylistWithTracksState {
     data class Content(
         val playlists: List<PlaylistWithTracks>
-    ) : PlaylistWithTracksState
+    ) : CreatePlaylistWithTracksState
 
-    object  Empty : PlaylistWithTracksState
+    object  Empty : CreatePlaylistWithTracksState
 }

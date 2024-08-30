@@ -28,7 +28,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/album_track"
+        android:id="@+id/album_playlist"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_margin="@dimen/dimen_32"
@@ -60,7 +60,7 @@
         app:cursorColor="@color/selector_text_input_color"
         app:hintAnimationEnabled="true"
         app:hintTextColor="@color/selector_hint_text_input_color"
-        app:layout_constraintEnd_toStartOf="@+id/album_track"
+        app:layout_constraintEnd_toStartOf="@+id/album_playlist"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/panel_header">
 
@@ -93,7 +93,7 @@
         app:cursorColor="@color/selector_text_input_color"
         app:hintAnimationEnabled="true"
         app:hintTextColor="@color/selector_hint_text_input_color"
-        app:layout_constraintEnd_toStartOf="@+id/album_track"
+        app:layout_constraintEnd_toStartOf="@+id/album_playlist"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/name_track">
 
@@ -115,7 +115,7 @@
         android:layout_marginStart="@dimen/dimen_16"
         android:layout_marginEnd="@dimen/dimen_32"
         app:layout_constraintBottom_toTopOf="@+id/add_playlist"
-        app:layout_constraintEnd_toStartOf="@+id/album_track"
+        app:layout_constraintEnd_toStartOf="@+id/album_playlist"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/description_track" />
 
@@ -137,7 +137,7 @@
         android:textFontWeight="500"
         android:textSize="@dimen/dimen_16s"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/album_track"
+        app:layout_constraintEnd_toStartOf="@+id/album_playlist"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

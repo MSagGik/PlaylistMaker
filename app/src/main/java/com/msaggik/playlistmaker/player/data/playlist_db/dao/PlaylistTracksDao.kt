@@ -123,6 +123,10 @@ interface PlaylistTracksDao {
     suspend fun playlistsWithTracks(): List<PlaylistWithTracks>
 
     @Transaction
+    @Query("SELECT * FROM ${DatabaseConfig.PLAYLIST_TABLE} WHERE ${DatabaseConfig.PLAYLIST_ID} = :playlistId")
+    suspend fun playlistWithTracks(playlistId: Long): PlaylistWithTracks
+
+    @Transaction
     @Query("SELECT * FROM ${DatabaseConfig.TRACK_TABLE}")
     suspend fun tracksWithPlaylists(): List<TrackWithPlaylists>
 

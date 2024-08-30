@@ -1,9 +1,10 @@
 package com.msaggik.playlistmaker.root
 
 import android.app.Application
-import com.msaggik.playlistmaker.create_playlist.di.playlistModule
+import com.msaggik.playlistmaker.create_playlist.di.playlistsModule
 import com.msaggik.playlistmaker.media.di.mediaModule
 import com.msaggik.playlistmaker.player.di.playerModule
+import com.msaggik.playlistmaker.playlist.di.playlistModule
 import com.msaggik.playlistmaker.search.di.searchModule
 import com.msaggik.playlistmaker.setting.di.settingModule
 import com.msaggik.playlistmaker.setting.domain.use_case.SettingsInteractor
@@ -28,6 +29,7 @@ class App : Application(), KoinComponent {
                 settingModule,
                 sharingModule,
                 mediaModule,
+                playlistsModule,
                 playlistModule
             )
         }

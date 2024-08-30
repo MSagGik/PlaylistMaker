@@ -133,13 +133,13 @@ class CreatePlaylistFragment : Fragment() {
                 .placeholder(R.drawable.ic_placeholder)
                 .transform(CenterCrop(), RoundedCorners(Utils.doToPx(8f, binding.root.context)))
                 .transform()
-                .into(binding.albumTrack)
+                .into(binding.albumPlaylist)
             uriImageToPrivateStorage = it
         }
 
         binding.nameTrackInput.addTextChangedListener(inputSearchWatcher)
         binding.buttonBack.setOnClickListener(listener)
-        binding.albumTrack.setOnClickListener(listener)
+        binding.albumPlaylist.setOnClickListener(listener)
         binding.addPlaylist.setOnClickListener(listener)
 
         requireActivity().onBackPressedDispatcher.addCallback(onBackPressedCallback)
@@ -177,7 +177,7 @@ class CreatePlaylistFragment : Fragment() {
                     }
                 }
 
-                R.id.album_track -> {
+                R.id.album_playlist -> {
                     pickMedia.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
                 }
 
