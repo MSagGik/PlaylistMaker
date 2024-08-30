@@ -14,8 +14,11 @@ class PlaylistViewModel(
     private val playlistInteractor: PlaylistInteractor,
 ) : ViewModel() {
 
-    private val playlistWithTracksLiveData = MutableLiveData<PlaylistWithTracksState>()
-    fun getPlaylistWithTracksLiveData(): LiveData<PlaylistWithTracksState> = playlistWithTracksLiveData
+    private val playlistWithTracksLiveData = MutableLiveData<PlaylistWithTracks>()
+    fun getPlaylistWithTracksLiveData(): LiveData<PlaylistWithTracks> = playlistWithTracksLiveData
+
+    private val tracksLiveData = MutableLiveData<PlaylistWithTracksState>()
+    fun getTracksLiveData(): LiveData<PlaylistWithTracksState> = tracksLiveData
 
     fun getPlaylistWithTracks(playlistId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -28,6 +31,7 @@ class PlaylistViewModel(
     }
 
     private fun processResult(playlist: PlaylistWithTracks) {
+        playlistWithTracksLiveData.postValue(playlist)
         if (playlist.tracks.isEmpty()) {
             renderState(PlaylistWithTracksState.Empty)
         } else {
@@ -36,6 +40,6 @@ class PlaylistViewModel(
     }
 
     private fun renderState(state: PlaylistWithTracksState) {
-        playlistWithTracksLiveData.postValue(state)
+        tracksLiveData.postValue(state)
     }
 }

@@ -71,4 +71,12 @@
     <string name="no_add_track_in_playlist">Трек уже добавлен в плейлист %1$s</string>
     <string name="add_in_playlist">Добавить в плейлист</string>
     <string name="default_playlist_meta_data">0 минут · 0 треков</string>
+    <plurals name="value_time">
+        <item quantity="zero">%1$d минут</item>
+        <item quantity="one">%1$d минута</item>
+        <item quantity="two">%1$d минуты</item>
+        <item quantity="few">%1$d минуты</item>
+        <item quantity="many">%1$d минут</item>
+        <item quantity="other">%1$d минут</item>
+    </plurals>
 </resources>

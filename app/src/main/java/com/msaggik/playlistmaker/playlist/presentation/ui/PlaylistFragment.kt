@@ -8,8 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.os.bundleOf
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.msaggik.playlistmaker.R
 import com.msaggik.playlistmaker.databinding.FragmentPlaylistBinding
 import com.msaggik.playlistmaker.playlist.domain.models.PlaylistWithTracks
 import com.msaggik.playlistmaker.playlist.domain.models.Track
@@ -77,15 +80,63 @@ class PlaylistFragment : Fragment() {
         binding.trackList.adapter = tracksAdapter
 
         // subscribe to state playlist
-        playlistViewModel.getPlaylistWithTracksLiveData().observe(viewLifecycleOwner) { state ->
-            render(state)
+        playlistViewModel.getPlaylistWithTracksLiveData().observe(viewLifecycleOwner) { playlist ->
+            renderPlaylist(playlist)
         }
 
+        // subscribe to state tracks playlist
+        playlistViewModel.getTracksLiveData().observe(viewLifecycleOwner) { state ->
+            renderTracks(state)
+        }
+
+        // set listeners
+        binding.buttonBack.setOnClickListener(listener)
     }
 
-    private fun render(state: PlaylistWithTracksState) {
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun renderPlaylist(playlist: PlaylistWithTracks) {
+        Glide.with(binding.root)
+            .load(playlist.playlist.playlistUriAlbum)
+            .placeholder(R.drawable.ic_placeholder)
+            .centerCrop()
+            .transform()
+            .into(binding.albumPlaylist)
+
+        binding.playlistName.text = playlist.playlist.playlistName
+
+        if (playlist.playlist.playlistDescription.isNullOrEmpty()) {
+            binding.playlistDescription.visibility = View.GONE
+        } else {
+            binding.playlistDescription.visibility = View.VISIBLE
+            binding.playlistDescription.text = playlist.playlist.playlistDescription
+        }
+
+        var valueTimeOfTracks = 0L
+        for(track in playlist.tracks) {
+            valueTimeOfTracks += track.trackTimeMillis
+        }
+        valueTimeOfTracks = if(valueTimeOfTracks % 60_000 > 0.41) {
+            valueTimeOfTracks / 60_000 + 1
+        } else {
+            valueTimeOfTracks / 60_000
+        }
+
+        val timeTracks = binding.root.context.resources.getQuantityString(R.plurals.value_time, valueTimeOfTracks.toInt(), valueTimeOfTracks)
+        val numbersTracks = binding.root.context.resources.getQuantityString(R.plurals.number_tracks, playlist.tracks.size, playlist.tracks.size)
+
+        binding.playlistMetaData.text = "$timeTracks ${binding.root.context.getString(R.string.inter_punctum)} $numbersTracks"
+    }
+
+    private fun renderTracks(state: PlaylistWithTracksState) {
         when (state) {
-            is PlaylistWithTracksState.Content -> showTracksPlaylist(state.playlist)
+            is PlaylistWithTracksState.Content -> {
+                showTracksPlaylist(state.playlist)
+            }
             is PlaylistWithTracksState.Empty -> bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
     }
@@ -96,5 +147,16 @@ class PlaylistFragment : Fragment() {
         tracks.addAll(playlist.tracks)
         tracksAdapter.notifyDataSetChanged()
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+    }
+
+    private val listener: View.OnClickListener = object : View.OnClickListener {
+        @SuppressLint("NotifyDataSetChanged", "SetTextI18n")
+        override fun onClick(p0: View?) {
+            when (p0?.id) {
+                R.id.button_back -> {
+                    findNavController().popBackStack()
+                }
+            }
+        }
     }
 }

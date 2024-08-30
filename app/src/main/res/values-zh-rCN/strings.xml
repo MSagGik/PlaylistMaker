@@ -61,4 +61,13 @@
     <string name="add_in_playlist">添加到播放列表</string>
     <string name="add_track_in_playlist">已添加到播放列表 %1$s</string>
     <string name="no_add_track_in_playlist">该曲目已添加到播放列表 %1$s</string>
+    <plurals name="value_time" tools:ignore="UnusedQuantity">
+        <item quantity="zero">%1$d 分钟</item>
+        <item quantity="one">%1$d 分钟</item>
+        <item quantity="two">%1$d 分钟</item>
+        <item quantity="few">%1$d 分钟</item>
+        <item quantity="many">%1$d 分钟</item>
+        <item quantity="other">%1$d 分钟</item>
+    </plurals>
+    <string name="default_playlist_meta_data">0 分钟 · 0 首曲目</string>
 </resources>
