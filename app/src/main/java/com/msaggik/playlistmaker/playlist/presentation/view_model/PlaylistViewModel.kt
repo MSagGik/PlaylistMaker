@@ -62,4 +62,10 @@ class PlaylistViewModel(
             playlistInteractor.sharePlaylist(infoPlaylist)
         }
     }
+
+    fun removePlaylist(playlistId: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            playlistInteractor.removePlaylist(playlistId)
+        }
+    }
 }

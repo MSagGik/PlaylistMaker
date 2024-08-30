@@ -75,4 +75,8 @@
     <string name="delete">删除</string>
     <string name="failed_to_delete_track">删除曲目失败</string>
     <string name="share_empty_playlist">该播放列表没有可共享的曲目列表</string>
+    <string name="share">分享</string>
+    <string name="edit_info_playlist">编辑信息</string>
+    <string name="delete_playlist">删除播放列表</string>
+    <string name="question_delete_playlist">您确定要删除此播放列表吗？</string>
 </resources>

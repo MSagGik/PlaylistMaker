@@ -20,4 +20,8 @@ class PlaylistInteractorImpl(
     override suspend fun sharePlaylist(infoPlaylist: String) {
         playlistRepository.sharePlaylist(infoPlaylist)
     }
+
+    override suspend fun removePlaylist(playlistId: Long) {
+        playlistRepository.removePlaylist(playlistId)
+    }
 }

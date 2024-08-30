@@ -82,6 +82,10 @@
     </plurals>
     <string name="title_delete_track">Удалить трек</string>
     <string name="question_delete_track">Вы уверены, что хотите удалить трек из плейлиста?</string>
+    <string name="question_delete_playlist">Вы уверены, что хотите удалить этот плейлист?</string>
     <string name="failed_to_delete_track">Удалить трек не удалось</string>
     <string name="share_empty_playlist">В этом плейлисте нет списка треков, которым можно поделиться</string>
+    <string name="share">Поделиться</string>
+    <string name="edit_info_playlist">Редактировать информацию</string>
+    <string name="delete_playlist">Удалить плейлист</string>
 </resources>

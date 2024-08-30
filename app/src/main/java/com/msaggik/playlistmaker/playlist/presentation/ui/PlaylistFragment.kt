@@ -13,12 +13,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.msaggik.playlistmaker.R
 import com.msaggik.playlistmaker.databinding.FragmentPlaylistBinding
 import com.msaggik.playlistmaker.player.presentation.ui.PlayerFragment
-import com.msaggik.playlistmaker.playlist.domain.models.Playlist
 import com.msaggik.playlistmaker.playlist.domain.models.PlaylistWithTracks
 import com.msaggik.playlistmaker.playlist.domain.models.Track
 import com.msaggik.playlistmaker.playlist.presentation.ui.adapter.TracksAdapter
@@ -49,6 +50,7 @@ class PlaylistFragment : Fragment() {
     // view
     private var _binding: FragmentPlaylistBinding? = null
     private val binding: FragmentPlaylistBinding get() = _binding!!
+    private var viewArray: Array<View>? = null
 
     // bottomSheetBehavior
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
@@ -71,7 +73,7 @@ class PlaylistFragment : Fragment() {
         )
     }
 
-    // parameter for dialog window
+    // dialogs windows
     private val deleteTrackDialog: MaterialAlertDialogBuilder by lazy {
         MaterialAlertDialogBuilder(requireActivity())
             .setTitle(requireActivity().getString(R.string.title_delete_track))
@@ -85,12 +87,28 @@ class PlaylistFragment : Fragment() {
                 playlistViewModel.getPlaylistWithTracks(requireArguments().getLong(PLAYLIST_ID))
             }
     }
+    private val deletePlaylistDialog: MaterialAlertDialogBuilder by lazy {
+        MaterialAlertDialogBuilder(requireActivity())
+            .setTitle(requireActivity().getString(R.string.delete_playlist))
+            .setMessage(requireActivity().getString(R.string.question_delete_playlist))
+            .setNegativeButton(requireActivity().getString(R.string.cancel)) { dialog, which -> }
+            .setPositiveButton(requireActivity().getString(R.string.delete)) { dialog, which ->
+                playlistViewModel.removePlaylist(
+                    requireArguments().getLong(PLAYLIST_ID)
+                )
+                findNavController().popBackStack()
+            }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentPlaylistBinding.inflate(inflater, container, false)
+        viewArray = arrayOf(
+            binding.trackList,
+            binding.menuPlaylist
+        )
         return binding.root
     }
 
@@ -104,11 +122,8 @@ class PlaylistFragment : Fragment() {
         // get playlist
         playlistViewModel.getPlaylistWithTracks(requireArguments().getLong(PLAYLIST_ID))
 
-        // creating an object of the BottomSheetBehavior class
-        bottomSheetBehavior = BottomSheetBehavior.from(binding.layoutBottomSheet).apply {
-            state = BottomSheetBehavior.STATE_HIDDEN
-        }
-        binding.layoutBottomSheet.visibility = View.GONE
+        // creating an object of the BottomSheetBehavior class and set state
+        defaultBottomSheetState()
 
         binding.trackList.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.trackList.adapter = tracksAdapter
@@ -133,11 +148,28 @@ class PlaylistFragment : Fragment() {
         binding.buttonBack.setOnClickListener(listener)
         binding.buttonSharePlaylist.setOnClickListener(listener)
         binding.buttonMenu.setOnClickListener(listener)
+        binding.shareInfoPlaylistMenu.setOnClickListener(listener)
+        binding.editInfoPlaylistMenu.setOnClickListener(listener)
+        binding.deletePlaylistMenu.setOnClickListener(listener)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        viewArray = emptyArray()
+        viewArray = null
+    }
+
+    private fun defaultBottomSheetState() {
+        bottomSheetBehavior = BottomSheetBehavior.from(binding.layoutBottomSheet).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+        }
+        binding.layoutBottomSheet.visibility = View.GONE
+        Utils.visibilityView(
+            viewArray,
+            binding.trackList
+        )
+        bottomSheetBehavior.isHideable = false
     }
 
     private fun initDebounces() {
@@ -156,6 +188,7 @@ class PlaylistFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun renderPlaylist(playlist: PlaylistWithTracks) {
+        // base screen
         Glide.with(binding.root)
             .load(playlist.playlist.playlistUriAlbum)
             .placeholder(R.drawable.ic_placeholder)
@@ -186,6 +219,17 @@ class PlaylistFragment : Fragment() {
         val numbersTracks = binding.root.context.resources.getQuantityString(R.plurals.number_tracks, playlist.tracks.size, playlist.tracks.size)
 
         binding.playlistMetaData.text = "$timeTracks ${binding.root.context.getString(R.string.inter_punctum)} $numbersTracks"
+
+        // menu
+        Glide.with(binding.root)
+            .load(playlist.playlist.playlistUriAlbum)
+            .placeholder(R.drawable.ic_placeholder)
+            .transform(CenterCrop(), RoundedCorners(Utils.doToPx(3f, requireContext())))
+            .transform()
+            .into(binding.albumPlaylistMenu)
+
+        binding.playlistNameMenu.text = playlist.playlist.playlistName
+        binding.numberTracksMenu.text = numbersTracks
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -228,7 +272,22 @@ class PlaylistFragment : Fragment() {
                     shareInfoPlaylist()
                 }
                 R.id.button_menu -> {
+                    binding.layoutBottomSheet.visibility = View.VISIBLE
+                    Utils.visibilityView(
+                        viewArray,
+                        binding.menuPlaylist
+                    )
+                    bottomSheetBehavior.isHideable = true
+                }
+                R.id.share_info_playlist_menu -> {
+                    shareInfoPlaylist()
+                }
+                R.id.edit_info_playlist_menu -> {
 
+                }
+                R.id.delete_playlist_menu -> {
+                    binding.layoutBottomSheet.visibility = View.GONE
+                    deletePlaylistDialog.show()
                 }
             }
         }

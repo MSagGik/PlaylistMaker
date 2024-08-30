@@ -10,4 +10,6 @@ interface PlaylistInteractor {
     suspend fun removeTrackFromPlaylist(idPlaylist: Long, idTrack: Long): Int
 
     suspend fun sharePlaylist(infoPlaylist: String)
+
+    suspend fun removePlaylist(playlistId: Long)
 }
