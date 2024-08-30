@@ -43,6 +43,10 @@ class CreatePlaylistRepositoryImpl(
         )
     }
 
+    override suspend fun insertPlaylist(playlist: Playlist): Long {
+        return dataBase.playlistTracksDao().insertPlaylist(playlistMapper.map(playlist))
+    }
+
     override suspend fun saveImageToPrivateStorage(uri: Uri): Uri {
         // read image
         val inputStream = context.contentResolver.openInputStream(uri)

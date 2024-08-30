@@ -15,24 +15,21 @@ class CreatePlaylistViewModel(
     private val playlistInteractor: CreatePlaylistInteractor
 ) : ViewModel() {
 
-    var isInputTrack = false
+    var stateCreateOrEditPlaylist = 0
 
     private val namesPlaylistLiveData = MutableLiveData<List<String>>()
     fun getNamesPlaylistLiveData(): LiveData<List<String>> = namesPlaylistLiveData
 
-    private val successAddTrackInPlaylistLiveData = MutableLiveData<Pair<Long, String>>()
-    fun getSuccessAddTrackInPlaylistLiveData(): LiveData<Pair<Long, String>> = successAddTrackInPlaylistLiveData
-
-    private val uriImageToPrivateStorageLiveData = MutableLiveData<Uri>()
-    fun getUriImageToPrivateStorageLiveData(): LiveData<Uri> = uriImageToPrivateStorageLiveData
-
     fun getNamesPlaylist() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             playlistInteractor.namesPlaylist().collect { list ->
                 namesPlaylistLiveData.postValue(list)
             }
         }
     }
+
+    private val successAddTrackInPlaylistLiveData = MutableLiveData<Pair<Long, String>>()
+    fun getSuccessAddTrackInPlaylistLiveData(): LiveData<Pair<Long, String>> = successAddTrackInPlaylistLiveData
 
     fun addPlaylist(playlist: Playlist) {
         viewModelScope.launch(Dispatchers.IO){
@@ -45,6 +42,19 @@ class CreatePlaylistViewModel(
             val idPlaylist = playlistInteractor.insertPlaylistAndAddTrackInPlaylist(playlist, track)
             successAddTrackInPlaylistLiveData.postValue(Pair(idPlaylist, playlist.playlistName))
         }
+    }
+
+    fun editTrackInPlaylist(playlist: Playlist) {
+        viewModelScope.launch(Dispatchers.IO){
+            playlistInteractor.insertPlaylist(playlist)
+        }
+    }
+
+    private val uriImageToPrivateStorageLiveData = MutableLiveData<Uri>()
+    fun getUriImageToPrivateStorageLiveData(): LiveData<Uri> = uriImageToPrivateStorageLiveData
+
+    fun setUriImageToPrivateStorageLiveData(uri: Uri) {
+        uriImageToPrivateStorageLiveData.postValue(uri)
     }
 
     fun saveImageToPrivateStorage(uri: Uri) {

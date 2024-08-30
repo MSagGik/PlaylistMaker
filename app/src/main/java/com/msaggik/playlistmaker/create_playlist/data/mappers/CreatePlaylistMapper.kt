@@ -9,6 +9,7 @@ class CreatePlaylistMapper {
     fun map(playlist: Playlist): PlaylistEntity {
         return with(playlist) {
             PlaylistEntity(
+                playlistId = playlistId,
                 playlistName = playlistName,
                 playlistDescription = playlistDescription,
                 playlistUriAlbum = playlistUriAlbum
@@ -19,6 +20,7 @@ class CreatePlaylistMapper {
     fun map(playlist: PlaylistEntity): Playlist {
         return with(playlist) {
             Playlist(
+                playlistId = playlistId,
                 playlistName = playlistName,
                 playlistDescription = playlistDescription,
                 playlistUriAlbum = playlistUriAlbum

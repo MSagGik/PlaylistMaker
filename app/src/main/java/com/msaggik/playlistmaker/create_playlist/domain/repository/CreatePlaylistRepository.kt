@@ -11,5 +11,7 @@ interface CreatePlaylistRepository {
 
     fun namesPlaylist(): Flow<List<String>>
 
+    suspend fun insertPlaylist(playlist: Playlist): Long
+
     suspend fun saveImageToPrivateStorage(uri: Uri): Uri
 }

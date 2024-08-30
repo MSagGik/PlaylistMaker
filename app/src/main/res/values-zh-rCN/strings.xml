@@ -79,4 +79,7 @@
     <string name="edit_info_playlist">编辑信息</string>
     <string name="delete_playlist">删除播放列表</string>
     <string name="question_delete_playlist">您确定要删除此播放列表吗？</string>
+    <string name="edit_playlist">编辑</string>
+    <string name="save_playlist">节省</string>
+    <string name="message_success_edit_playlist">播放列表 %1$s 已更新</string>
 </resources>

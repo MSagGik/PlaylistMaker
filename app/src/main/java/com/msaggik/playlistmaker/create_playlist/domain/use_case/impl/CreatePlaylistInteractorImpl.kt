@@ -19,6 +19,10 @@ class CreatePlaylistInteractorImpl(
         return repository.namesPlaylist()
     }
 
+    override suspend fun insertPlaylist(playlist: Playlist): Long {
+        return repository.insertPlaylist(playlist)
+    }
+
     override suspend fun insertPlaylistAndAddTrackInPlaylist(
         playlist: Playlist,
         track: Track

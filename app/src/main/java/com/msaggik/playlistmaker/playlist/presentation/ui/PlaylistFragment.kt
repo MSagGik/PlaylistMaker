@@ -18,8 +18,11 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.msaggik.playlistmaker.R
+import com.msaggik.playlistmaker.create_playlist.presentation.ui.CreatePlaylistFragment
+import com.msaggik.playlistmaker.create_playlist.presentation.ui.state.CreateOrEditPlaylistState
 import com.msaggik.playlistmaker.databinding.FragmentPlaylistBinding
 import com.msaggik.playlistmaker.player.presentation.ui.PlayerFragment
+import com.msaggik.playlistmaker.playlist.domain.models.Playlist
 import com.msaggik.playlistmaker.playlist.domain.models.PlaylistWithTracks
 import com.msaggik.playlistmaker.playlist.domain.models.Track
 import com.msaggik.playlistmaker.playlist.presentation.ui.adapter.TracksAdapter
@@ -43,6 +46,7 @@ class PlaylistFragment : Fragment() {
 
     // debounces
     private lateinit var onTrackClickDebounce: (Track) -> Unit
+    private lateinit var editPlaylistDebounce: (Playlist) -> Unit
 
     // view-model
     private val playlistViewModel: PlaylistViewModel by viewModel()
@@ -173,16 +177,41 @@ class PlaylistFragment : Fragment() {
     }
 
     private fun initDebounces() {
-        onTrackClickDebounce = onTrackClickDebounceAll { track -> trackSelection(track) }
+        onTrackClickDebounce = onTrackClickDebounce { track -> trackSelection(track) }
+        editPlaylistDebounce = onPlaylistClickDebounce { playlist -> editPlaylist(playlist) }
     }
 
-    private fun onTrackClickDebounceAll(action: (Track) -> Unit): (Track) -> Unit {
+    private fun onTrackClickDebounce(action: (Track) -> Unit): (Track) -> Unit {
         return debounce<Track>(
             DELAY_CLICK_TRACK,
             viewLifecycleOwner.lifecycleScope,
             false,
             true,
             action
+        )
+    }
+
+    private fun onPlaylistClickDebounce(action: (Playlist) -> Unit): (Playlist) -> Unit {
+        return debounce<Playlist>(
+            DELAY_CLICK_TRACK,
+            viewLifecycleOwner.lifecycleScope,
+            false,
+            true,
+            action
+        )
+    }
+
+    private fun trackSelection(track: Track) {
+        findNavController().navigate(
+            R.id.action_playlistFragment_to_playerFragment,
+            PlayerFragment.createArgs(mapPlaylistToPlayer(track))
+        )
+    }
+
+    private fun editPlaylist(playlist: Playlist) {
+        findNavController().navigate(
+            R.id.action_playlistFragment_to_createPlaylistFragment,
+            CreatePlaylistFragment.createArgs(CreateOrEditPlaylistState.EditPlaylistArg(mapPlaylistToEditPlaylist(playlist)))
         )
     }
 
@@ -283,7 +312,7 @@ class PlaylistFragment : Fragment() {
                     shareInfoPlaylist()
                 }
                 R.id.edit_info_playlist_menu -> {
-
+                    editPlaylistDebounce(currentPlaylist.playlist)
                 }
                 R.id.delete_playlist_menu -> {
                     binding.layoutBottomSheet.visibility = View.GONE
@@ -311,13 +340,6 @@ class PlaylistFragment : Fragment() {
         }
     }
 
-    private fun trackSelection(track: Track) {
-        findNavController().navigate(
-            R.id.action_playlistFragment_to_playerFragment,
-            PlayerFragment.createArgs(mapPlaylistToPlayer(track))
-        )
-    }
-
     private fun mapPlaylistToPlayer(track: Track): com.msaggik.playlistmaker.player.domain.models.Track {
         return with(track) {
             com.msaggik.playlistmaker.player.domain.models.Track(
@@ -333,6 +355,16 @@ class PlaylistFragment : Fragment() {
                 previewUrl = previewUrl,
                 isFavorite = isFavorite,
                 dateAddTrack = dateAddTrack
+            )
+        }
+    }
+    private fun mapPlaylistToEditPlaylist(playlist: Playlist): com.msaggik.playlistmaker.create_playlist.domain.models.Playlist {
+        return with(playlist) {
+            com.msaggik.playlistmaker.create_playlist.domain.models.Playlist(
+                playlistId = playlistId,
+                playlistName = playlistName,
+                playlistDescription = playlistDescription,
+                playlistUriAlbum = playlistUriAlbum
             )
         }
     }

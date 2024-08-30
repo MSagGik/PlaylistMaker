@@ -58,6 +58,7 @@
     <string name="finish">"Завершить"</string>
     <string name="delete">"Удалить"</string>
     <string name="message_success_add_playlist">"Плейлист %1$s создан"</string>
+    <string name="message_success_edit_playlist">"Плейлист %1$s обновлён"</string>
     <string name="name_playlist">Название плейлиста</string>
     <string name="number_tracks_default">Количество треков</string>
     <plurals name="number_tracks">
@@ -88,4 +89,6 @@
     <string name="share">Поделиться</string>
     <string name="edit_info_playlist">Редактировать информацию</string>
     <string name="delete_playlist">Удалить плейлист</string>
+    <string name="edit_playlist">Редактировать</string>
+    <string name="save_playlist">Сохранить</string>
 </resources>
