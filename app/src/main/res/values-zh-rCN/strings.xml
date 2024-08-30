@@ -74,4 +74,5 @@
     <string name="question_delete_track">您确定要从播放列表中删除该曲目吗？</string>
     <string name="delete">删除</string>
     <string name="failed_to_delete_track">删除曲目失败</string>
+    <string name="share_empty_playlist">该播放列表没有可共享的曲目列表</string>
 </resources>

@@ -18,11 +18,13 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.msaggik.playlistmaker.R
 import com.msaggik.playlistmaker.databinding.FragmentPlaylistBinding
 import com.msaggik.playlistmaker.player.presentation.ui.PlayerFragment
+import com.msaggik.playlistmaker.playlist.domain.models.Playlist
 import com.msaggik.playlistmaker.playlist.domain.models.PlaylistWithTracks
 import com.msaggik.playlistmaker.playlist.domain.models.Track
 import com.msaggik.playlistmaker.playlist.presentation.ui.adapter.TracksAdapter
 import com.msaggik.playlistmaker.playlist.presentation.view_model.PlaylistViewModel
 import com.msaggik.playlistmaker.playlist.presentation.view_model.state.PlaylistWithTracksState
+import com.msaggik.playlistmaker.util.Utils
 import com.msaggik.playlistmaker.util.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -40,7 +42,6 @@ class PlaylistFragment : Fragment() {
 
     // debounces
     private lateinit var onTrackClickDebounce: (Track) -> Unit
-    private lateinit var onTrackLongClickDebounce: (Track) -> Unit
 
     // view-model
     private val playlistViewModel: PlaylistViewModel by viewModel()
@@ -55,6 +56,7 @@ class PlaylistFragment : Fragment() {
     // adapter playlists and listener select playlist to add track
     private var tracks: MutableList<Track> = mutableListOf()
     private lateinit var selectedTrack: Track
+    private lateinit var currentPlaylist: PlaylistWithTracks
 
     private val tracksAdapter: TracksAdapter by lazy {
         TracksAdapter(
@@ -114,6 +116,7 @@ class PlaylistFragment : Fragment() {
         // subscribe to state playlist
         playlistViewModel.getPlaylistWithTracksLiveData().observe(viewLifecycleOwner) { playlist ->
             renderPlaylist(playlist)
+            currentPlaylist = playlist
         }
 
         // subscribe to state tracks playlist
@@ -128,6 +131,8 @@ class PlaylistFragment : Fragment() {
 
         // set listeners
         binding.buttonBack.setOnClickListener(listener)
+        binding.buttonSharePlaylist.setOnClickListener(listener)
+        binding.buttonMenu.setOnClickListener(listener)
     }
 
     override fun onDestroyView() {
@@ -137,7 +142,6 @@ class PlaylistFragment : Fragment() {
 
     private fun initDebounces() {
         onTrackClickDebounce = onTrackClickDebounceAll { track -> trackSelection(track) }
-        onTrackLongClickDebounce = onTrackClickDebounceAll { track -> trackLongSelection(track) }
     }
 
     private fun onTrackClickDebounceAll(action: (Track) -> Unit): (Track) -> Unit {
@@ -220,7 +224,31 @@ class PlaylistFragment : Fragment() {
                 R.id.button_back -> {
                     findNavController().popBackStack()
                 }
+                R.id.button_share_playlist -> {
+                    shareInfoPlaylist()
+                }
+                R.id.button_menu -> {
+
+                }
             }
+        }
+    }
+
+    private fun shareInfoPlaylist() {
+        if(tracks.isEmpty()) {
+            Toast.makeText(requireContext(), requireContext().getString(R.string.share_empty_playlist), Toast.LENGTH_SHORT).show()
+        } else {
+            var infoSharePlaylist = "${currentPlaylist.playlist.playlistName}\n"
+            if(!currentPlaylist.playlist.playlistDescription.isNullOrEmpty()) {
+                infoSharePlaylist += "${currentPlaylist.playlist.playlistDescription}\n"
+            }
+            infoSharePlaylist += "${binding.root.context.resources.getQuantityString(R.plurals.number_tracks, currentPlaylist.tracks.size, currentPlaylist.tracks.size)}\n"
+            var countTrack = 0
+            for (track in currentPlaylist.tracks) {
+                countTrack++
+                infoSharePlaylist += "$countTrack. ${track.artistName} - ${track.trackName} (${Utils.dateFormatMillisToMinSecFull(track.trackTimeMillis)}\n"
+            }
+            playlistViewModel.sharePlaylist(infoSharePlaylist)
         }
     }
 
@@ -229,10 +257,6 @@ class PlaylistFragment : Fragment() {
             R.id.action_playlistFragment_to_playerFragment,
             PlayerFragment.createArgs(mapPlaylistToPlayer(track))
         )
-    }
-
-    private fun trackLongSelection(track: Track) {
-
     }
 
     private fun mapPlaylistToPlayer(track: Track): com.msaggik.playlistmaker.player.domain.models.Track {

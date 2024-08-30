@@ -74,4 +74,5 @@
     <string name="question_delete_track">Are you sure you want to remove the track from the playlist?</string>
     <string name="delete">Delete</string>
     <string name="failed_to_delete_track">Failed to delete track</string>
+    <string name="share_empty_playlist">This playlist does not have a list of tracks to share</string>
 </resources>

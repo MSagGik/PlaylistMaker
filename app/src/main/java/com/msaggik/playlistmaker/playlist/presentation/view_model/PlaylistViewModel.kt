@@ -56,4 +56,10 @@ class PlaylistViewModel(
             successRemoveTrackFromPlaylistLiveData.postValue(success != -1)
         }
     }
+
+    fun sharePlaylist(infoPlaylist: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            playlistInteractor.sharePlaylist(infoPlaylist)
+        }
+    }
 }
