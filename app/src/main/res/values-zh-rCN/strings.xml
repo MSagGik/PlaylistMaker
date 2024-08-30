@@ -70,4 +70,8 @@
         <item quantity="other">%1$d 分钟</item>
     </plurals>
     <string name="default_playlist_meta_data">0 分钟 · 0 首曲目</string>
+    <string name="title_delete_track">删除曲目</string>
+    <string name="question_delete_track">您确定要从播放列表中删除该曲目吗？</string>
+    <string name="delete">删除</string>
+    <string name="failed_to_delete_track">删除曲目失败</string>
 </resources>

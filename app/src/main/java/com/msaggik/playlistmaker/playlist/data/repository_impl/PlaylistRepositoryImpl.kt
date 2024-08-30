@@ -17,4 +17,8 @@ class PlaylistRepositoryImpl(
             playlistMapper.mapPlaylistDbToPlaylist(dataBase.playlistTracksDao().playlistWithTracks(playlistId))
         )
     }
+
+    override suspend fun removeTrackFromPlaylist(idPlaylist: Long, idTrack: Long): Int {
+        return dataBase.playlistTracksDao().removeTrackFromPlaylist(idPlaylist, idTrack)
+    }
 }

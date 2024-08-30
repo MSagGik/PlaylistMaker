@@ -12,7 +12,8 @@ import com.msaggik.playlistmaker.util.Utils
 
 class TracksAdapter (
     tracksAdd: List<Track>,
-    private val trackClickListener: TrackClickListener
+    private val trackClickListener: TrackClickListener,
+    private val trackLongClickListener: TrackLongClickListener
 ) : RecyclerView.Adapter<TracksAdapter.TrackViewHolder> () {
 
     private var trackList = tracksAdd
@@ -27,8 +28,12 @@ class TracksAdapter (
     }
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         holder.bind(trackList[position])
-        holder.itemView.setOnClickListener{
+        holder.itemView.setOnClickListener {
             trackClickListener.onTrackClick(trackList.get(position))
+        }
+        holder.itemView.setOnLongClickListener {
+            trackLongClickListener.onTrackLongClick(trackList.get(position))
+            true
         }
     }
     override fun getItemCount(): Int {
@@ -37,6 +42,10 @@ class TracksAdapter (
 
     fun interface TrackClickListener {
         fun onTrackClick(track: Track)
+    }
+
+    fun interface TrackLongClickListener {
+        fun onTrackLongClick(track: Track)
     }
 
     class TrackViewHolder(private val binding: ItemTrackListBinding): RecyclerView.ViewHolder(binding.root) {

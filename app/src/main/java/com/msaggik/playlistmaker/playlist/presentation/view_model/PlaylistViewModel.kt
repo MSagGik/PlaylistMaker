@@ -42,4 +42,18 @@ class PlaylistViewModel(
     private fun renderState(state: PlaylistWithTracksState) {
         tracksLiveData.postValue(state)
     }
+
+    private val successRemoveTrackFromPlaylistLiveData = MutableLiveData<Boolean>()
+    fun getSuccessRemoveTrackFromPlaylistLiveData(): LiveData<Boolean> = successRemoveTrackFromPlaylistLiveData
+
+    fun defaultSuccessRemoveTrackFromPlaylistLiveData() {
+        successRemoveTrackFromPlaylistLiveData.postValue(true)
+    }
+
+    fun removeTrackFromPlaylist(idPlaylist: Long, idTrack: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val success = playlistInteractor.removeTrackFromPlaylist(idPlaylist, idTrack)
+            successRemoveTrackFromPlaylistLiveData.postValue(success != -1)
+        }
+    }
 }

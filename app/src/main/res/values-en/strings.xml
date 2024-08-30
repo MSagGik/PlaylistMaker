@@ -70,4 +70,8 @@
         <item quantity="other">%1$d minutes</item>
     </plurals>
     <string name="default_playlist_meta_data">0 minutes · 0 tracks</string>
+    <string name="title_delete_track">Delete track</string>
+    <string name="question_delete_track">Are you sure you want to remove the track from the playlist?</string>
+    <string name="delete">Delete</string>
+    <string name="failed_to_delete_track">Failed to delete track</string>
 </resources>

@@ -56,5 +56,9 @@
         android:id="@+id/playlistFragment"
         android:name="com.msaggik.playlistmaker.playlist.presentation.ui.PlaylistFragment"
         android:label="fragment_playlist"
-        tools:layout="@layout/fragment_playlist" />
+        tools:layout="@layout/fragment_playlist" >
+        <action
+            android:id="@+id/action_playlistFragment_to_playerFragment"
+            app:destination="@id/playerFragment" />
+    </fragment>
 </navigation>
