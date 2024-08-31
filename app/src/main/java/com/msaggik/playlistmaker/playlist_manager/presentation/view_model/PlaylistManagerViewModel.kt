@@ -1,18 +1,18 @@
-package com.msaggik.playlistmaker.create_playlist.presentation.view_model
+package com.msaggik.playlistmaker.playlist_manager.presentation.view_model
 
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.msaggik.playlistmaker.create_playlist.domain.models.Playlist
-import com.msaggik.playlistmaker.create_playlist.domain.models.Track
-import com.msaggik.playlistmaker.create_playlist.domain.use_case.CreatePlaylistInteractor
+import com.msaggik.playlistmaker.playlist_manager.domain.models.Playlist
+import com.msaggik.playlistmaker.playlist_manager.domain.models.Track
+import com.msaggik.playlistmaker.playlist_manager.domain.use_case.PlaylistManagerInteractor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class CreatePlaylistViewModel(
-    private val playlistInteractor: CreatePlaylistInteractor
+class PlaylistManagerViewModel(
+    private val playlistInteractor: PlaylistManagerInteractor
 ) : ViewModel() {
 
     var stateCreateOrEditPlaylist = 0

@@ -1,15 +1,15 @@
-package com.msaggik.playlistmaker.create_playlist.domain.use_case.impl
+package com.msaggik.playlistmaker.playlist_manager.domain.use_case.impl
 
 import android.net.Uri
-import com.msaggik.playlistmaker.create_playlist.domain.models.Playlist
-import com.msaggik.playlistmaker.create_playlist.domain.models.Track
-import com.msaggik.playlistmaker.create_playlist.domain.repository.CreatePlaylistRepository
-import com.msaggik.playlistmaker.create_playlist.domain.use_case.CreatePlaylistInteractor
+import com.msaggik.playlistmaker.playlist_manager.domain.models.Playlist
+import com.msaggik.playlistmaker.playlist_manager.domain.models.Track
+import com.msaggik.playlistmaker.playlist_manager.domain.repository.PlaylistManagerRepository
+import com.msaggik.playlistmaker.playlist_manager.domain.use_case.PlaylistManagerInteractor
 import kotlinx.coroutines.flow.Flow
 
-class CreatePlaylistInteractorImpl(
-    private val repository: CreatePlaylistRepository
-) : CreatePlaylistInteractor {
+class PlaylistManagerInteractorImpl(
+    private val repository: PlaylistManagerRepository
+) : PlaylistManagerInteractor {
 
     override suspend fun addPlaylist(playlist: Playlist): Long {
         return repository.addPlaylist(playlist)

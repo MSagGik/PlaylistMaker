@@ -49,9 +49,9 @@
     </fragment>
     <fragment
         android:id="@+id/createPlaylistFragment"
-        android:name="com.msaggik.playlistmaker.create_playlist.presentation.ui.CreatePlaylistFragment"
+        android:name="com.msaggik.playlistmaker.playlist_manager.presentation.ui.PlaylistManagerFragment"
         android:label="fragment_create_playlist"
-        tools:layout="@layout/fragment_create_playlist" />
+        tools:layout="@layout/fragment_playlist_manager" />
     <fragment
         android:id="@+id/playlistFragment"
         android:name="com.msaggik.playlistmaker.playlist.presentation.ui.PlaylistFragment"

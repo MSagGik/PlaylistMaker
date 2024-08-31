@@ -5,13 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/grey_700"
     tools:context=".playlist.presentation.ui.PlaylistFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/playlist"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/grey_700">
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/dimen_16">
 
         <ImageView
             android:id="@+id/album_playlist"
@@ -127,7 +128,7 @@
             android:layout_marginVertical="@dimen/dimen_24"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_track_list"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/menu_playlist"

@@ -1,4 +1,4 @@
-package com.msaggik.playlistmaker.create_playlist.domain.models
+package com.msaggik.playlistmaker.playlist_manager.domain.models
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

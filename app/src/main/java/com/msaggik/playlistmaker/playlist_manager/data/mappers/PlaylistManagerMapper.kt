@@ -1,11 +1,11 @@
-package com.msaggik.playlistmaker.create_playlist.data.mappers
+package com.msaggik.playlistmaker.playlist_manager.data.mappers
 
-import com.msaggik.playlistmaker.create_playlist.domain.models.Playlist
-import com.msaggik.playlistmaker.create_playlist.domain.models.Track
+import com.msaggik.playlistmaker.playlist_manager.domain.models.Playlist
+import com.msaggik.playlistmaker.playlist_manager.domain.models.Track
 import com.msaggik.playlistmaker.player.data.playlist_db.entity.many_to_many.PlaylistEntity
 import com.msaggik.playlistmaker.player.data.playlist_db.entity.many_to_many.TrackEntity
 
-class CreatePlaylistMapper {
+class PlaylistManagerMapper {
     fun map(playlist: Playlist): PlaylistEntity {
         return with(playlist) {
             PlaylistEntity(

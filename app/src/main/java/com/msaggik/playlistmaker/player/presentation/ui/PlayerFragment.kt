@@ -18,8 +18,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.msaggik.playlistmaker.R
-import com.msaggik.playlistmaker.create_playlist.presentation.ui.CreatePlaylistFragment
-import com.msaggik.playlistmaker.create_playlist.presentation.ui.state.CreateOrEditPlaylistState
+import com.msaggik.playlistmaker.playlist_manager.presentation.ui.PlaylistManagerFragment
+import com.msaggik.playlistmaker.playlist_manager.presentation.ui.state.PlaylistManagerState
 import com.msaggik.playlistmaker.databinding.FragmentPlayerBinding
 import com.msaggik.playlistmaker.player.domain.models.PlaylistWithTracks
 import com.msaggik.playlistmaker.player.domain.models.Track
@@ -297,7 +297,7 @@ class PlayerFragment : Fragment() {
         createNewPlaylistClickDebounce = onTrackClickDebounceAll {
             findNavController().navigate(
                 R.id.action_playerFragment_to_createPlaylistFragment,
-                CreatePlaylistFragment.createArgs(CreateOrEditPlaylistState.TrackArg(mapPlayerToCreatePlaylist(track!!)))
+                PlaylistManagerFragment.createArgs(PlaylistManagerState.TrackArg(mapPlayerToCreatePlaylist(track!!)))
             )
         }
     }
@@ -312,9 +312,9 @@ class PlayerFragment : Fragment() {
         )
     }
 
-    private fun mapPlayerToCreatePlaylist(track: Track): com.msaggik.playlistmaker.create_playlist.domain.models.Track {
+    private fun mapPlayerToCreatePlaylist(track: Track): com.msaggik.playlistmaker.playlist_manager.domain.models.Track {
         return with(track) {
-            com.msaggik.playlistmaker.create_playlist.domain.models.Track(
+            com.msaggik.playlistmaker.playlist_manager.domain.models.Track(
                 trackId = trackId,
                 trackName = trackName,
                 artistName = artistName,

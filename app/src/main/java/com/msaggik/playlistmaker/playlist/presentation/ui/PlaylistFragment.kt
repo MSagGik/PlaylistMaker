@@ -18,8 +18,8 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.msaggik.playlistmaker.R
-import com.msaggik.playlistmaker.create_playlist.presentation.ui.CreatePlaylistFragment
-import com.msaggik.playlistmaker.create_playlist.presentation.ui.state.CreateOrEditPlaylistState
+import com.msaggik.playlistmaker.playlist_manager.presentation.ui.PlaylistManagerFragment
+import com.msaggik.playlistmaker.playlist_manager.presentation.ui.state.PlaylistManagerState
 import com.msaggik.playlistmaker.databinding.FragmentPlaylistBinding
 import com.msaggik.playlistmaker.player.presentation.ui.PlayerFragment
 import com.msaggik.playlistmaker.playlist.domain.models.Playlist
@@ -159,6 +159,7 @@ class PlaylistFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.root.viewTreeObserver.addOnGlobalLayoutListener(null)
         _binding = null
         viewArray = emptyArray()
         viewArray = null
@@ -167,6 +168,12 @@ class PlaylistFragment : Fragment() {
     private fun defaultBottomSheetState() {
         bottomSheetBehavior = BottomSheetBehavior.from(binding.layoutBottomSheet).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
+        }
+        binding.root.viewTreeObserver.addOnGlobalLayoutListener {
+            if(_binding != null) {
+                val peekHeight = binding.root.height - binding.playlist.height
+                bottomSheetBehavior.peekHeight = peekHeight
+            }
         }
         binding.layoutBottomSheet.visibility = View.GONE
         Utils.visibilityView(
@@ -211,7 +218,7 @@ class PlaylistFragment : Fragment() {
     private fun editPlaylist(playlist: Playlist) {
         findNavController().navigate(
             R.id.action_playlistFragment_to_createPlaylistFragment,
-            CreatePlaylistFragment.createArgs(CreateOrEditPlaylistState.EditPlaylistArg(mapPlaylistToEditPlaylist(playlist)))
+            PlaylistManagerFragment.createArgs(PlaylistManagerState.EditPlaylistArg(mapPlaylistToEditPlaylist(playlist)))
         )
     }
 
@@ -306,6 +313,7 @@ class PlaylistFragment : Fragment() {
                         viewArray,
                         binding.menuPlaylist
                     )
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                     bottomSheetBehavior.isHideable = true
                 }
                 R.id.share_info_playlist_menu -> {
@@ -358,9 +366,9 @@ class PlaylistFragment : Fragment() {
             )
         }
     }
-    private fun mapPlaylistToEditPlaylist(playlist: Playlist): com.msaggik.playlistmaker.create_playlist.domain.models.Playlist {
+    private fun mapPlaylistToEditPlaylist(playlist: Playlist): com.msaggik.playlistmaker.playlist_manager.domain.models.Playlist {
         return with(playlist) {
-            com.msaggik.playlistmaker.create_playlist.domain.models.Playlist(
+            com.msaggik.playlistmaker.playlist_manager.domain.models.Playlist(
                 playlistId = playlistId,
                 playlistName = playlistName,
                 playlistDescription = playlistDescription,

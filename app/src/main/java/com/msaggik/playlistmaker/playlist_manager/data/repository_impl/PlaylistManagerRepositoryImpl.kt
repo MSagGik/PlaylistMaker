@@ -1,4 +1,4 @@
-package com.msaggik.playlistmaker.create_playlist.data.repository_impl
+package com.msaggik.playlistmaker.playlist_manager.data.repository_impl
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -6,10 +6,10 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Environment
 import androidx.core.net.toUri
-import com.msaggik.playlistmaker.create_playlist.data.mappers.CreatePlaylistMapper
-import com.msaggik.playlistmaker.create_playlist.domain.models.Playlist
-import com.msaggik.playlistmaker.create_playlist.domain.models.Track
-import com.msaggik.playlistmaker.create_playlist.domain.repository.CreatePlaylistRepository
+import com.msaggik.playlistmaker.playlist_manager.data.mappers.PlaylistManagerMapper
+import com.msaggik.playlistmaker.playlist_manager.domain.models.Playlist
+import com.msaggik.playlistmaker.playlist_manager.domain.models.Track
+import com.msaggik.playlistmaker.playlist_manager.domain.repository.PlaylistManagerRepository
 import com.msaggik.playlistmaker.player.data.playlist_db.PlaylistTracksDatabase
 import com.msaggik.playlistmaker.util.Utils
 import kotlinx.coroutines.Dispatchers
@@ -19,11 +19,11 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 
-class CreatePlaylistRepositoryImpl(
+class PlaylistManagerRepositoryImpl(
     private val context: Context,
     private val dataBase: PlaylistTracksDatabase,
-    private val playlistMapper: CreatePlaylistMapper
-) : CreatePlaylistRepository {
+    private val playlistMapper: PlaylistManagerMapper
+) : PlaylistManagerRepository {
 
     override suspend fun addPlaylist(playlist: Playlist): Long {
         return dataBase.playlistTracksDao().insertPlaylist(playlistMapper.map(playlist))

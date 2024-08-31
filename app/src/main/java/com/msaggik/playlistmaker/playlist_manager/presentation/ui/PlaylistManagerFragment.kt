@@ -1,4 +1,4 @@
-package com.msaggik.playlistmaker.create_playlist.presentation.ui
+package com.msaggik.playlistmaker.playlist_manager.presentation.ui
 
 import android.annotation.SuppressLint
 import android.net.Uri
@@ -23,15 +23,15 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.msaggik.playlistmaker.R
-import com.msaggik.playlistmaker.create_playlist.domain.models.Playlist
-import com.msaggik.playlistmaker.create_playlist.domain.models.Track
-import com.msaggik.playlistmaker.create_playlist.presentation.ui.state.CreateOrEditPlaylistState
-import com.msaggik.playlistmaker.create_playlist.presentation.view_model.CreatePlaylistViewModel
-import com.msaggik.playlistmaker.databinding.FragmentCreatePlaylistBinding
+import com.msaggik.playlistmaker.playlist_manager.domain.models.Playlist
+import com.msaggik.playlistmaker.playlist_manager.domain.models.Track
+import com.msaggik.playlistmaker.playlist_manager.presentation.ui.state.PlaylistManagerState
+import com.msaggik.playlistmaker.playlist_manager.presentation.view_model.PlaylistManagerViewModel
+import com.msaggik.playlistmaker.databinding.FragmentPlaylistManagerBinding
 import com.msaggik.playlistmaker.util.Utils
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class CreatePlaylistFragment : Fragment() {
+class PlaylistManagerFragment : Fragment() {
 
     companion object {
         private const val TRACK_INSTANCE = "track_instance"
@@ -43,25 +43,25 @@ class CreatePlaylistFragment : Fragment() {
         private const val CREATE_PLAYLIST_WITH_TRACK_STATE = 1
         private const val EDIT_PLAYLIST_STATE = 2
 
-        fun createArgs(createOrEditPlaylistState: CreateOrEditPlaylistState): Bundle {
-            return when (createOrEditPlaylistState) {
-                is CreateOrEditPlaylistState.EmptyArg -> {
+        fun createArgs(playlistManagerState: PlaylistManagerState): Bundle {
+            return when (playlistManagerState) {
+                is PlaylistManagerState.EmptyArg -> {
                     bundleOf(
                         ARGS_STATE to CREATE_PLAYLIST_STATE
                     )
                 }
 
-                is CreateOrEditPlaylistState.TrackArg -> {
+                is PlaylistManagerState.TrackArg -> {
                     bundleOf(
                         ARGS_STATE to CREATE_PLAYLIST_WITH_TRACK_STATE,
-                        TRACK_INSTANCE to createOrEditPlaylistState.track
+                        TRACK_INSTANCE to playlistManagerState.track
                     )
                 }
 
-                is CreateOrEditPlaylistState.EditPlaylistArg -> {
+                is PlaylistManagerState.EditPlaylistArg -> {
                     bundleOf(
                         ARGS_STATE to EDIT_PLAYLIST_STATE,
-                        PLAYLIST_INSTANCE to createOrEditPlaylistState.playlist
+                        PLAYLIST_INSTANCE to playlistManagerState.playlist
                     )
                 }
 
@@ -70,11 +70,11 @@ class CreatePlaylistFragment : Fragment() {
     }
 
     // view-model
-    private val createPlaylistViewModel: CreatePlaylistViewModel by viewModel()
+    private val playlistManagerViewModel: PlaylistManagerViewModel by viewModel()
 
     // view
-    private var _binding: FragmentCreatePlaylistBinding? = null
-    private val binding: FragmentCreatePlaylistBinding get() = _binding!!
+    private var _binding: FragmentPlaylistManagerBinding? = null
+    private val binding: FragmentPlaylistManagerBinding get() = _binding!!
 
     // input data
     private var track: Track? = null
@@ -102,11 +102,11 @@ class CreatePlaylistFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        createPlaylistViewModel.stateCreateOrEditPlaylist = requireArguments().getInt(ARGS_STATE)
+        playlistManagerViewModel.stateCreateOrEditPlaylist = requireArguments().getInt(ARGS_STATE)
 
         pickMedia = registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
-                createPlaylistViewModel.saveImageToPrivateStorage(uri)
+                playlistManagerViewModel.saveImageToPrivateStorage(uri)
             }
         }
     }
@@ -115,7 +115,7 @@ class CreatePlaylistFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentCreatePlaylistBinding.inflate(inflater, container, false)
+        _binding = FragmentPlaylistManagerBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -125,14 +125,14 @@ class CreatePlaylistFragment : Fragment() {
 
         initDifStateFragment()
 
-        createPlaylistViewModel.getNamesPlaylist()
+        playlistManagerViewModel.getNamesPlaylist()
 
-        createPlaylistViewModel.getNamesPlaylistLiveData().observe(viewLifecycleOwner) {
+        playlistManagerViewModel.getNamesPlaylistLiveData().observe(viewLifecycleOwner) {
             namesPlaylist.clear()
             namesPlaylist.addAll(it)
         }
 
-        createPlaylistViewModel.getUriImageToPrivateStorageLiveData().observe(viewLifecycleOwner) {
+        playlistManagerViewModel.getUriImageToPrivateStorageLiveData().observe(viewLifecycleOwner) {
             Glide.with(binding.root)
                 .load(it)
                 .placeholder(R.drawable.ic_placeholder)
@@ -142,8 +142,8 @@ class CreatePlaylistFragment : Fragment() {
             uriImageToPrivateStorage = it
         }
 
-        if (createPlaylistViewModel.stateCreateOrEditPlaylist == EDIT_PLAYLIST_STATE) {
-            createPlaylistViewModel.setUriImageToPrivateStorageLiveData(playlist!!.playlistUriAlbum.toUri())
+        if (playlistManagerViewModel.stateCreateOrEditPlaylist == EDIT_PLAYLIST_STATE) {
+            playlistManagerViewModel.setUriImageToPrivateStorageLiveData(playlist!!.playlistUriAlbum.toUri())
             binding.nameTrackInput.setText(playlist!!.playlistName)
             binding.descriptionTrackInput.setText(playlist!!.playlistDescription)
         }
@@ -159,7 +159,7 @@ class CreatePlaylistFragment : Fragment() {
     private val onBackPressedCallback: OnBackPressedCallback =
         object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if(createPlaylistViewModel.stateCreateOrEditPlaylist == EDIT_PLAYLIST_STATE) {
+                if(playlistManagerViewModel.stateCreateOrEditPlaylist == EDIT_PLAYLIST_STATE) {
                     findNavController().popBackStack()
                 } else if (uriImageToPrivateStorage != null || !binding.nameTrackInput.text.isNullOrEmpty() || !binding.descriptionTrackInput.text.isNullOrEmpty()) {
                     backAddPlaylistDialog.show()
@@ -179,7 +179,7 @@ class CreatePlaylistFragment : Fragment() {
     }
 
     private fun initDifStateFragment() {
-        when (createPlaylistViewModel.stateCreateOrEditPlaylist) {
+        when (playlistManagerViewModel.stateCreateOrEditPlaylist) {
             CREATE_PLAYLIST_STATE -> {
                 binding.panelHeader.text = requireContext().getString(R.string.new_playlist)
                 binding.addPlaylist.text = requireContext().getString(R.string.create)
@@ -196,7 +196,7 @@ class CreatePlaylistFragment : Fragment() {
                     requireArguments().getParcelable(TRACK_INSTANCE)
                 }
 
-                createPlaylistViewModel.getSuccessAddTrackInPlaylistLiveData()
+                playlistManagerViewModel.getSuccessAddTrackInPlaylistLiveData()
                     .observe(viewLifecycleOwner) { values ->
                         val (idPlaylist, namePlaylist) = values
                         val hasSuccessAddTrack = idPlaylist != -1L
@@ -229,7 +229,7 @@ class CreatePlaylistFragment : Fragment() {
         override fun onClick(p0: View?) {
             when (p0?.id) {
                 R.id.button_back -> {
-                    if(createPlaylistViewModel.stateCreateOrEditPlaylist == EDIT_PLAYLIST_STATE) {
+                    if(playlistManagerViewModel.stateCreateOrEditPlaylist == EDIT_PLAYLIST_STATE) {
                         findNavController().popBackStack()
                     } else if (uriImageToPrivateStorage != null || !binding.nameTrackInput.text.isNullOrEmpty() || !binding.descriptionTrackInput.text.isNullOrEmpty()) {
                         backAddPlaylistDialog.show()
@@ -248,21 +248,21 @@ class CreatePlaylistFragment : Fragment() {
                         playlistDescription = binding.descriptionTrackInput.text.toString(),
                         playlistUriAlbum = uriImageToPrivateStorage.toString()
                     )
-                    when (createPlaylistViewModel.stateCreateOrEditPlaylist) {
+                    when (playlistManagerViewModel.stateCreateOrEditPlaylist) {
                         CREATE_PLAYLIST_STATE -> {
-                            createPlaylistViewModel.addPlaylist(newPlaylist)
+                            playlistManagerViewModel.addPlaylist(newPlaylist)
                             findNavController().popBackStack()
                             messageSuccessAddPlaylist(binding.nameTrackInput.text.toString())
                         }
 
                         CREATE_PLAYLIST_WITH_TRACK_STATE -> {
-                            createPlaylistViewModel.addTrackInPlaylist(newPlaylist, track!!)
+                            playlistManagerViewModel.addTrackInPlaylist(newPlaylist, track!!)
                             messageSuccessAddPlaylist(binding.nameTrackInput.text.toString())
                         }
 
                         EDIT_PLAYLIST_STATE -> {
                             newPlaylist.apply { playlistId = playlist!!.playlistId }
-                            createPlaylistViewModel.editTrackInPlaylist(newPlaylist)
+                            playlistManagerViewModel.editTrackInPlaylist(newPlaylist)
                             findNavController().popBackStack()
                             messageSuccessEditPlaylist(binding.nameTrackInput.text.toString())
                         }
@@ -304,7 +304,7 @@ class CreatePlaylistFragment : Fragment() {
     private fun stateButtonPlaylist(namePlaylist: String) {
         val hasNamesPlaylist = namesPlaylist.contains(namePlaylist)
         binding.addPlaylist.isEnabled = when {
-            createPlaylistViewModel.stateCreateOrEditPlaylist == EDIT_PLAYLIST_STATE
+            playlistManagerViewModel.stateCreateOrEditPlaylist == EDIT_PLAYLIST_STATE
                     && namePlaylist == playlist!!.playlistName -> {
                 binding.nameTrack.isErrorEnabled = false
                 true
