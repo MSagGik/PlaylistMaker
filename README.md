@@ -98,7 +98,7 @@ Playlist Maker разработан с акцентом на улучшенны�
 <img src="screenshots/screen_playlist_manager_light_theme_ru.png"/>
 </p>
 <p align="left">
-<img src="screenshots/screen_playlist_manager_light_theme_ru.png"/>
+<img src="screenshots/screen_playlist_manager_dark_theme_ru.png"/>
 </p>
 
 ### Взаимодействие с плейлистом:
