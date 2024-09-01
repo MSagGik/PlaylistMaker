@@ -17,7 +17,7 @@ class SearchViewModel(
 ) : ViewModel() {
 
     companion object {
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+        private const val SEARCH_DEBOUNCE_DELAY = 3000L
     }
 
     // trackListHistoryLiveData
@@ -88,7 +88,10 @@ class SearchViewModel(
         true,
         false
     ) { changedText ->
-        searchTracks(changedText)
+        if (changedText.isNotEmpty()) {
+            searchTracks(changedText)
+        }
+
     }
 
     fun searchDebounce(changedText: String) {

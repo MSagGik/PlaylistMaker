@@ -1,6 +1,7 @@
 package com.msaggik.playlistmaker.media.presentation.ui.fragments
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -27,7 +28,8 @@ class PlaylistsFragment : Fragment() {
 
     companion object {
         private const val DELAY_CLICK_PLAYLIST = 250L
-        private val NUMBER_COLUMN_RECYCLERVIEW = 2
+        private val NUMBER_COLUMN_RECYCLERVIEW_LANDSCAPE = 5
+        private val NUMBER_COLUMN_RECYCLERVIEW_PORTRAIT = 2
         fun newInstance() = PlaylistsFragment()
     }
 
@@ -77,8 +79,13 @@ class PlaylistsFragment : Fragment() {
 
         playlistsViewModel.getPlaylistWithTracks()
 
-        binding.playlists.layoutManager =
-            GridLayoutManager(activity, NUMBER_COLUMN_RECYCLERVIEW, LinearLayoutManager.VERTICAL, false)
+        val orientation = resources.configuration.orientation
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            binding.playlists.layoutManager = GridLayoutManager(activity, NUMBER_COLUMN_RECYCLERVIEW_LANDSCAPE, LinearLayoutManager.VERTICAL, false)
+        } else if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            binding.playlists.layoutManager = GridLayoutManager(activity, NUMBER_COLUMN_RECYCLERVIEW_PORTRAIT, LinearLayoutManager.VERTICAL, false)
+        }
+
         binding.playlists.adapter = playlistWithTracksAdapter
         playlistWithTracksAdapter.notifyDataSetChanged()
 

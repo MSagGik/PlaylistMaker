@@ -132,8 +132,12 @@ class SearchFragment : Fragment() {
                 Utils.visibilityView(viewArray, binding.layoutCommunicationProblems)
                 Toast.makeText(requireContext(), state.errorMessage, Toast.LENGTH_SHORT).show()
             }
+
             is TracksState.Empty -> Utils.visibilityView(viewArray, binding.layoutNothingFound)
-            is TracksState.HistoryTracks -> Utils.visibilityView(viewArray, binding.layoutSearchHistory)
+            is TracksState.HistoryTracks -> Utils.visibilityView(
+                viewArray,
+                binding.layoutSearchHistory
+            )
         }
     }
 
@@ -207,10 +211,8 @@ class SearchFragment : Fragment() {
         override fun onTextChanged(inputText: CharSequence?, p1: Int, p2: Int, p3: Int) {
             val isInputText = !inputText.isNullOrEmpty()
             binding.buttonClear.isVisible = isInputText
-            if (isInputText) {
-                searchTrackResult = inputText.toString()
-                searchViewModel.searchDebounce(searchTrackResult)
-            }
+            searchTrackResult = inputText.toString()
+            searchViewModel.searchDebounce(searchTrackResult)
             visibleLayoutSearchHistory(!isInputText)
         }
 

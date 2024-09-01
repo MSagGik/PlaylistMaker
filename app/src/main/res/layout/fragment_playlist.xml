@@ -29,18 +29,19 @@
             android:id="@+id/button_back"
             android:layout_width="@dimen/dimen_48"
             android:layout_height="@dimen/dimen_48"
+            android:layout_margin="@dimen/dimen_4"
             android:foreground="?attr/selectableItemBackground"
             app:layout_constraintDimensionRatio="w,1:1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_back" />
+            app:srcCompat="@drawable/ic_back_with_outline" />
 
         <TextView
             android:id="@+id/playlist_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/dimen_16"
-            android:layout_marginTop="@dimen/dimen_48"
+            android:layout_marginTop="@dimen/dimen_24"
             android:ellipsize="end"
             android:fontFamily="@font/ys_display_bold"
             android:maxLines="1"

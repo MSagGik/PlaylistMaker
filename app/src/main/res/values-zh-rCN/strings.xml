@@ -20,7 +20,7 @@
     <string name="length_track">轨道长度</string>
     <string name="track_selection">曲目选择</string>
     <string name="nothing_found">没有找到任何内容</string>
-    <string name="communication_problems">沟通问题\\n\\n上传失败\\n查看互联网连接</string>
+    <string name="communication_problems">沟通问题 \n 上传失败 \n 查看互联网连接</string>
     <string name="update">更新</string>
     <string name="header_search">你正在寻找</string>
     <string name="clear_search_history">清除历史记录</string>

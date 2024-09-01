@@ -141,7 +141,7 @@
 
     <style name="BaseButtonPlaceHolder">
         <item name="android:layout_width">@dimen/dimen_91</item>
-        <item name="android:layout_height">@dimen/dimen_36</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/dimen_24</item>
         <item name="android:paddingHorizontal">@dimen/dimen_8</item>
         <item name="cornerRadius">@dimen/dimen_54</item>
