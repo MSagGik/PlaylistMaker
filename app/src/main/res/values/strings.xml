@@ -91,4 +91,5 @@
     <string name="delete_playlist">Удалить плейлист</string>
     <string name="edit_playlist">Редактировать</string>
     <string name="save_playlist">Сохранить</string>
+    <string name="message_empty_playlist">В плейлисте треки отсутствуют</string>
 </resources>

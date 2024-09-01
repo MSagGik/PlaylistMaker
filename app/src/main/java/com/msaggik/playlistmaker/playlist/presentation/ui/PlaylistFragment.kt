@@ -111,7 +111,8 @@ class PlaylistFragment : Fragment() {
         _binding = FragmentPlaylistBinding.inflate(inflater, container, false)
         viewArray = arrayOf(
             binding.trackList,
-            binding.menuPlaylist
+            binding.menuPlaylist,
+            binding.placeholderEmptyPlaylist
         )
         return binding.root
     }
@@ -175,7 +176,6 @@ class PlaylistFragment : Fragment() {
                 bottomSheetBehavior.peekHeight = peekHeight
             }
         }
-        binding.layoutBottomSheet.visibility = View.GONE
         Utils.visibilityView(
             viewArray,
             binding.trackList
@@ -282,10 +282,14 @@ class PlaylistFragment : Fragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun showTracksPlaylist(playlist: PlaylistWithTracks) {
-        binding.layoutBottomSheet.visibility = View.VISIBLE
         tracks.clear()
         tracks.addAll(playlist.tracks)
         tracksAdapter.notifyDataSetChanged()
+        binding.layoutBottomSheet.visibility = View.VISIBLE
+        Utils.visibilityView(
+            viewArray,
+            binding.trackList
+        )
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
@@ -293,8 +297,12 @@ class PlaylistFragment : Fragment() {
     private fun noShowTracksPlaylist() {
         tracks.clear()
         tracksAdapter.notifyDataSetChanged()
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        binding.layoutBottomSheet.visibility = View.GONE
+        binding.layoutBottomSheet.visibility = View.VISIBLE
+        Utils.visibilityView(
+            viewArray,
+            binding.placeholderEmptyPlaylist
+        )
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
     private val listener: View.OnClickListener = object : View.OnClickListener {

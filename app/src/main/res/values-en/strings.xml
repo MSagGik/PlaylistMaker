@@ -82,4 +82,5 @@
     <string name="edit_playlist">Edit</string>
     <string name="save_playlist">Save</string>
     <string name="message_success_edit_playlist">Playlist %1$s updated</string>
+    <string name="message_empty_playlist">There are no tracks in the playlist</string>
 </resources>
