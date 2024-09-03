@@ -26,13 +26,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistsFragment : Fragment() {
 
-    companion object {
-        private const val DELAY_CLICK_PLAYLIST = 250L
-        private val NUMBER_COLUMN_RECYCLERVIEW_LANDSCAPE = 5
-        private val NUMBER_COLUMN_RECYCLERVIEW_PORTRAIT = 2
-        fun newInstance() = PlaylistsFragment()
-    }
-
     private lateinit var playlistClickDebounce: (PlaylistWithTracks) -> Unit
 
     private val playlistsViewModel: PlaylistsViewModel by viewModel()
@@ -134,5 +127,12 @@ class PlaylistsFragment : Fragment() {
                 }
             }
         }
+    }
+
+    companion object {
+        private const val DELAY_CLICK_PLAYLIST = 250L
+        private val NUMBER_COLUMN_RECYCLERVIEW_LANDSCAPE = 5
+        private val NUMBER_COLUMN_RECYCLERVIEW_PORTRAIT = 2
+        fun newInstance() = PlaylistsFragment()
     }
 }

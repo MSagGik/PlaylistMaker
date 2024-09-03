@@ -1,10 +1,9 @@
 package com.msaggik.playlistmaker.player.di
 
 import android.media.MediaPlayer
-import androidx.room.Room
-import com.msaggik.playlistmaker.player.data.mappers.PlayerMapper
+import androidx.room.migration.Migration
 import com.msaggik.playlistmaker.player.data.playlist_db.PlaylistTracksDatabase
-import com.msaggik.playlistmaker.player.data.playlist_db.entity.config_db.DatabaseConfig.DATABASE_NAME
+import com.msaggik.playlistmaker.player.data.playlist_db.migrate.MigrationOneToTwoVersion
 import com.msaggik.playlistmaker.player.data.repository_impl.PlayerRepositoryImpl
 import com.msaggik.playlistmaker.player.domain.use_case.PlayerInteractor
 import com.msaggik.playlistmaker.player.domain.use_case.impl.PlayerInteractorImpl
@@ -34,7 +33,6 @@ val playerModule = module {
     factory<PlayerRepository> {
         PlayerRepositoryImpl(
             mediaPlayer = get(),
-            converters = get(),
             dataBase = get()
         )
     }
@@ -43,12 +41,15 @@ val playerModule = module {
         MediaPlayer()
     }
 
-    single {
-        PlayerMapper()
-    }
-
     // db
     single {
-        Room.databaseBuilder(androidContext(), PlaylistTracksDatabase::class.java, DATABASE_NAME).build()
+        PlaylistTracksDatabase.getDatabase(
+            context = androidContext(),
+            migration = get()
+        )
+    }
+
+    single<Migration> {
+        MigrationOneToTwoVersion()
     }
 }

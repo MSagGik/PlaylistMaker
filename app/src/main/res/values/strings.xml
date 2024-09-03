@@ -92,4 +92,5 @@
     <string name="edit_playlist">Редактировать</string>
     <string name="save_playlist">Сохранить</string>
     <string name="message_empty_playlist">В плейлисте треки отсутствуют</string>
+    <string name="message_empty_track">Отсутствует трек для добавления в плейлист</string>
 </resources>

@@ -1,6 +1,5 @@
 package com.msaggik.playlistmaker.playlist_manager.di
 
-import com.msaggik.playlistmaker.playlist_manager.data.mappers.PlaylistManagerMapper
 import com.msaggik.playlistmaker.playlist_manager.data.repository_impl.PlaylistManagerRepositoryImpl
 import com.msaggik.playlistmaker.playlist_manager.domain.repository.PlaylistManagerRepository
 import com.msaggik.playlistmaker.playlist_manager.domain.use_case.PlaylistManagerInteractor
@@ -30,13 +29,7 @@ val playlistManagerModule = module {
     single<PlaylistManagerRepository> {
         PlaylistManagerRepositoryImpl(
             context = androidContext(),
-            dataBase = get(),
-            playlistMapper = get()
+            dataBase = get()
         )
     }
-
-    single {
-        PlaylistManagerMapper()
-    }
-
 }

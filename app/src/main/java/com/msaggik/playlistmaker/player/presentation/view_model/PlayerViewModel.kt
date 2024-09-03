@@ -21,11 +21,6 @@ import kotlinx.coroutines.launch
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
 ) : ViewModel() {
-
-    companion object {
-        private const val PLAYER_DELAY_UPDATE_TRACK_LIST = 250L
-    }
-
     /**
      * Player ViewModel
      * @param playerTrackLiveData - LiveData state instance entity Track
@@ -204,5 +199,10 @@ class PlayerViewModel(
             val idPlaylist = playerInteractor.addTrackInPlaylist(playlist.playlistId, track)
             successAddTrackInPlaylistLiveData.postValue(Pair(idPlaylist, playlist.playlistName))
         }
+    }
+
+
+    companion object {
+        private const val PLAYER_DELAY_UPDATE_TRACK_LIST = 250L
     }
 }

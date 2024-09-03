@@ -33,42 +33,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistManagerFragment : Fragment() {
 
-    companion object {
-        private const val TRACK_INSTANCE = "track_instance"
-        private const val PLAYLIST_INSTANCE = "playlist_instance"
-
-        private const val ARGS_STATE = "args_state"
-
-        private const val CREATE_PLAYLIST_STATE = 0
-        private const val CREATE_PLAYLIST_WITH_TRACK_STATE = 1
-        private const val EDIT_PLAYLIST_STATE = 2
-
-        fun createArgs(playlistManagerState: PlaylistManagerState): Bundle {
-            return when (playlistManagerState) {
-                is PlaylistManagerState.EmptyArg -> {
-                    bundleOf(
-                        ARGS_STATE to CREATE_PLAYLIST_STATE
-                    )
-                }
-
-                is PlaylistManagerState.TrackArg -> {
-                    bundleOf(
-                        ARGS_STATE to CREATE_PLAYLIST_WITH_TRACK_STATE,
-                        TRACK_INSTANCE to playlistManagerState.track
-                    )
-                }
-
-                is PlaylistManagerState.EditPlaylistArg -> {
-                    bundleOf(
-                        ARGS_STATE to EDIT_PLAYLIST_STATE,
-                        PLAYLIST_INSTANCE to playlistManagerState.playlist
-                    )
-                }
-
-            }
-        }
-    }
-
     // view-model
     private val playlistManagerViewModel: PlaylistManagerViewModel by viewModel()
 
@@ -90,10 +54,10 @@ class PlaylistManagerFragment : Fragment() {
     // parameter for dialog window
     private val backAddPlaylistDialog: MaterialAlertDialogBuilder by lazy {
         MaterialAlertDialogBuilder(requireActivity())
-            .setTitle(requireActivity().getString(R.string.finish_creating_the_playlist))
-            .setMessage(requireActivity().getString(R.string.all_unsaved_data_will_be_lost))
-            .setNeutralButton(requireActivity().getString(R.string.cancel)) { dialog, which -> }
-            .setPositiveButton(requireActivity().getString(R.string.finish)) { dialog, which ->
+            .setTitle(getString(R.string.finish_creating_the_playlist))
+            .setMessage(getString(R.string.all_unsaved_data_will_be_lost))
+            .setNeutralButton(getString(R.string.cancel)) { dialog, which -> }
+            .setPositiveButton(getString(R.string.finish)) { dialog, which ->
                 findNavController().popBackStack()
             }
     }
@@ -143,9 +107,11 @@ class PlaylistManagerFragment : Fragment() {
         }
 
         if (playlistManagerViewModel.stateCreateOrEditPlaylist == EDIT_PLAYLIST_STATE) {
-            playlistManagerViewModel.setUriImageToPrivateStorageLiveData(playlist!!.playlistUriAlbum.toUri())
-            binding.nameTrackInput.setText(playlist!!.playlistName)
-            binding.descriptionTrackInput.setText(playlist!!.playlistDescription)
+            playlist?.let {
+                playlistManagerViewModel.setUriImageToPrivateStorageLiveData(it.playlistUriAlbum.toUri())
+                binding.nameTrackInput.setText(it.playlistName)
+                binding.descriptionTrackInput.setText(it.playlistDescription)
+            }
         }
 
         binding.nameTrackInput.addTextChangedListener(inputSearchWatcher)
@@ -181,14 +147,14 @@ class PlaylistManagerFragment : Fragment() {
     private fun initDifStateFragment() {
         when (playlistManagerViewModel.stateCreateOrEditPlaylist) {
             CREATE_PLAYLIST_STATE -> {
-                binding.panelHeader.text = requireContext().getString(R.string.new_playlist)
-                binding.addPlaylist.text = requireContext().getString(R.string.create)
+                binding.panelHeader.text = getString(R.string.new_playlist)
+                binding.addPlaylist.text = getString(R.string.create)
 
             }
 
             CREATE_PLAYLIST_WITH_TRACK_STATE -> {
-                binding.panelHeader.text = requireContext().getString(R.string.new_playlist)
-                binding.addPlaylist.text = requireContext().getString(R.string.create)
+                binding.panelHeader.text = getString(R.string.new_playlist)
+                binding.addPlaylist.text = getString(R.string.create)
 
                 track = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     requireArguments().getParcelable(TRACK_INSTANCE, Track::class.java)
@@ -200,8 +166,7 @@ class PlaylistManagerFragment : Fragment() {
                     .observe(viewLifecycleOwner) { values ->
                         val (idPlaylist, namePlaylist) = values
                         val hasSuccessAddTrack = idPlaylist != -1L
-                        val message = requireContext()
-                            .getString(
+                        val message = getString(
                                 if (hasSuccessAddTrack) R.string.add_track_in_playlist else R.string.no_add_track_in_playlist,
                                 namePlaylist
                             )
@@ -211,8 +176,8 @@ class PlaylistManagerFragment : Fragment() {
             }
 
             EDIT_PLAYLIST_STATE -> {
-                binding.panelHeader.text = requireContext().getString(R.string.edit_playlist)
-                binding.addPlaylist.text = requireContext().getString(R.string.save_playlist)
+                binding.panelHeader.text = getString(R.string.edit_playlist)
+                binding.addPlaylist.text = getString(R.string.save_playlist)
                 binding.addPlaylist.isEnabled = true
 
                 playlist = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -256,12 +221,14 @@ class PlaylistManagerFragment : Fragment() {
                         }
 
                         CREATE_PLAYLIST_WITH_TRACK_STATE -> {
-                            playlistManagerViewModel.addTrackInPlaylist(newPlaylist, track!!)
+                            track?.let { playlistManagerViewModel.addTrackInPlaylist(newPlaylist, it) }
                             messageSuccessAddPlaylist(binding.nameTrackInput.text.toString())
                         }
 
                         EDIT_PLAYLIST_STATE -> {
-                            newPlaylist.apply { playlistId = playlist!!.playlistId }
+                            playlist?.let {
+                                newPlaylist.apply { playlistId = it.playlistId }
+                            }
                             playlistManagerViewModel.editTrackInPlaylist(newPlaylist)
                             findNavController().popBackStack()
                             messageSuccessEditPlaylist(binding.nameTrackInput.text.toString())
@@ -275,7 +242,7 @@ class PlaylistManagerFragment : Fragment() {
     private fun messageSuccessAddPlaylist(namePlaylist: String) {
         Toast.makeText(
             requireActivity(),
-            requireActivity().getString(R.string.message_success_add_playlist, namePlaylist),
+            getString(R.string.message_success_add_playlist, namePlaylist),
             Toast.LENGTH_SHORT
         ).show()
     }
@@ -283,7 +250,7 @@ class PlaylistManagerFragment : Fragment() {
     private fun messageSuccessEditPlaylist(namePlaylist: String) {
         Toast.makeText(
             requireActivity(),
-            requireActivity().getString(R.string.message_success_edit_playlist, namePlaylist),
+            getString(R.string.message_success_edit_playlist, namePlaylist),
             Toast.LENGTH_SHORT
         ).show()
     }
@@ -305,25 +272,61 @@ class PlaylistManagerFragment : Fragment() {
         val hasNamesPlaylist = namesPlaylist.contains(namePlaylist)
         binding.addPlaylist.isEnabled = when {
             playlistManagerViewModel.stateCreateOrEditPlaylist == EDIT_PLAYLIST_STATE
-                    && namePlaylist == playlist!!.playlistName -> {
+                    && playlist?.let { namePlaylist == it.playlistName } == true -> {
                 binding.nameTrack.isErrorEnabled = false
                 true
             }
 
-            !hasNamesPlaylist && !namePlaylist.isNullOrEmpty() -> {
+            !hasNamesPlaylist && !namePlaylist.isNullOrEmpty() && namePlaylist.trim().isNotEmpty() -> {
                 binding.nameTrack.isErrorEnabled = false
                 true
             }
 
             hasNamesPlaylist -> {
                 binding.nameTrack.error =
-                    requireActivity().getString(R.string.has_duplicate_playlist)
+                    getString(R.string.has_duplicate_playlist)
                 false
             }
 
             else -> {
                 binding.nameTrack.isErrorEnabled = false
                 false
+            }
+        }
+    }
+
+    companion object {
+        private const val TRACK_INSTANCE = "track_instance"
+        private const val PLAYLIST_INSTANCE = "playlist_instance"
+
+        private const val ARGS_STATE = "args_state"
+
+        private const val CREATE_PLAYLIST_STATE = 0
+        private const val CREATE_PLAYLIST_WITH_TRACK_STATE = 1
+        private const val EDIT_PLAYLIST_STATE = 2
+
+        fun createArgs(playlistManagerState: PlaylistManagerState): Bundle {
+            return when (playlistManagerState) {
+                is PlaylistManagerState.EmptyArg -> {
+                    bundleOf(
+                        ARGS_STATE to CREATE_PLAYLIST_STATE
+                    )
+                }
+
+                is PlaylistManagerState.TrackArg -> {
+                    bundleOf(
+                        ARGS_STATE to CREATE_PLAYLIST_WITH_TRACK_STATE,
+                        TRACK_INSTANCE to playlistManagerState.track
+                    )
+                }
+
+                is PlaylistManagerState.EditPlaylistArg -> {
+                    bundleOf(
+                        ARGS_STATE to EDIT_PLAYLIST_STATE,
+                        PLAYLIST_INSTANCE to playlistManagerState.playlist
+                    )
+                }
+
             }
         }
     }

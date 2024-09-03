@@ -10,6 +10,9 @@ import retrofit2.http.Query
 
 interface RestItunes {
 
+    @GET("/search?entity=song")
+    suspend fun search(@Query("term") text: String): TrackResponse
+
     companion object{
         fun createRetrofitObject(baseUrl: String) : Retrofit {
             return  Retrofit.Builder()
@@ -29,7 +32,4 @@ interface RestItunes {
                 .build()
         }
     }
-
-    @GET("/search?entity=song")
-    suspend fun search(@Query("term") text: String): TrackResponse
 }

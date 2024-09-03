@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.flow
 private const val DELTA_TIME_TRACK = 250L
 class PlayerRepositoryImpl(
     private val mediaPlayer: MediaPlayer,
-    private val converters: PlayerMapper,
     private val dataBase: PlaylistTracksDatabase
 ) : PlayerRepository {
 
@@ -76,7 +75,7 @@ class PlayerRepositoryImpl(
     // favorite tracks
 
     override suspend fun setFavoriteTrack(track: Track): Long {
-        return dataBase.playlistTracksDao().setFavoriteTrack(converters.map(track))
+        return dataBase.playlistTracksDao().setFavoriteTrack(PlayerMapper.map(track))
     }
 
     override fun getFavoriteTracksId(): Flow<List<Long>> = flow {
@@ -96,12 +95,12 @@ class PlayerRepositoryImpl(
     override suspend fun playlistsWithTracks(): Flow<List<PlaylistWithTracks>> = flow {
         emit(
             dataBase.playlistTracksDao().playlistsWithTracks().map { playlist ->
-                converters.mapPlaylistDbToPlaylist(playlist)
+                PlayerMapper.mapPlaylistDbToPlaylist(playlist)
             }
         )
     }
 
     override suspend fun addTrackInPlaylist(idPlaylist: Long, track: Track): Long {
-        return dataBase.playlistTracksDao().addTrackInPlaylist(idPlaylist, converters.map(track))
+        return dataBase.playlistTracksDao().addTrackInPlaylist(idPlaylist, PlayerMapper.map(track))
     }
 }

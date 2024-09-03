@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.msaggik.playlistmaker.playlist.domain.models.PlaylistWithTracks
+import com.msaggik.playlistmaker.playlist.domain.models.Track
 import com.msaggik.playlistmaker.playlist.domain.use_case.PlaylistInteractor
 import com.msaggik.playlistmaker.playlist.presentation.view_model.state.PlaylistWithTracksState
 import kotlinx.coroutines.Dispatchers
@@ -66,6 +67,24 @@ class PlaylistViewModel(
     fun removePlaylist(playlistId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             playlistInteractor.removePlaylist(playlistId)
+        }
+    }
+
+    private val sumTimeOfTracksLiveData = MutableLiveData<Long>()
+    fun getSumTimeOfTracksLiveData(): LiveData<Long> = sumTimeOfTracksLiveData
+
+    fun sumTimeOfTracks(list: List<Track>){
+        viewModelScope.launch(Dispatchers.Default) {
+            var valueTimeOfTracks = 0L
+            for (track in list) {
+                valueTimeOfTracks += track.trackTimeMillis
+            }
+            valueTimeOfTracks = if (valueTimeOfTracks % 60_000 > 0.41) {
+                valueTimeOfTracks / 60_000 + 1
+            } else {
+                valueTimeOfTracks / 60_000
+            }
+            sumTimeOfTracksLiveData.postValue(valueTimeOfTracks)
         }
     }
 }

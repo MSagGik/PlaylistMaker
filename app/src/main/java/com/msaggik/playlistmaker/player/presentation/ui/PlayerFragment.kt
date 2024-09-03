@@ -1,6 +1,7 @@
 package com.msaggik.playlistmaker.player.presentation.ui
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -21,6 +22,7 @@ import com.msaggik.playlistmaker.R
 import com.msaggik.playlistmaker.playlist_manager.presentation.ui.PlaylistManagerFragment
 import com.msaggik.playlistmaker.playlist_manager.presentation.ui.state.PlaylistManagerState
 import com.msaggik.playlistmaker.databinding.FragmentPlayerBinding
+import com.msaggik.playlistmaker.player.data.mappers.PlayerMapper
 import com.msaggik.playlistmaker.player.domain.models.PlaylistWithTracks
 import com.msaggik.playlistmaker.player.domain.models.Track
 import com.msaggik.playlistmaker.player.presentation.ui.adapters.PlaylistWithTracksAdapter
@@ -31,16 +33,6 @@ import com.msaggik.playlistmaker.util.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlayerFragment : Fragment() {
-
-    companion object {
-        private const val DELAY_CLICK_TRACK = 250L
-        private const val TRACK_INSTANCE = "track_instance"
-        fun createArgs(track: Track): Bundle {
-            return bundleOf(
-                TRACK_INSTANCE to track
-            )
-        }
-    }
 
     // view-model
     private val playerViewModel: PlayerViewModel by viewModel()
@@ -95,7 +87,8 @@ class PlayerFragment : Fragment() {
         _binding = FragmentPlayerBinding.inflate(inflater, container, false)
         viewArray = arrayOf(
             binding.placeholderEmptyPlaylists,
-            binding.playlists
+            binding.playlists,
+            binding.loadingPlaylist
         )
         return binding.root
     }
@@ -247,12 +240,14 @@ class PlayerFragment : Fragment() {
                     BottomSheetBehavior.STATE_COLLAPSED -> {
                         playerViewModel.pausePlayer()
                         playerViewModel.getPlaylistsWithTracks()
+                        binding.backgroundScreen.background = ColorDrawable(ContextCompat.getColor(requireContext(), R.color.grey_100_alfa_50))
                     }
-
                     BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding.backgroundScreen.background = ColorDrawable(ContextCompat.getColor(requireContext(), R.color.color_null))
                     }
-
-                    else -> {}
+                    else -> {
+                        binding.backgroundScreen.background = ColorDrawable(ContextCompat.getColor(requireContext(), R.color.grey_100_alfa_50))
+                    }
                 }
             }
 
@@ -295,10 +290,12 @@ class PlayerFragment : Fragment() {
     private fun initDebounces() {
         setFavoriteClickDebounce = onTrackClickDebounceAll { playerViewModel.onFavoriteClicked(it) }
         createNewPlaylistClickDebounce = onTrackClickDebounceAll {
-            findNavController().navigate(
-                R.id.action_playerFragment_to_createPlaylistFragment,
-                PlaylistManagerFragment.createArgs(PlaylistManagerState.TrackArg(mapPlayerToCreatePlaylist(track!!)))
-            )
+            track?.let{
+                findNavController().navigate(
+                    R.id.action_playerFragment_to_createPlaylistFragment,
+                    PlaylistManagerFragment.createArgs(PlaylistManagerState.TrackArg(PlayerMapper.mapPlayerToCreatePlaylist(it)))
+                )
+            }?:Toast.makeText(requireContext(),getString(R.string.message_empty_track), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -312,21 +309,12 @@ class PlayerFragment : Fragment() {
         )
     }
 
-    private fun mapPlayerToCreatePlaylist(track: Track): com.msaggik.playlistmaker.playlist_manager.domain.models.Track {
-        return with(track) {
-            com.msaggik.playlistmaker.playlist_manager.domain.models.Track(
-                trackId = trackId,
-                trackName = trackName,
-                artistName = artistName,
-                trackTimeMillis = trackTimeMillis,
-                artworkUrl100 = artworkUrl100,
-                collectionName = collectionName,
-                releaseDate = releaseDate,
-                primaryGenreName = primaryGenreName,
-                country = country,
-                previewUrl = previewUrl,
-                isFavorite = isFavorite,
-                dateAddTrack = dateAddTrack
+    companion object {
+        private const val DELAY_CLICK_TRACK = 250L
+        private const val TRACK_INSTANCE = "track_instance"
+        fun createArgs(track: Track): Bundle {
+            return bundleOf(
+                TRACK_INSTANCE to track
             )
         }
     }

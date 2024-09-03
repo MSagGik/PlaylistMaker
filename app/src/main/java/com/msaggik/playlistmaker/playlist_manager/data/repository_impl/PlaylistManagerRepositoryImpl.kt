@@ -21,12 +21,11 @@ import java.io.FileOutputStream
 
 class PlaylistManagerRepositoryImpl(
     private val context: Context,
-    private val dataBase: PlaylistTracksDatabase,
-    private val playlistMapper: PlaylistManagerMapper
+    private val dataBase: PlaylistTracksDatabase
 ) : PlaylistManagerRepository {
 
     override suspend fun addPlaylist(playlist: Playlist): Long {
-        return dataBase.playlistTracksDao().insertPlaylist(playlistMapper.map(playlist))
+        return dataBase.playlistTracksDao().insertPlaylist(PlaylistManagerMapper.map(playlist))
     }
 
     override suspend fun insertPlaylistAndAddTrackInPlaylist(
@@ -34,7 +33,7 @@ class PlaylistManagerRepositoryImpl(
         track: Track
     ): Long {
         return  dataBase.playlistTracksDao()
-            .insertPlaylistAndAddTrackInPlaylist(playlistMapper.map(playlist), playlistMapper.map(track))
+            .insertPlaylistAndAddTrackInPlaylist(PlaylistManagerMapper.map(playlist), PlaylistManagerMapper.map(track))
     }
 
     override fun namesPlaylist(): Flow<List<String>> = flow {
@@ -44,7 +43,7 @@ class PlaylistManagerRepositoryImpl(
     }
 
     override suspend fun insertPlaylist(playlist: Playlist): Long {
-        return dataBase.playlistTracksDao().insertPlaylist(playlistMapper.map(playlist))
+        return dataBase.playlistTracksDao().insertPlaylist(PlaylistManagerMapper.map(playlist))
     }
 
     override suspend fun saveImageToPrivateStorage(uri: Uri): Uri {

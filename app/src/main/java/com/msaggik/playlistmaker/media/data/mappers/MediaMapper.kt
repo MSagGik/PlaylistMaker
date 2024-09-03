@@ -6,7 +6,7 @@ import com.msaggik.playlistmaker.media.domain.models.Track
 import com.msaggik.playlistmaker.player.data.playlist_db.entity.many_to_many.PlaylistEntity
 import com.msaggik.playlistmaker.player.data.playlist_db.entity.many_to_many.TrackEntity
 
-class MediaMapper {
+object MediaMapper {
 
     fun mapTrackEntityToTrack(trackEntity: TrackEntity): Track {
         return with(trackEntity) {
@@ -107,6 +107,25 @@ class MediaMapper {
                         )
                     }
                 }
+            )
+        }
+    }
+
+    fun mapMediaToPlayer(track: Track): com.msaggik.playlistmaker.player.domain.models.Track {
+        return with(track) {
+            com.msaggik.playlistmaker.player.domain.models.Track(
+                trackId = trackId,
+                trackName = trackName,
+                artistName = artistName,
+                trackTimeMillis = trackTimeMillis,
+                artworkUrl100 = artworkUrl100,
+                collectionName = collectionName,
+                releaseDate = releaseDate,
+                primaryGenreName = primaryGenreName,
+                country = country,
+                previewUrl = previewUrl,
+                isFavorite = isFavorite,
+                dateAddTrack = dateAddTrack
             )
         }
     }

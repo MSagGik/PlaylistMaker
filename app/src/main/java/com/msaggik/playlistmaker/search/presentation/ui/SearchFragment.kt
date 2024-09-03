@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.msaggik.playlistmaker.R
 import com.msaggik.playlistmaker.databinding.FragmentSearchBinding
 import com.msaggik.playlistmaker.player.presentation.ui.PlayerFragment
+import com.msaggik.playlistmaker.search.data.mappers.SearchMappers
 import com.msaggik.playlistmaker.search.domain.models.Track
 import com.msaggik.playlistmaker.search.presentation.ui.adapter.TrackListAdapter
 import com.msaggik.playlistmaker.search.presentation.ui.state.TracksState
@@ -28,12 +29,6 @@ import com.msaggik.playlistmaker.util.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
-
-    private companion object {
-        const val KEY_TEXT_SEARCH = "KEY_SEARCH"
-        const val TEXT_SEARCH_DEFAULT = ""
-        const val DELAY_CLICK_TRACK = 1000L
-    }
 
     // view
     private var _binding: FragmentSearchBinding? = null
@@ -154,7 +149,7 @@ class SearchFragment : Fragment() {
         searchViewModel.addTrackListHistory(track)
         findNavController().navigate(
             R.id.action_searchFragment_to_playerFragment,
-            PlayerFragment.createArgs(mapSearchToPlayer(track))
+            PlayerFragment.createArgs(SearchMappers.mapSearchToPlayer(track))
         )
     }
 
@@ -241,22 +236,9 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun mapSearchToPlayer(track: Track): com.msaggik.playlistmaker.player.domain.models.Track {
-        return with(track) {
-            com.msaggik.playlistmaker.player.domain.models.Track(
-                trackId = trackId,
-                trackName = trackName,
-                artistName = artistName,
-                trackTimeMillis = trackTimeMillis,
-                artworkUrl100 = artworkUrl100,
-                collectionName = collectionName,
-                releaseDate = releaseDate,
-                primaryGenreName = primaryGenreName,
-                country = country,
-                previewUrl = previewUrl,
-                isFavorite = isFavorite,
-                dateAddTrack = dateAddTrack
-            )
-        }
+    private companion object {
+        const val KEY_TEXT_SEARCH = "KEY_SEARCH"
+        const val TEXT_SEARCH_DEFAULT = ""
+        const val DELAY_CLICK_TRACK = 1000L
     }
 }

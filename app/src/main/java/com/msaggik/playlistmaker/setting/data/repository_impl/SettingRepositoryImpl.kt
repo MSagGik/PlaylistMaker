@@ -8,12 +8,12 @@ import com.msaggik.playlistmaker.setting.domain.repository.SettingRepository
 class SettingRepositoryImpl (
     private val themeSp: ThemeSp
 ) : SettingRepository {
-    override fun getThemeSettings(): ThemeSettings {
+    override suspend fun getThemeSettings(): ThemeSettings {
         val isDarkTheme = (themeSp as ThemeSpImpl).isDarkThemeSharedPreferences()
         return ThemeSettings(isDarkTheme)
     }
 
-    override fun updateThemeSetting(themeSettings: ThemeSettings) {
+    override suspend fun updateThemeSetting(themeSettings: ThemeSettings) {
         (themeSp as ThemeSpImpl).updateThemeSettingSharedPreferences(themeSettings.isDarkTheme)
     }
 }

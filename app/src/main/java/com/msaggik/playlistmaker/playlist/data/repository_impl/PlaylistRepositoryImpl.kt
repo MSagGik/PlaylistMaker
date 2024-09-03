@@ -12,13 +12,12 @@ import kotlinx.coroutines.flow.flow
 
 class PlaylistRepositoryImpl(
     private val context: Context,
-    private val dataBase: PlaylistTracksDatabase,
-    private val playlistMapper: PlaylistMapper
+    private val dataBase: PlaylistTracksDatabase
 ) : PlaylistRepository {
 
     override suspend fun playlistWithTracks(playlistId: Long): Flow<PlaylistWithTracks> = flow {
         emit(
-            playlistMapper.mapPlaylistDbToPlaylist(dataBase.playlistTracksDao().playlistWithTracks(playlistId))
+            PlaylistMapper.mapPlaylistDbToPlaylist(dataBase.playlistTracksDao().getPlaylistWithSortedTracks(playlistId))
         )
     }
 

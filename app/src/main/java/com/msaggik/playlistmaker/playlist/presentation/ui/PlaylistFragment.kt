@@ -1,6 +1,7 @@
 package com.msaggik.playlistmaker.playlist.presentation.ui
 
 import android.annotation.SuppressLint
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -22,6 +24,7 @@ import com.msaggik.playlistmaker.playlist_manager.presentation.ui.PlaylistManage
 import com.msaggik.playlistmaker.playlist_manager.presentation.ui.state.PlaylistManagerState
 import com.msaggik.playlistmaker.databinding.FragmentPlaylistBinding
 import com.msaggik.playlistmaker.player.presentation.ui.PlayerFragment
+import com.msaggik.playlistmaker.playlist.data.mappers.PlaylistMapper
 import com.msaggik.playlistmaker.playlist.domain.models.Playlist
 import com.msaggik.playlistmaker.playlist.domain.models.PlaylistWithTracks
 import com.msaggik.playlistmaker.playlist.domain.models.Track
@@ -33,16 +36,6 @@ import com.msaggik.playlistmaker.util.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PlaylistFragment : Fragment() {
-
-    companion object {
-        const val DELAY_CLICK_TRACK = 250L
-        private const val PLAYLIST_ID = "playlist_id"
-        fun createArgs(playlistId: Long): Bundle {
-            return bundleOf(
-                PLAYLIST_ID to playlistId
-            )
-        }
-    }
 
     // debounces
     private lateinit var onTrackClickDebounce: (Track) -> Unit
@@ -57,7 +50,8 @@ class PlaylistFragment : Fragment() {
     private var viewArray: Array<View>? = null
 
     // bottomSheetBehavior
-    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+    private lateinit var bottomSheetBehaviorTracks: BottomSheetBehavior<LinearLayout>
+    private lateinit var bottomSheetBehaviorMenu: BottomSheetBehavior<LinearLayout>
 
     // adapter playlists and listener select playlist to add track
     private var tracks: MutableList<Track> = mutableListOf()
@@ -80,10 +74,10 @@ class PlaylistFragment : Fragment() {
     // dialogs windows
     private val deleteTrackDialog: MaterialAlertDialogBuilder by lazy {
         MaterialAlertDialogBuilder(requireActivity())
-            .setTitle(requireActivity().getString(R.string.title_delete_track))
-            .setMessage(requireActivity().getString(R.string.question_delete_track))
-            .setNegativeButton(requireActivity().getString(R.string.cancel)) { dialog, which -> }
-            .setPositiveButton(requireActivity().getString(R.string.delete)) { dialog, which ->
+            .setTitle(getString(R.string.title_delete_track))
+            .setMessage(getString(R.string.question_delete_track))
+            .setNegativeButton(getString(R.string.cancel)) { dialog, which -> }
+            .setPositiveButton(getString(R.string.delete)) { dialog, which ->
                 playlistViewModel.removeTrackFromPlaylist(
                     requireArguments().getLong(PLAYLIST_ID),
                     selectedTrack.trackId.toLong()
@@ -93,10 +87,10 @@ class PlaylistFragment : Fragment() {
     }
     private val deletePlaylistDialog: MaterialAlertDialogBuilder by lazy {
         MaterialAlertDialogBuilder(requireActivity())
-            .setTitle(requireActivity().getString(R.string.delete_playlist))
-            .setMessage(requireActivity().getString(R.string.question_delete_playlist))
-            .setNegativeButton(requireActivity().getString(R.string.cancel)) { dialog, which -> }
-            .setPositiveButton(requireActivity().getString(R.string.delete)) { dialog, which ->
+            .setTitle(getString(R.string.delete_playlist))
+            .setMessage(getString(R.string.question_delete_playlist))
+            .setNegativeButton(getString(R.string.cancel)) { dialog, which -> }
+            .setPositiveButton(getString(R.string.delete)) { dialog, which ->
                 playlistViewModel.removePlaylist(
                     requireArguments().getLong(PLAYLIST_ID)
                 )
@@ -111,8 +105,8 @@ class PlaylistFragment : Fragment() {
         _binding = FragmentPlaylistBinding.inflate(inflater, container, false)
         viewArray = arrayOf(
             binding.trackList,
-            binding.menuPlaylist,
-            binding.placeholderEmptyPlaylist
+            binding.placeholderEmptyPlaylist,
+            binding.loadingTracks
         )
         return binding.root
     }
@@ -146,7 +140,7 @@ class PlaylistFragment : Fragment() {
 
         // subscribe to state delete track from playlist
         playlistViewModel.getSuccessRemoveTrackFromPlaylistLiveData().observe(viewLifecycleOwner) {
-            if(!it) Toast.makeText(requireContext(), requireContext().getString(R.string.failed_to_delete_track), Toast.LENGTH_SHORT).show()
+            if(!it) Toast.makeText(requireContext(), getString(R.string.failed_to_delete_track), Toast.LENGTH_SHORT).show()
         }
 
         // set listeners
@@ -156,6 +150,8 @@ class PlaylistFragment : Fragment() {
         binding.shareInfoPlaylistMenu.setOnClickListener(listener)
         binding.editInfoPlaylistMenu.setOnClickListener(listener)
         binding.deletePlaylistMenu.setOnClickListener(listener)
+        bottomSheetBehaviorTracks.addBottomSheetCallback(bottomSheetCallback)
+        bottomSheetBehaviorMenu.addBottomSheetCallback(bottomSheetCallback)
     }
 
     override fun onDestroyView() {
@@ -166,21 +162,45 @@ class PlaylistFragment : Fragment() {
         viewArray = null
     }
 
+    private val bottomSheetCallback: BottomSheetBehavior.BottomSheetCallback =
+        object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                if(bottomSheet.id == R.id.layout_bottom_sheet_menu) {
+                    when (newState) {
+                        BottomSheetBehavior.STATE_HIDDEN -> {
+                            binding.backgroundScreen.background = ColorDrawable(
+                                ContextCompat.getColor(requireContext(), R.color.color_null))
+                        }
+                        else -> {
+                            binding.backgroundScreen.background = ColorDrawable(ContextCompat.getColor(requireContext(), R.color.grey_100_alfa_50))
+                        }
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                binding.playlist.alpha = 1 - slideOffset
+            }
+        }
+
     private fun defaultBottomSheetState() {
-        bottomSheetBehavior = BottomSheetBehavior.from(binding.layoutBottomSheet).apply {
+        bottomSheetBehaviorTracks = BottomSheetBehavior.from(binding.layoutBottomSheetTracks).apply {
+            state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+        bottomSheetBehaviorMenu = BottomSheetBehavior.from(binding.layoutBottomSheetMenu).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
         }
         binding.root.viewTreeObserver.addOnGlobalLayoutListener {
             if(_binding != null) {
                 val peekHeight = binding.root.height - binding.playlist.height
-                bottomSheetBehavior.peekHeight = peekHeight
+                bottomSheetBehaviorTracks.peekHeight = peekHeight
+                bottomSheetBehaviorMenu.peekHeight = peekHeight
             }
         }
         Utils.visibilityView(
             viewArray,
             binding.trackList
         )
-        bottomSheetBehavior.isHideable = false
     }
 
     private fun initDebounces() {
@@ -211,14 +231,14 @@ class PlaylistFragment : Fragment() {
     private fun trackSelection(track: Track) {
         findNavController().navigate(
             R.id.action_playlistFragment_to_playerFragment,
-            PlayerFragment.createArgs(mapPlaylistToPlayer(track))
+            PlayerFragment.createArgs(PlaylistMapper.mapPlaylistToPlayer(track))
         )
     }
 
     private fun editPlaylist(playlist: Playlist) {
         findNavController().navigate(
             R.id.action_playlistFragment_to_createPlaylistFragment,
-            PlaylistManagerFragment.createArgs(PlaylistManagerState.EditPlaylistArg(mapPlaylistToEditPlaylist(playlist)))
+            PlaylistManagerFragment.createArgs(PlaylistManagerState.EditPlaylistArg(PlaylistMapper.mapPlaylistToEditPlaylist(playlist)))
         )
     }
 
@@ -241,20 +261,16 @@ class PlaylistFragment : Fragment() {
             binding.playlistDescription.text = playlist.playlist.playlistDescription
         }
 
-        var valueTimeOfTracks = 0L
-        for(track in playlist.tracks) {
-            valueTimeOfTracks += track.trackTimeMillis
-        }
-        valueTimeOfTracks = if(valueTimeOfTracks % 60_000 > 0.41) {
-            valueTimeOfTracks / 60_000 + 1
-        } else {
-            valueTimeOfTracks / 60_000
-        }
+        playlistViewModel.sumTimeOfTracks(playlist.tracks)
 
-        val timeTracks = binding.root.context.resources.getQuantityString(R.plurals.value_time, valueTimeOfTracks.toInt(), valueTimeOfTracks)
-        val numbersTracks = binding.root.context.resources.getQuantityString(R.plurals.number_tracks, playlist.tracks.size, playlist.tracks.size)
+        playlistViewModel.getSumTimeOfTracksLiveData().observe(viewLifecycleOwner) {
+            val timeTracks = resources.getQuantityString(R.plurals.value_time, it.toInt(), it)
+            val numbersTracks = resources.getQuantityString(R.plurals.number_tracks, playlist.tracks.size, playlist.tracks.size)
 
-        binding.playlistMetaData.text = "$timeTracks ${binding.root.context.getString(R.string.inter_punctum)} $numbersTracks"
+            binding.playlistMetaData.text = "$timeTracks ${getString(R.string.inter_punctum)} $numbersTracks"
+            // menu
+            binding.numberTracksMenu.text = numbersTracks
+        }
 
         // menu
         Glide.with(binding.root)
@@ -265,7 +281,6 @@ class PlaylistFragment : Fragment() {
             .into(binding.albumPlaylistMenu)
 
         binding.playlistNameMenu.text = playlist.playlist.playlistName
-        binding.numberTracksMenu.text = numbersTracks
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -285,24 +300,20 @@ class PlaylistFragment : Fragment() {
         tracks.clear()
         tracks.addAll(playlist.tracks)
         tracksAdapter.notifyDataSetChanged()
-        binding.layoutBottomSheet.visibility = View.VISIBLE
         Utils.visibilityView(
             viewArray,
             binding.trackList
         )
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun noShowTracksPlaylist() {
         tracks.clear()
         tracksAdapter.notifyDataSetChanged()
-        binding.layoutBottomSheet.visibility = View.VISIBLE
         Utils.visibilityView(
             viewArray,
             binding.placeholderEmptyPlaylist
         )
-        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
     private val listener: View.OnClickListener = object : View.OnClickListener {
@@ -316,22 +327,17 @@ class PlaylistFragment : Fragment() {
                     shareInfoPlaylist()
                 }
                 R.id.button_menu -> {
-                    binding.layoutBottomSheet.visibility = View.VISIBLE
-                    Utils.visibilityView(
-                        viewArray,
-                        binding.menuPlaylist
-                    )
-                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-                    bottomSheetBehavior.isHideable = true
+                    bottomSheetBehaviorMenu.state = BottomSheetBehavior.STATE_COLLAPSED
                 }
                 R.id.share_info_playlist_menu -> {
+                    bottomSheetBehaviorMenu.state = BottomSheetBehavior.STATE_HIDDEN
                     shareInfoPlaylist()
                 }
                 R.id.edit_info_playlist_menu -> {
                     editPlaylistDebounce(currentPlaylist.playlist)
                 }
                 R.id.delete_playlist_menu -> {
-                    binding.layoutBottomSheet.visibility = View.GONE
+                    bottomSheetBehaviorMenu.state = BottomSheetBehavior.STATE_HIDDEN
                     deletePlaylistDialog.show()
                 }
             }
@@ -340,47 +346,28 @@ class PlaylistFragment : Fragment() {
 
     private fun shareInfoPlaylist() {
         if(tracks.isEmpty()) {
-            Toast.makeText(requireContext(), requireContext().getString(R.string.share_empty_playlist), Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.share_empty_playlist), Toast.LENGTH_SHORT).show()
         } else {
             var infoSharePlaylist = "${currentPlaylist.playlist.playlistName}\n"
             if(!currentPlaylist.playlist.playlistDescription.isNullOrEmpty()) {
                 infoSharePlaylist += "${currentPlaylist.playlist.playlistDescription}\n"
             }
-            infoSharePlaylist += "${binding.root.context.resources.getQuantityString(R.plurals.number_tracks, currentPlaylist.tracks.size, currentPlaylist.tracks.size)}\n"
+            infoSharePlaylist += "${resources.getQuantityString(R.plurals.number_tracks, currentPlaylist.tracks.size, currentPlaylist.tracks.size)}\n"
             var countTrack = 0
             for (track in currentPlaylist.tracks) {
                 countTrack++
-                infoSharePlaylist += "$countTrack. ${track.artistName} - ${track.trackName} (${Utils.dateFormatMillisToMinSecFull(track.trackTimeMillis)}\n"
+                infoSharePlaylist += "$countTrack. ${track.artistName} - ${track.trackName} (${Utils.dateFormatMillisToMinSecFull(track.trackTimeMillis)})\n"
             }
             playlistViewModel.sharePlaylist(infoSharePlaylist)
         }
     }
 
-    private fun mapPlaylistToPlayer(track: Track): com.msaggik.playlistmaker.player.domain.models.Track {
-        return with(track) {
-            com.msaggik.playlistmaker.player.domain.models.Track(
-                trackId = trackId,
-                trackName = trackName,
-                artistName = artistName,
-                trackTimeMillis = trackTimeMillis,
-                artworkUrl100 = artworkUrl100,
-                collectionName = collectionName,
-                releaseDate = releaseDate,
-                primaryGenreName = primaryGenreName,
-                country = country,
-                previewUrl = previewUrl,
-                isFavorite = isFavorite,
-                dateAddTrack = dateAddTrack
-            )
-        }
-    }
-    private fun mapPlaylistToEditPlaylist(playlist: Playlist): com.msaggik.playlistmaker.playlist_manager.domain.models.Playlist {
-        return with(playlist) {
-            com.msaggik.playlistmaker.playlist_manager.domain.models.Playlist(
-                playlistId = playlistId,
-                playlistName = playlistName,
-                playlistDescription = playlistDescription,
-                playlistUriAlbum = playlistUriAlbum
+    companion object {
+        const val DELAY_CLICK_TRACK = 250L
+        private const val PLAYLIST_ID = "playlist_id"
+        fun createArgs(playlistId: Long): Bundle {
+            return bundleOf(
+                PLAYLIST_ID to playlistId
             )
         }
     }

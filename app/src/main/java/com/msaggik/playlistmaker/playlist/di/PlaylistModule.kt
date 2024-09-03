@@ -1,6 +1,5 @@
 package com.msaggik.playlistmaker.playlist.di
 
-import com.msaggik.playlistmaker.playlist.data.mappers.PlaylistMapper
 import com.msaggik.playlistmaker.playlist.data.repository_impl.PlaylistRepositoryImpl
 import com.msaggik.playlistmaker.playlist.domain.repository.PlaylistRepository
 import com.msaggik.playlistmaker.playlist.domain.use_case.PlaylistInteractor
@@ -29,12 +28,7 @@ val playlistModule = module {
     single<PlaylistRepository> {
         PlaylistRepositoryImpl(
             context = androidContext(),
-            dataBase = get(),
-            playlistMapper = get()
+            dataBase = get()
         )
-    }
-
-    single {
-        PlaylistMapper()
     }
 }

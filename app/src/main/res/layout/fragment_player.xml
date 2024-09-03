@@ -7,6 +7,11 @@
     android:orientation="vertical"
     tools:context=".player.presentation.ui.PlayerFragment">
 
+    <View
+        android:id="@+id/background_screen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
@@ -424,11 +429,20 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:visibility="gone"/>
 
+        <ProgressBar
+            android:id="@+id/loading_playlist"
+            android:layout_width="@dimen/dimen_44"
+            android:layout_height="@dimen/dimen_44"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dimen_24"
+            android:indeterminateTint="@color/blue_100"
+            android:visibility="visible"/>
+
         <FrameLayout
             android:id="@+id/placeholder_empty_playlists"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="@dimen/dimen_61"
