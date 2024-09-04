@@ -9,27 +9,26 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class MediaRepositoryImpl(
-    private val dataBase: PlaylistTracksDatabase,
-    private val mediaMapper: MediaMapper
+    private val dataBase: PlaylistTracksDatabase
 ) : MediaRepository {
 
     override suspend fun addFavoriteTrack(track: Track): Long {
         return dataBase.playlistTracksDao()
-            .insertOrUpdateTrack(mediaMapper.mapTrackToTrackEntity(track))
+            .insertOrUpdateTrack(MediaMapper.mapTrackToTrackEntity(track))
     }
 
     override fun getFavoriteTracks(): Flow<List<Track>> = flow {
         emit(
             dataBase.playlistTracksDao()
                 .getFavoriteTracks()
-                .map { trackEntity -> mediaMapper.mapTrackEntityToTrack(trackEntity) }
+                .map { trackEntity -> MediaMapper.mapTrackEntityToTrack(trackEntity) }
         )
     }
 
     override fun playlistsWithTracks(): Flow<List<PlaylistWithTracks>> = flow {
         emit(
             dataBase.playlistTracksDao().playlistsWithTracks().map { playlist ->
-                mediaMapper.mapPlaylistDbToPlaylist(playlist)
+                MediaMapper.mapPlaylistDbToPlaylist(playlist)
             }
         )
     }

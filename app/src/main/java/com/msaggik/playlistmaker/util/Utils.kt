@@ -54,6 +54,11 @@ internal object Utils {
         )
     }
 
+    fun getApplicationTheme() : Boolean {
+        val darkThemeEnabledInt = AppCompatDelegate.getDefaultNightMode()
+        return darkThemeEnabledInt == AppCompatDelegate.MODE_NIGHT_YES
+    }
+
     private fun roundingToThousandths(inputValue: Long) : Long {
         var value = inputValue
         val remainder = value % 1000

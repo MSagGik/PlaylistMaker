@@ -7,7 +7,7 @@ import com.msaggik.playlistmaker.player.domain.models.PlaylistWithTracks
 import com.msaggik.playlistmaker.player.domain.models.Track
 import com.msaggik.playlistmaker.search.data.dto.response.TrackDto
 
-class PlayerMapper {
+object PlayerMapper {
     fun convertTrackDtoToTrack(track: TrackDto): Track {
         return Track(
             track.trackId, track.trackName, track.artistName,
@@ -122,6 +122,25 @@ class PlayerMapper {
                         )
                     }
                 }
+            )
+        }
+    }
+
+    fun mapPlayerToCreatePlaylist(track: Track): com.msaggik.playlistmaker.playlist_manager.domain.models.Track {
+        return with(track) {
+            com.msaggik.playlistmaker.playlist_manager.domain.models.Track(
+                trackId = trackId,
+                trackName = trackName,
+                artistName = artistName,
+                trackTimeMillis = trackTimeMillis,
+                artworkUrl100 = artworkUrl100,
+                collectionName = collectionName,
+                releaseDate = releaseDate,
+                primaryGenreName = primaryGenreName,
+                country = country,
+                previewUrl = previewUrl,
+                isFavorite = isFavorite,
+                dateAddTrack = dateAddTrack
             )
         }
     }

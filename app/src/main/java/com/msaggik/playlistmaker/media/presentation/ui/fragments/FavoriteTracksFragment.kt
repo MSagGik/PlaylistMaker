@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.msaggik.playlistmaker.R
 import com.msaggik.playlistmaker.databinding.FragmentFavoriteTracksBinding
+import com.msaggik.playlistmaker.media.data.mappers.MediaMapper
 import com.msaggik.playlistmaker.media.domain.models.Track
 import com.msaggik.playlistmaker.media.presentation.ui.adapters.FavoriteTracksAdapter
 import com.msaggik.playlistmaker.media.presentation.view_model.FavoriteTracksViewModel
@@ -21,10 +22,6 @@ import com.msaggik.playlistmaker.util.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FavoriteTracksFragment : Fragment() {
-    companion object {
-        fun newInstance() = FavoriteTracksFragment()
-        const val DELAY_CLICK_TRACK = 1000L
-    }
 
     private val favoriteTracksViewModel: FavoriteTracksViewModel by viewModel()
 
@@ -84,7 +81,7 @@ class FavoriteTracksFragment : Fragment() {
         favoriteTracksViewModel.addTrackListHistory(track)
         findNavController().navigate(
             R.id.action_mediaFragment_to_playerFragment,
-            PlayerFragment.createArgs(mapMediaToPlayer(track))
+            PlayerFragment.createArgs(MediaMapper.mapMediaToPlayer(track))
         )
     }
 
@@ -115,22 +112,8 @@ class FavoriteTracksFragment : Fragment() {
         viewArray = null
     }
 
-    private fun mapMediaToPlayer(track: Track): com.msaggik.playlistmaker.player.domain.models.Track {
-        return with(track) {
-            com.msaggik.playlistmaker.player.domain.models.Track(
-                trackId = trackId,
-                trackName = trackName,
-                artistName = artistName,
-                trackTimeMillis = trackTimeMillis,
-                artworkUrl100 = artworkUrl100,
-                collectionName = collectionName,
-                releaseDate = releaseDate,
-                primaryGenreName = primaryGenreName,
-                country = country,
-                previewUrl = previewUrl,
-                isFavorite = isFavorite,
-                dateAddTrack = dateAddTrack
-            )
-        }
+    companion object {
+        fun newInstance() = FavoriteTracksFragment()
+        const val DELAY_CLICK_TRACK = 1000L
     }
 }

@@ -1,6 +1,5 @@
 package com.msaggik.playlistmaker.media.di
 
-import com.msaggik.playlistmaker.media.data.mappers.MediaMapper
 import com.msaggik.playlistmaker.media.data.repository_impl.MediaRepositoryImpl
 import com.msaggik.playlistmaker.media.domain.repository.MediaRepository
 import com.msaggik.playlistmaker.media.domain.use_case.MediaInteractor
@@ -35,13 +34,7 @@ val mediaModule = module {
     // data
     single<MediaRepository> {
         MediaRepositoryImpl(
-            dataBase = get(),
-            mediaMapper = get()
+            dataBase = get()
         )
     }
-
-    single {
-        MediaMapper()
-    }
-
 }

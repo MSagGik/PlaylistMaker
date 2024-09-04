@@ -113,4 +113,8 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <style name="TextMenu" parent="BaseTextMenu">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
 </resources>

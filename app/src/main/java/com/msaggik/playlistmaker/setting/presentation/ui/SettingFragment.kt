@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.msaggik.playlistmaker.R
-import com.msaggik.playlistmaker.databinding.FragmentSearchBinding
 import com.msaggik.playlistmaker.databinding.FragmentSettingBinding
 import com.msaggik.playlistmaker.setting.presentation.view_model.SettingsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -28,7 +27,8 @@ class SettingFragment : Fragment() {
         settingsViewModel.getSettingsTheme().value?.let { binding.switchTheme.setChecked(it) } // start activity
 
         binding.switchTheme.setOnCheckedChangeListener { switcher, checked -> // checked theme
-            settingsViewModel.switchTheme(checked) }
+            settingsViewModel.switchTheme(checked)
+        }
 
         binding.buttonShare.setOnClickListener(listener)
         binding.buttonSupport.setOnClickListener(listener)

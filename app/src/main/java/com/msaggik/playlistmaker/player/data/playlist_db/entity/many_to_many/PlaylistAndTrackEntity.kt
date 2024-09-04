@@ -9,5 +9,7 @@ data class PlaylistAndTrackEntity(
     @ColumnInfo(name = DatabaseConfig.ID_PLAYLIST)
     val idPlaylist: Long,
     @ColumnInfo(name = DatabaseConfig.ID_TRACK)
-    val idTrack: Long
+    val idTrack: Long,
+    @ColumnInfo(name = DatabaseConfig.TIME_ADD)
+    val timeAdd: Long = -1
 )

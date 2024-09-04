@@ -16,10 +16,6 @@ class SearchViewModel(
     private val tracksInteractor: TracksInteractor
 ) : ViewModel() {
 
-    companion object {
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-    }
-
     // trackListHistoryLiveData
     private val trackListHistoryLiveData = MutableLiveData<List<Track>>()
 
@@ -88,7 +84,10 @@ class SearchViewModel(
         true,
         false
     ) { changedText ->
-        searchTracks(changedText)
+        if (changedText.isNotEmpty()) {
+            searchTracks(changedText)
+        }
+
     }
 
     fun searchDebounce(changedText: String) {
@@ -133,5 +132,9 @@ class SearchViewModel(
 
     private fun renderState(state: TracksState) {
         stateLiveData.postValue(state)
+    }
+
+    companion object {
+        private const val SEARCH_DEBOUNCE_DELAY = 3000L
     }
 }

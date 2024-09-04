@@ -20,7 +20,7 @@
     <string name="length_track">轨道长度</string>
     <string name="track_selection">曲目选择</string>
     <string name="nothing_found">没有找到任何内容</string>
-    <string name="communication_problems">沟通问题\\n\\n上传失败\\n查看互联网连接</string>
+    <string name="communication_problems">沟通问题 \n 上传失败 \n 查看互联网连接</string>
     <string name="update">更新</string>
     <string name="header_search">你正在寻找</string>
     <string name="clear_search_history">清除历史记录</string>
@@ -61,4 +61,27 @@
     <string name="add_in_playlist">添加到播放列表</string>
     <string name="add_track_in_playlist">已添加到播放列表 %1$s</string>
     <string name="no_add_track_in_playlist">该曲目已添加到播放列表 %1$s</string>
+    <plurals name="value_time" tools:ignore="UnusedQuantity">
+        <item quantity="zero">%1$d 分钟</item>
+        <item quantity="one">%1$d 分钟</item>
+        <item quantity="two">%1$d 分钟</item>
+        <item quantity="few">%1$d 分钟</item>
+        <item quantity="many">%1$d 分钟</item>
+        <item quantity="other">%1$d 分钟</item>
+    </plurals>
+    <string name="default_playlist_meta_data">0 分钟 · 0 首曲目</string>
+    <string name="title_delete_track">删除曲目</string>
+    <string name="question_delete_track">您确定要从播放列表中删除该曲目吗？</string>
+    <string name="delete">删除</string>
+    <string name="failed_to_delete_track">删除曲目失败</string>
+    <string name="share_empty_playlist">该播放列表没有可共享的曲目列表</string>
+    <string name="share">分享</string>
+    <string name="edit_info_playlist">编辑信息</string>
+    <string name="delete_playlist">删除播放列表</string>
+    <string name="question_delete_playlist">您确定要删除此播放列表吗？</string>
+    <string name="edit_playlist">编辑</string>
+    <string name="save_playlist">节省</string>
+    <string name="message_success_edit_playlist">播放列表 %1$s 已更新</string>
+    <string name="message_empty_playlist">播放列表中没有曲目</string>
+    <string name="message_empty_track">没有曲目可添加到播放列表</string>
 </resources>

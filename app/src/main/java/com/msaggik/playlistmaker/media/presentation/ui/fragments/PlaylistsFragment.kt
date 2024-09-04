@@ -1,29 +1,32 @@
 package com.msaggik.playlistmaker.media.presentation.ui.fragments
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.msaggik.playlistmaker.R
-import com.msaggik.playlistmaker.create_playlist.presentation.ui.CreatePlaylistFragment
+import com.msaggik.playlistmaker.playlist_manager.presentation.ui.PlaylistManagerFragment
+import com.msaggik.playlistmaker.playlist_manager.presentation.ui.state.PlaylistManagerState
 import com.msaggik.playlistmaker.databinding.FragmentPlaylistsBinding
 import com.msaggik.playlistmaker.media.domain.models.PlaylistWithTracks
 import com.msaggik.playlistmaker.media.presentation.ui.adapters.PlaylistWithTracksAdapter
 import com.msaggik.playlistmaker.media.presentation.view_model.PlaylistsViewModel
-import com.msaggik.playlistmaker.media.presentation.view_model.state.PlaylistWithTracksState
+import com.msaggik.playlistmaker.media.presentation.view_model.state.CreatePlaylistWithTracksState
+import com.msaggik.playlistmaker.playlist.presentation.ui.PlaylistFragment
 import com.msaggik.playlistmaker.util.Utils
+import com.msaggik.playlistmaker.util.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-private val NUMBER_COLUMN_RECYCLERVIEW = 2
 class PlaylistsFragment : Fragment() {
-    companion object {
-        fun newInstance() = PlaylistsFragment()
-    }
+
+    private lateinit var playlistClickDebounce: (PlaylistWithTracks) -> Unit
 
     private val playlistsViewModel: PlaylistsViewModel by viewModel()
 
@@ -36,6 +39,8 @@ class PlaylistsFragment : Fragment() {
     }
 
     private fun playlistWithTracksSelection(playlist: PlaylistWithTracks) {
+        findNavController().navigate(R.id.action_mediaFragment_to_playlistFragment,
+           PlaylistFragment.createArgs(playlist.playlist.playlistId))
     }
 
     private var _binding: FragmentPlaylistsBinding? = null
@@ -58,10 +63,22 @@ class PlaylistsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        playlistClickDebounce = debounce<PlaylistWithTracks>(
+            DELAY_CLICK_PLAYLIST,
+            viewLifecycleOwner.lifecycleScope,
+            false,
+            true
+        ) { playlist -> playlistSelection(playlist) }
+
         playlistsViewModel.getPlaylistWithTracks()
 
-        binding.playlists.layoutManager =
-            GridLayoutManager(activity, NUMBER_COLUMN_RECYCLERVIEW, LinearLayoutManager.VERTICAL, false)
+        val orientation = resources.configuration.orientation
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            binding.playlists.layoutManager = GridLayoutManager(activity, NUMBER_COLUMN_RECYCLERVIEW_LANDSCAPE, LinearLayoutManager.VERTICAL, false)
+        } else if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            binding.playlists.layoutManager = GridLayoutManager(activity, NUMBER_COLUMN_RECYCLERVIEW_PORTRAIT, LinearLayoutManager.VERTICAL, false)
+        }
+
         binding.playlists.adapter = playlistWithTracksAdapter
         playlistWithTracksAdapter.notifyDataSetChanged()
 
@@ -72,10 +89,16 @@ class PlaylistsFragment : Fragment() {
         }
     }
 
-    private fun render(state: PlaylistWithTracksState) {
+    @SuppressLint("NotifyDataSetChanged")
+    private fun playlistSelection(playlist: PlaylistWithTracks) {
+        findNavController().navigate(R.id.action_mediaFragment_to_playlistFragment,
+            PlaylistFragment.createArgs(playlist.playlist.playlistId))
+    }
+
+    private fun render(state: CreatePlaylistWithTracksState) {
         when (state) {
-            is PlaylistWithTracksState.Content -> showPlaylistsWithTracks(state.playlists)
-            is PlaylistWithTracksState.Empty -> Utils.visibilityView(viewArray, binding.placeholderEmptyPlaylists)
+            is CreatePlaylistWithTracksState.Content -> showPlaylistsWithTracks(state.playlists)
+            is CreatePlaylistWithTracksState.Empty -> Utils.visibilityView(viewArray, binding.placeholderEmptyPlaylists)
         }
     }
 
@@ -100,9 +123,16 @@ class PlaylistsFragment : Fragment() {
             when (p0?.id) {
                 R.id.button_new_playlist -> {
                     findNavController().navigate(R.id.action_mediaFragment_to_createPlaylistFragment,
-                        CreatePlaylistFragment.createArgs(false))
+                        PlaylistManagerFragment.createArgs(PlaylistManagerState.EmptyArg))
                 }
             }
         }
+    }
+
+    companion object {
+        private const val DELAY_CLICK_PLAYLIST = 250L
+        private val NUMBER_COLUMN_RECYCLERVIEW_LANDSCAPE = 5
+        private val NUMBER_COLUMN_RECYCLERVIEW_PORTRAIT = 2
+        fun newInstance() = PlaylistsFragment()
     }
 }

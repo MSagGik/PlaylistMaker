@@ -32,4 +32,5 @@ object DatabaseConfig {
 
     const val ID_TRACK: String = "id_track"
     const val ID_PLAYLIST: String = "id_playlist"
+    const val TIME_ADD: String = "time_add"
 }

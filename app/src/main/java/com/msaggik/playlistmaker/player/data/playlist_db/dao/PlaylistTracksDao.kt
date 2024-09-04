@@ -7,7 +7,6 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import com.msaggik.playlistmaker.player.data.playlist_db.entity.additional_entities.PlaylistWithTracks
-import com.msaggik.playlistmaker.player.data.playlist_db.entity.additional_entities.TrackWithPlaylists
 import com.msaggik.playlistmaker.player.data.playlist_db.entity.config_db.DatabaseConfig
 import com.msaggik.playlistmaker.player.data.playlist_db.entity.many_to_many.PlaylistAndTrackEntity
 import com.msaggik.playlistmaker.player.data.playlist_db.entity.many_to_many.PlaylistEntity
@@ -17,7 +16,6 @@ import com.msaggik.playlistmaker.player.data.playlist_db.entity.many_to_many.Tra
 interface PlaylistTracksDao {
 
     // PLAYLISTS
-
     // create playlist and add track in playlist
     @Transaction
     suspend fun insertPlaylistAndAddTrackInPlaylist(playlistEntity: PlaylistEntity, track: TrackEntity): Long {
@@ -27,7 +25,8 @@ interface PlaylistTracksDao {
             -1L
         } else {
             if(!checkIfExistsTracks(track.trackId)) insertOrUpdateTrack(track = track)
-            insertPlaylistAndTrack(listOf(PlaylistAndTrackEntity(idPlaylist, track.trackId))).first() // return idTrack
+            val currentTime = System.currentTimeMillis()
+            insertPlaylistAndTrack(listOf(PlaylistAndTrackEntity(idPlaylist, track.trackId, currentTime))).first() // return idTrack
         }
     }
     // create playlist
@@ -37,10 +36,6 @@ interface PlaylistTracksDao {
     // names playlist
     @Query("SELECT ${DatabaseConfig.PLAYLIST_NAME} FROM ${DatabaseConfig.PLAYLIST_TABLE}")
     suspend fun namesPlaylist(): List<String>
-
-    // check playlist
-    @Query("SELECT COUNT(*) > 0 FROM ${DatabaseConfig.PLAYLIST_TABLE} WHERE ${DatabaseConfig.PLAYLIST_NAME} = :namePlaylist")
-    suspend fun namesPlaylist(namePlaylist: String): Boolean
 
     // PLAYLISTS AND TRACKS
     // delete playlist
@@ -58,7 +53,7 @@ interface PlaylistTracksDao {
     }
 
     @Transaction
-    @Query("SELECT t.* FROM ${DatabaseConfig.TRACK_TABLE} t JOIN ${DatabaseConfig.PLAYLIST_AND_TRACK_TABLE} pt ON t.track_id = pt.id_track WHERE pt.id_playlist = :playlistId")
+    @Query("SELECT t.* FROM ${DatabaseConfig.TRACK_TABLE} t JOIN ${DatabaseConfig.PLAYLIST_AND_TRACK_TABLE} pt ON t.track_id = pt.id_track WHERE pt.id_playlist = :playlistId ORDER BY ${DatabaseConfig.TIME_ADD} DESC")
     suspend fun getTracksForPlaylist(playlistId: Long): List<TrackEntity>
 
     @Query("DELETE FROM ${DatabaseConfig.PLAYLIST_TABLE} WHERE ${DatabaseConfig.PLAYLIST_ID} = :playlistId")
@@ -104,7 +99,8 @@ interface PlaylistTracksDao {
             -1L
         } else {
             if(!checkIfExistsTracks(track.trackId)) insertOrUpdateTrack(track = track)
-            insertPlaylistAndTrack(listOf(PlaylistAndTrackEntity(idPlaylist, track.trackId))).first() // return idTrack
+            val currentTime = System.currentTimeMillis()
+            insertPlaylistAndTrack(listOf(PlaylistAndTrackEntity(idPlaylist, track.trackId, currentTime))).first() // return idTrack
         }
     }
 
@@ -123,8 +119,14 @@ interface PlaylistTracksDao {
     suspend fun playlistsWithTracks(): List<PlaylistWithTracks>
 
     @Transaction
-    @Query("SELECT * FROM ${DatabaseConfig.TRACK_TABLE}")
-    suspend fun tracksWithPlaylists(): List<TrackWithPlaylists>
+    @Query("SELECT * FROM ${DatabaseConfig.PLAYLIST_TABLE} WHERE ${DatabaseConfig.PLAYLIST_ID} = :playlistId")
+    suspend fun playlistWithTracks(playlistId: Long): PlaylistWithTracks
+
+    suspend fun getPlaylistWithSortedTracks(playlistId: Long): PlaylistWithTracks {
+        val playlistWithTracks = playlistWithTracks(playlistId)
+        val sortedTracks = getTracksForPlaylist(playlistId)
+        return playlistWithTracks.copy(tracks = sortedTracks)
+    }
 
     // FAVORITE TRACKS
     // Query to get a list of track IDs of all posts with `favoriteTrack` equal to true

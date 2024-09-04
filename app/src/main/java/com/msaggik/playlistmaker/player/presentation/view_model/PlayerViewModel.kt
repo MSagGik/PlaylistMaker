@@ -11,7 +11,7 @@ import com.msaggik.playlistmaker.player.domain.use_case.PlayerInteractor
 import com.msaggik.playlistmaker.player.domain.state.PlayerState
 import com.msaggik.playlistmaker.player.presentation.view_model.state.FavoriteState
 import com.msaggik.playlistmaker.player.presentation.view_model.state.PlayState
-import com.msaggik.playlistmaker.player.presentation.view_model.state.PlaylistWithTracksState
+import com.msaggik.playlistmaker.player.presentation.view_model.state.PlaylistsWithTracksState
 import com.msaggik.playlistmaker.util.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -21,11 +21,6 @@ import kotlinx.coroutines.launch
 class PlayerViewModel(
     private val playerInteractor: PlayerInteractor,
 ) : ViewModel() {
-
-    companion object {
-        private const val PLAYER_DELAY_UPDATE_TRACK_LIST = 250L
-    }
-
     /**
      * Player ViewModel
      * @param playerTrackLiveData - LiveData state instance entity Track
@@ -171,13 +166,13 @@ class PlayerViewModel(
      * @param successAddTrackInPlaylistLiveData - LiveData status of successful adding of a track to a playlist
      */
 
-    private val playlistWithTracksLiveData = MutableLiveData<PlaylistWithTracksState>()
-    fun getPlaylistsWithTracksLiveData(): LiveData<PlaylistWithTracksState> = playlistWithTracksLiveData
+    private val playlistsWithTracksLiveData = MutableLiveData<PlaylistsWithTracksState>()
+    fun getPlaylistsWithTracksLiveData(): LiveData<PlaylistsWithTracksState> = playlistsWithTracksLiveData
 
     private val successAddTrackInPlaylistLiveData = MutableLiveData<Pair<Long, String>>()
     fun getSuccessAddTrackInPlaylistLiveData(): LiveData<Pair<Long, String>> = successAddTrackInPlaylistLiveData
 
-    fun getPlaylistWithTracks() {
+    fun getPlaylistsWithTracks() {
         viewModelScope.launch(Dispatchers.IO) {
             playerInteractor
                 .playlistsWithTracks()
@@ -187,16 +182,16 @@ class PlayerViewModel(
         }
     }
 
-    private fun processResult(playlist: List<PlaylistWithTracks>) {
-        if (playlist.isEmpty()) {
-            renderState(PlaylistWithTracksState.Empty)
+    private fun processResult(playlists: List<PlaylistWithTracks>) {
+        if (playlists.isEmpty()) {
+            renderState(PlaylistsWithTracksState.Empty)
         } else {
-            renderState(PlaylistWithTracksState.Content(playlist))
+            renderState(PlaylistsWithTracksState.Content(playlists))
         }
     }
 
-    private fun renderState(state: PlaylistWithTracksState) {
-        playlistWithTracksLiveData.postValue(state)
+    private fun renderState(state: PlaylistsWithTracksState) {
+        playlistsWithTracksLiveData.postValue(state)
     }
 
     fun addTrackInPlaylist(playlist: Playlist, track: Track) {
@@ -204,5 +199,10 @@ class PlayerViewModel(
             val idPlaylist = playerInteractor.addTrackInPlaylist(playlist.playlistId, track)
             successAddTrackInPlaylistLiveData.postValue(Pair(idPlaylist, playlist.playlistName))
         }
+    }
+
+
+    companion object {
+        private const val PLAYER_DELAY_UPDATE_TRACK_LIST = 250L
     }
 }
