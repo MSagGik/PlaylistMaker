@@ -32,7 +32,7 @@
         android:paddingBottom="@dimen/dimen_8"
         android:paddingTop="@dimen/dimen_70"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <FrameLayout
         android:id="@+id/placeholder_empty_playlists"
